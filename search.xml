@@ -8,6 +8,7 @@
 </blockquote>
 <a id="more"></a>
 
+<p>[toc]</p>
 <h1 id="Spring-Boot-三大特性之：开箱即用"><a href="#Spring-Boot-三大特性之：开箱即用" class="headerlink" title="Spring-Boot 三大特性之：开箱即用"></a>Spring-Boot 三大特性之：开箱即用</h1><h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><ul>
 <li><p><strong>在以前如何连接数据库？</strong></p>
 <ul>
@@ -74,6 +75,7 @@
 </blockquote>
 <a id="more"></a>
 
+<p>[toc]</p>
 <h1 id="Spring-Boot-如何开始"><a href="#Spring-Boot-如何开始" class="headerlink" title="Spring_Boot 如何开始"></a>Spring_Boot 如何开始</h1><h2 id="1、Spring-Boot"><a href="#1、Spring-Boot" class="headerlink" title="1、Spring-Boot"></a>1、Spring-Boot</h2><p> Spring_Boot是一个简化Spring应用开发的框架；</p>
 <p> Spring_Boot是整个Spring技术栈的大整合；</p>
 <p> Spring_Boot是J2EE开发的一站式解决方案；</p>
@@ -266,7 +268,7 @@
 <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>    <span class="title">unCompress</span><span class="params">(java.io.File source, java.lang.String path)</span></span>
 <span class="function"><span class="comment">//文档解压</span></span>
 <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>    <span class="title">zipFile</span><span class="params">(java.io.File inFile, java.util.zip.ZipOutputStream zos, java.lang.String dir)</span></span></code></pre>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://github.com/allwayz" target="_blank" rel="noopener">Allwayz</a><br><a href="https://github.com/Allwayz/JavaToolClasses/tree/master/src/main/java/com/opslab" target="_blank" rel="noopener">源码</a></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://github.com/allwayz" target="_blank" rel="noopener">Allwayz</a><br><a href="/download/JavaToolClasses.zip">点击此处，下载源码</a></p>
 ]]></content>
   </entry>
   <entry>
