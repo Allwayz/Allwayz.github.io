@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Spring-Boot," />
 
 
 
@@ -79,17 +79,23 @@
 
 
 
-<meta name="description" content="程序猿&amp;攻城狮的自我修养">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;about&#x2F;index.html">
+<meta name="description" content="在很多网站或者应用第一次注册的时候都会要求验证用户，这次就来学习一个邮件验证的小工具、  MailUtil是基于 oh-my-email 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot 摸索之路-3：Authenticate users by E-mail">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="程序猿&amp;攻城狮的自我修养">
+<meta property="og:description" content="在很多网站或者应用第一次注册的时候都会要求验证用户，这次就来学习一个邮件验证的小工具、  MailUtil是基于 oh-my-email 的">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-23T00:02:34.000Z">
-<meta property="article:modified_time" content="2020-01-23T00:02:34.556Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail&#x2F;step1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail&#x2F;step2.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail&#x2F;Email.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail&#x2F;run.jpg">
+<meta property="article:published_time" content="2020-02-11T07:06:15.000Z">
+<meta property="article:modified_time" content="2020-02-11T16:12:59.000Z">
 <meta property="article:author" content="Allwayz">
+<meta property="article:tag" content="Spring-Boot">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail&#x2F;step1.png">
 
 
 
@@ -119,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/02/11/Spring-Boot-摸索之路-3：Authenticate-users-by-E-mail/"/>
 
 
 
 
 
-  <title>about | Allwayz aint a coder</title>
+  <title>Spring Boot 摸索之路-3：Authenticate users by E-mail | Allwayz aint a coder</title>
   
 
 
@@ -325,33 +331,226 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">about</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
+          <h1 class="post-title" itemprop="name headline">Spring Boot 摸索之路-3：Authenticate users by E-mail</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-11T15:06:15+08:00">
+                2020-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-      </div>
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <blockquote>
+<p>  在很多网站或者应用第一次注册的时候都会要求验证用户，这次就来学习一个邮件验证的小工具、<br>  MailUtil是基于 <code>oh-my-email</code> 的</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="创建基于Maven的Spring-Boot-工程"><a href="#创建基于Maven的Spring-Boot-工程" class="headerlink" title="创建基于Maven的Spring Boot 工程"></a>创建基于<strong>Maven</strong>的<strong>Spring Boot</strong> 工程</h1><p>具体创建步骤不赘述了，因为只基于邮件发送功能，所以不用数据库和web之类的依赖。</p>
+<h1 id="pom-xml中导入依赖"><a href="#pom-xml中导入依赖" class="headerlink" title="pom.xml中导入依赖"></a>pom.xml中导入依赖</h1><h3 id="在pom-xml中加入以下依赖："><a href="#在pom-xml中加入以下依赖：" class="headerlink" title="在pom.xml中加入以下依赖："></a>在<code>pom.xml</code>中加入以下依赖：</h3><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="XML"><figure class="iseeu highlight /xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.biezhi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>oh-my-email<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="配置邮件服务器"><a href="#配置邮件服务器" class="headerlink" title="配置邮件服务器"></a>配置邮件服务器</h1><ul>
+<li><p>在邮箱中开启<code>POP3/IMAP/SMTP</code>服务</p>
+<p><strong>这里以qq邮箱为栗子</strong>🌰</p>
+</li>
+</ul>
+<ol>
+<li><p>登陆网页邮箱，进入设置界面</p>
+ <img src="/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/step1.png" class="" title="第一步">
+</li>
+<li><p>设置界面中进入子菜单账户，向下翻找到<strong>POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV服务</strong></p>
+ <img src="/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/step2.png" class="" title="第二步">
+</li>
+</ol>
+<ul>
+<li><p>新建邮箱工具类<code>MailUtil.java</code></p>
+</li>
+<li><p>配置邮件服务器</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailUtil</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 根据 OhMyEmail 的文档来配置邮件服务器</span></span><br><span class="line"><span class="comment">	*</span></span><br><span class="line"><span class="comment">	* 下面需要自行输入的参数：</span></span><br><span class="line"><span class="comment">	* <span class="doctag">@param</span> emailAddress 发送邮件的邮箱地址</span></span><br><span class="line"><span class="comment">	* <span class="doctag">@param</span> emailPassword 邮箱授权码</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        OhMyEmail.config(SMTP_QQ(<span class="keyword">false</span>), <span class="string">"emailAddress"</span>, <span class="string">"emailPassword"</span>);</span><br><span class="line">        <span class="comment">// 企业邮箱可以使用一下配置</span></span><br><span class="line">        <span class="comment">//OhMyEmail.config(SMTP_ENT_QQ(false), "emailAddress", "emailPassword");</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+<h1 id="编写测试类"><a href="#编写测试类" class="headerlink" title="编写测试类"></a>编写测试类</h1><p>因为测试类需要用到邮件服务器配置，所以直接在邮箱工具类中实现</p>
+<h2 id="邮件发送"><a href="#邮件发送" class="headerlink" title="邮件发送"></a>邮件发送</h2><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 该邮箱修改为你需要测试的邮箱地址</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TO_EMAIL = <span class="string">"xxxxx@gmail.com"</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试类</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Param</span> TO_EAMIL 收件人地址</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> OhMyEmail #from() 发件人姓名</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> OhMyEmail #to() 收件人地址</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> OhMyEmail #text() 发送内容</span></span><br><span class="line"><span class="comment">* <span class="doctag">@see</span> OhMyEmail #send() 发送方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSendText</span><span class="params">()</span> <span class="keyword">throws</span> SendMailException </span>&#123;</span><br><span class="line">    OhMyEmail.subject(<span class="string">"This is a Test Email"</span>)</span><br><span class="line">            .from(<span class="string">"YourName"</span>)</span><br><span class="line">            .to(TO_EMAIL)</span><br><span class="line">            .text(<span class="string">"content"</span>)</span><br><span class="line">            .send();</span><br><span class="line">    Assert.assertTrue(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="邮件模版"><a href="#邮件模版" class="headerlink" title="邮件模版"></a>邮件模版</h2><p>一般来说，很多网页或应用厂商的验证码邮件中都会有很好看的排版，所以我们这里只发送一些文字肯定是不够看的，所以可以使用一些<code>HTML</code>的模版来达到一些更漂亮的效果。</p>
+<p><strong>这里再举个栗子</strong>🌰</p>
+<img src="/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/Email.png" class="" title="Example">
+
+<p>这是怎么做到的呢。。。</p>
+<p><strong>说实话，我没(meì)研究明白</strong></p>
+<p>在Github主页的<a href="https://github.com/biezhi/oh-my-email/blob/master/README.md" target="_blank" rel="noopener">技术文档</a>中有详细的测试类，日后再研究。。。</p>
+<img src="/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/run.jpg" class="" title="战术逃跑">
+
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>GitHub源码： <a href="https://github.com/biezhi/oh-my-email" target="_blank" rel="noopener">oh-my-email</a><br><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+      <div>
+        <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Allwayz
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://allwayz.github.io/2020/02/11/Spring-Boot-摸索之路-3：Authenticate-users-by-E-mail/" target="_blank" rel="noopener" title="Spring Boot 摸索之路-3：Authenticate users by E-mail">allwayz.github.io/2020/02/11/Spring-Boot-摸索之路-3：Authenticate-users-by-E-mail/</a>
+  </li>
+
+
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({
+          title: "",
+          text: '复制文章链接成功',
+          icon: "success",
+          showConfirmButton: true
+          });
+      });
+    });  
+</script>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Boot/" rel="tag"># Spring-Boot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/11/%E6%AD%A6%E6%B1%89%E5%8A%A0%E6%B2%B9%EF%BC%8C%E4%B8%AD%E5%9B%BD%E5%8A%A0%E6%B2%B9/" rel="next" title="武汉加油，中国加油">
+                <i class="fa fa-chevron-left"></i> 武汉加油，中国加油
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -384,8 +583,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -506,6 +714,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#创建基于Maven的Spring-Boot-工程"><span class="nav-number">1.</span> <span class="nav-text">创建基于Maven的Spring Boot 工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pom-xml中导入依赖"><span class="nav-number">2.</span> <span class="nav-text">pom.xml中导入依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在pom-xml中加入以下依赖："><span class="nav-number">2.0.1.</span> <span class="nav-text">在pom.xml中加入以下依赖：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置邮件服务器"><span class="nav-number">3.</span> <span class="nav-text">配置邮件服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编写测试类"><span class="nav-number">4.</span> <span class="nav-text">编写测试类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#邮件发送"><span class="nav-number">4.1.</span> <span class="nav-text">邮件发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#邮件模版"><span class="nav-number">4.2.</span> <span class="nav-text">邮件模版</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
