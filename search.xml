@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版</title>
+    <url>/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/</url>
+    <content><![CDATA[<blockquote>
+<p>  接上篇博客<a href="http://allwayz.github.io/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/" target="_blank" rel="noopener">Authenticate-user-by-Email</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="Maven导入Jetx依赖"><a href="#Maven导入Jetx依赖" class="headerlink" title="Maven导入Jetx依赖"></a>Maven导入Jetx依赖</h1><ul>
+<li><a href="https://github.com/subchen/jetbrick-template-2x/blob/master/README.md" target="_blank" rel="noopener">开发文档</a>中提到，Release 版本已发布到 Maven 中央库： <a href="http://central.maven.org/maven2/com/github/subchen/" target="_blank" rel="noopener">http://central.maven.org/maven2/com/github/subchen/</a></li>
+</ul>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="XML"><figure class="iseeu highlight /xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.subchen<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jetbrick-template<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="类路径下创建后缀为jetx的文件"><a href="#类路径下创建后缀为jetx的文件" class="headerlink" title="类路径下创建后缀为jetx的文件"></a>类路径下创建后缀为<strong>jetx</strong>的文件</h1><p>模版中的代码用<code>HTML5</code>的格式写就行。</p>
+<p><code>Test.jetx</code></p>
+<p><strong>⚠️注意！！！</strong> <code>jetx</code>文件需要把邮件内容放在<code>div</code>标签中，不需要加其他<code>HTML</code>的元素。</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="HTML"><figure class="iseeu highlight /html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span>Dear <span class="tag">&lt;<span class="name">b</span>&gt;</span>$&#123;username&#125;<span class="tag">&lt;/<span class="name">b</span>&gt;</span>, 欢迎加入!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span>这是一封测试邮件<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span>这里测试链接  $&#123;url&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span>这里测试字符串 $&#123;string&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span>-----------------------<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">p</span>&gt;</span>(这是Jetx引擎的模版，请勿回复)<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h1 id="MailUtil类中写方法"><a href="#MailUtil类中写方法" class="headerlink" title="MailUtil类中写方法"></a>MailUtil类中写方法</h1><ul>
+<li><p>配置<strong>JetEngine</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line">JetEngine engine = JetEngine.create();</span><br><span class="line">JetTemplate template = engine.getTemplate(<span class="string">"/templates/JetxTemplates/Test.jetx"</span>);</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>替换变量</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line">Map&lt;String, Object&gt; context = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        context.put(<span class="string">"username"</span>, <span class="string">"User"</span>);</span><br><span class="line">        context.put(<span class="string">"string"</span>, <span class="string">"this is string"</span>);</span><br><span class="line">        context.put(<span class="string">"url"</span>, <span class="string">"&lt;a href='http://www.baidu.com&lt;'&gt;http://www.baidu.com&lt;/a&gt;"</span>);</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>调用<code>OhMyEmail</code>中的<code>Send()</code>发送邮件</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line">OhMyEmail.subject(<span class="string">"这是一封测试Jetx模版的邮件"</span>)</span><br><span class="line">                .from(<span class="string">"Allwayz"</span>)</span><br><span class="line">                .to(TO_EMAIL)</span><br><span class="line">                .html(output)</span><br><span class="line">                .send();</span><br><span class="line">        Assert.assertTrue(<span class="keyword">true</span>);</span><br><span class="line">        System.out.println(<span class="string">"Send..."</span>);</span><br></pre></td></tr></table></figure></div>
+
+
+</li>
+</ul>
+<h2 id="完整的发送类"><a href="#完整的发送类" class="headerlink" title="完整的发送类"></a>完整的发送类</h2><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> string</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> email</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> user</span></span><br><span class="line"><span class="comment">* <span class="doctag">@throws</span> SendMailException</span></span><br><span class="line"><span class="comment">*/</span>    </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sendTestEmail</span><span class="params">(String email, String string, String user)</span> </span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> SendMailException </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        JetEngine engine = JetEngine.create();</span><br><span class="line">        JetTemplate template = engine.getTemplate(<span class="string">"/templates/JetxTemplates/test.jetx"</span>);</span><br><span class="line"></span><br><span class="line">        Map&lt;String, Object&gt; context = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        context.put(<span class="string">"username"</span>, user);</span><br><span class="line">        context.put(<span class="string">"string"</span>, string);</span><br><span class="line">        context.put(<span class="string">"url"</span>, <span class="string">"&lt;a href='http://www.baidu.com&lt;'&gt;http://www.baidu.com&lt;/a&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        StringWriter writer = <span class="keyword">new</span> StringWriter();</span><br><span class="line">        template.render(context, writer);</span><br><span class="line">        String output = writer.toString();</span><br><span class="line">        System.out.println(output);</span><br><span class="line"></span><br><span class="line">        OhMyEmail.subject(<span class="string">"Welcome to FreeSeed"</span>)</span><br><span class="line">                .from(<span class="string">"Allwayz"</span>)</span><br><span class="line">                .to(email)</span><br><span class="line">                .html(output)</span><br><span class="line">                .send();</span><br><span class="line">        Assert.assertTrue(<span class="keyword">true</span>);</span><br><span class="line">        System.out.println(<span class="string">"Send Success..."</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<p>​    </p>
+<h1 id="测试类"><a href="#测试类" class="headerlink" title="测试类"></a>测试类</h1><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testEmail</span><span class="params">()</span> <span class="keyword">throws</span> SendMailException</span>&#123;</span><br><span class="line">       String email = <span class="string">"xxxxxxxx@gamil.com"</span>;</span><br><span class="line">       String username = <span class="string">"User"</span>;</span><br><span class="line">       String string = <span class="string">"this is a String"</span></span><br><span class="line">       MailUtil.sendTestEmail(email,string,username);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>JetBrick-Template-2x <a href="http://subchen.github.io/jetbrick-template/2x/overview.html" target="_blank" rel="noopener">Documentation</a></p>
+<p>JetBrick-Template Github<a href="https://github.com/subchen/jetbrick-template-2x" target="_blank" rel="noopener">源码</a></p>
+<p><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+]]></content>
+      <tags>
+        <tag>Spring-Boot</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring Boot 摸索之路-3：Authenticate users by E-mail</title>
     <url>/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/</url>
     <content><![CDATA[<blockquote>
@@ -49,6 +111,7 @@
 <p>在Github主页的<a href="https://github.com/biezhi/oh-my-email/blob/master/README.md" target="_blank" rel="noopener">技术文档</a>中有详细的测试类，日后再研究。。。</p>
 <img src="/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/run.jpg" class="" title="战术逃跑">
 
+<p>终于把模版整明白了，<a href="allwayz.github.io/2020/02/12/Spring-Boot-摸索之路-4：Jetx生成邮件模版/">点此链接</a></p>
 <hr>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>GitHub源码： <a href="https://github.com/biezhi/oh-my-email" target="_blank" rel="noopener">oh-my-email</a><br><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
 ]]></content>
