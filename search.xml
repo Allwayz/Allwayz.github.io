@@ -1,6 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper</title>
+    <url>/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/</url>
+    <content><![CDATA[<blockquote>
+<p>  MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="构造器关系"><a href="#构造器关系" class="headerlink" title="构造器关系"></a>构造器关系</h1><img src="/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/Wrapper.png" class="" title="Wrapper">
+
+<ul>
+<li>蓝色线连起来的是Wrapper的类，其他都是继承</li>
+<li>最下边四个是正常类，可以new对象</li>
+<li>加了Abstract的是抽象类</li>
+<li>蓝色实线是继承关系</li>
+</ul>
+<h2 id="wapper介绍-："><a href="#wapper介绍-：" class="headerlink" title="wapper介绍 ："></a>wapper介绍 ：</h2><ul>
+<li><code>Wrapper</code> ： 条件构造抽象类，最顶端父类，抽象类中提供4个方法西面贴源码展示</li>
+<li><code>AbstractWrapper</code> ： 用于查询条件封装，生成 <strong>sql</strong> 的 <strong>where</strong> 条件</li>
+<li><code>AbstractLambdaWrapper</code> ： <strong>Lambda</strong> 语法使用 <strong>Wrapper</strong>统一处理解析 <strong>lambda</strong> 获取 <strong>column</strong>。</li>
+<li><code>LambdaQueryWrapper</code> ：看名称也能明白就是用于<strong>Lambda</strong>语法使用的查询<strong>Wrapper</strong></li>
+<li><code>LambdaUpdateWrapper</code> ： <strong>Lambda</strong> 更新封装<strong>Wrapper</strong></li>
+<li><code>QueryWrapper</code> ： <strong>Entity</strong> 对象封装操作类，不是用<strong>lambda</strong>语法</li>
+<li><code>UpdateWrapper</code> ： <strong>Update</strong> 条件封装，用于<strong>Entity</strong>对象更新操作</li>
+</ul>
+<h1 id="构造器方法"><a href="#构造器方法" class="headerlink" title="构造器方法"></a>构造器方法</h1><table>
+<thead>
+<tr>
+<th>FunctionName</th>
+<th>Desc</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eq( );</td>
+<td>等于      =</td>
+<td>eq(“name”,”Allwayz”) -&gt; name = ‘Allwayz’</td>
+</tr>
+<tr>
+<td>ne( );</td>
+<td>不等于   !=</td>
+<td>ne(“name”,”Allwayz”) -&gt; name&lt;&gt;’Allwayz’</td>
+</tr>
+<tr>
+<td>gt( );</td>
+<td>大于      &gt;</td>
+<td>gt(“age”,18) -&gt; age &gt; 18</td>
+</tr>
+<tr>
+<td>ge( );</td>
+<td>大于等于 &gt;=</td>
+<td>ge(“age”,18) -&gt; age &gt;= 18</td>
+</tr>
+<tr>
+<td>lt( );</td>
+<td>小于    &lt;</td>
+<td>lt(“age”,18) -&gt; age &lt; 18</td>
+</tr>
+<tr>
+<td>le( );</td>
+<td>小于等于 &lt;=</td>
+<td>le(“age”,18) -&gt; age &lt;= 18</td>
+</tr>
+<tr>
+<td>between( );</td>
+<td>BETWEEN</td>
+<td>between(“age”,18,30) -&gt; age between 18 and 30</td>
+</tr>
+<tr>
+<td>notBetween( );</td>
+<td>NOT BETWEEN</td>
+<td>notBetween(“age”,18,30) -&gt; age not between 18 and 30</td>
+</tr>
+<tr>
+<td>like( );</td>
+<td>LIKE ‘%value%’</td>
+<td>like(“name”,”All”) -&gt; name like ‘%All%’</td>
+</tr>
+<tr>
+<td>notLike( );</td>
+<td>NOT LIKE ‘%value%’</td>
+<td>notLike(“name”,”All”) -&gt; name not like ‘%All%’</td>
+</tr>
+<tr>
+<td>likeLeft( );</td>
+<td>LIKE ‘%value’</td>
+<td>likeLeft(“name”,”All”) -&gt; name like ‘%All’</td>
+</tr>
+<tr>
+<td>likeRight( );</td>
+<td>LIKE ‘value%’</td>
+<td>likeRight(“name”,”All”) -&gt; name like ‘All%’</td>
+</tr>
+<tr>
+<td>isNull( );</td>
+<td>Value IS NULL</td>
+<td>isNull(“name”) -&gt;name is null</td>
+</tr>
+<tr>
+<td>isNotNull( );</td>
+<td>Value IS NOT NULL</td>
+<td>isNotNull(“name”) -&gt;name is not null</td>
+</tr>
+<tr>
+<td>in( );</td>
+<td>Value IN(v0,v1…)</td>
+<td>in(“age”,{1,2,3}) -&gt; age in (1,2,3)</td>
+</tr>
+<tr>
+<td>notIn( );</td>
+<td>Value NOT IN(v0,v1…)</td>
+<td>notIn(“age”,{1,2,3}) -&gt; age not in (1,2,3)</td>
+</tr>
+<tr>
+<td>inSql( );</td>
+<td>Value IN(sql)</td>
+<td>inSql(“id”,”Select id from table where id &lt; 3”) -&gt; id in (Select id from table where id &lt; 3)</td>
+</tr>
+<tr>
+<td>notInSql( );</td>
+<td>Value NOT IN(sql)</td>
+<td>notInSql(“id”,”Select id from table where id &lt; 3”) -&gt; id not in (Select id from table where id &lt; 3)</td>
+</tr>
+<tr>
+<td>groupBy( );</td>
+<td>分组</td>
+<td>groupBy(“id”,”name”) -&gt; group by id, name</td>
+</tr>
+<tr>
+<td>orderByAsc( );</td>
+<td>升序排列</td>
+<td>orderByAsc(“id”,”name”) -&gt; order by id ASC, name ASC</td>
+</tr>
+<tr>
+<td>orderByDesc( );</td>
+<td>降序排列</td>
+<td>orderByDesc(“id”,”name”) -&gt; order by id DESC, nameDESC</td>
+</tr>
+<tr>
+<td>orderBy( );</td>
+<td>排列</td>
+<td>orderBy(true, true,”id”,”name”) -&gt; order by id ASC, name ASC</td>
+</tr>
+<tr>
+<td>having( );</td>
+<td>HAVING(sql)</td>
+<td>having(“sum(age) &gt; {0}”,11) -&gt; having sum (age) &gt;11</td>
+</tr>
+<tr>
+<td>or( );</td>
+<td>拼接 OR</td>
+<td></td>
+</tr>
+<tr>
+<td>and( );</td>
+<td>AND 嵌套</td>
+<td></td>
+</tr>
+<tr>
+<td>apply( );</td>
+<td>拼接 sql</td>
+<td></td>
+</tr>
+<tr>
+<td>last( )</td>
+<td>无视优化规则直接拼接到sql最后</td>
+<td></td>
+</tr>
+<tr>
+<td>exists( );</td>
+<td>拼接 EXISTS（sql）</td>
+<td></td>
+</tr>
+<tr>
+<td>notExists( );</td>
+<td>拼接 NOT EXIXSTS （sql）</td>
+<td></td>
+</tr>
+<tr>
+<td>nested( );</td>
+<td>正常嵌套 不带AND OR</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="使用过程"><a href="#使用过程" class="headerlink" title="使用过程"></a>使用过程</h1><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Fuzzy query</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMajor</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;Major&gt; majorList = majorMapper</span><br><span class="line">        .selectList(<span class="keyword">new</span> QueryWrapper&lt;Major&gt;().like(<span class="string">"major_code"</span>,<span class="string">"MC_506"</span>));</span><br><span class="line">    majorList.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>控制台</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@<span class="number">2005675644</span> wrapping com<span class="variable">.mysql</span><span class="variable">.cj</span><span class="variable">.jdbc</span><span class="variable">.ConnectionImpl</span>@b70fa38] will <span class="keyword">not</span> be managed by Spring</span><br><span class="line">==&gt;  Preparing: SELECT major_id,major_code,major_name,major_status,create_time,update_time,is_delete FROM major WHERE is_delete=<span class="number">0</span> AND (major_code LIKE ?) </span><br><span class="line">==&gt; Parameters: %MC_506%(String)</span><br><span class="line">&lt;==    Columns: major_id, major_code, major_name, major_status, create_time, update_time, is_delete</span><br><span class="line">&lt;==        Row: <span class="number">1</span>, MC_50601, History of Architecture, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">8</span>, MC_50602, International System in the <span class="number">20</span>th Century, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">9</span>, MC_50603, Ancient Greece:Myth,Art,War, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">0</span></span><br><span class="line">&lt;==      Total: <span class="number">3</span></span><br><span class="line">Closing non transactional SqlSession [org<span class="variable">.apache</span><span class="variable">.ibatis</span><span class="variable">.session</span><span class="variable">.defaults</span><span class="variable">.DefaultSqlSession</span>@<span class="number">38</span>c460e8]</span><br><span class="line">Major(majorId=<span class="number">1</span>, majorCode=MC_50601, majorName=History of Architecture, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">8</span>, majorCode=MC_50602, majorName=International System in the <span class="number">20</span>th Century, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">9</span>, majorCode=MC_50603, majorName=Ancient Greece:Myth,Art,War, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, isDelete=<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
+
+]]></content>
+      <tags>
+        <tag>Spring-Boot</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版</title>
     <url>/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/</url>
     <content><![CDATA[<blockquote>
