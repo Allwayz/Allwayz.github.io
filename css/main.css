@@ -1829,7 +1829,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #fff4fc;
+  background: #b977ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2668,9 +2668,10 @@ embed {
   display: inline-block;
 }
 body {
-  background-image: url("/images/background.png");
+  background-image: url("https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/background.png");
   background-attachment: fixed;
   background-repeat: no-repeat;
+  background-size: cover;
 }
 .bg_content {
   position: fixed;
