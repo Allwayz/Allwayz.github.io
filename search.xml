@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Spring-Boot-摸索之路-6：Spring-Boot 集成JSP</title>
+    <url>/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot-%E9%9B%86%E6%88%90JSP/</url>
+    <content><![CDATA[<blockquote>
+<p>  我知道Spring Boot 不适合JSP这种引擎，但是学校有项目要求使用JSP来完成</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="在Maven工程中导入以下依赖"><a href="#在Maven工程中导入以下依赖" class="headerlink" title="在Maven工程中导入以下依赖"></a>在Maven工程中导入以下依赖</h2><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="XML"><figure class="iseeu highlight /xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JSTL for JSP --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Need this to compile JSP --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.embed<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat-embed-jasper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="在工程中建立图片中的路径"><a href="#在工程中建立图片中的路径" class="headerlink" title="在工程中建立图片中的路径"></a>在工程中建立图片中的路径</h2><p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot%20%E9%9B%86%E6%88%90JSP/JSP.png" alt="JSP"></p>
+<h2 id="配置文件中加入以下配置"><a href="#配置文件中加入以下配置" class="headerlink" title="配置文件中加入以下配置"></a>配置文件中加入以下配置</h2><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="YML"><figure class="iseeu highlight /yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">view:</span></span><br><span class="line">      <span class="comment">#配置jsp文件</span></span><br><span class="line">      <span class="attr">prefix:</span> <span class="string">/WEB-INF/jsp/</span></span><br><span class="line">      <span class="attr">suffix:</span> <span class="string">.jsp</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="写一个JSP页面来测试一下吧！"><a href="#写一个JSP页面来测试一下吧！" class="headerlink" title="写一个JSP页面来测试一下吧！"></a>写一个JSP页面来测试一下吧！</h2><h3 id="hello-jsp"><a href="#hello-jsp" class="headerlink" title="hello.jsp"></a>hello.jsp</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;%--</span><br><span class="line">  Created by IntelliJ IDEA.</span><br><span class="line">  User: allwayz</span><br><span class="line">  Date: <span class="number">2020</span>/<span class="number">2</span>/<span class="number">18</span></span><br><span class="line">  Time: <span class="number">01</span>:<span class="number">03</span></span><br><span class="line">  To change <span class="keyword">this</span> template use File | Settings | File Templates.</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;Hello&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;h1&gt;</span><br><span class="line">        Hello World!</span><br><span class="line">    &lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/hello"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<hr>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+]]></content>
+      <tags>
+        <tag>Spring-Boot</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper</title>
     <url>/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/</url>
     <content><![CDATA[<blockquote>
