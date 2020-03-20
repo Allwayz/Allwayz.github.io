@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Spring-Boot," />
+  <meta name="keywords" content="前后端分离," />
 
 
 
@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="案例是动态生成下拉菜单，使用Ajax从Controller请求JSON对象">
+<meta name="description" content="jsp、servlet➕SpringBoot这样的前后端耦合在一起的开发实在太难熬了！ 如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;18&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-7%EF%BC%9ASpring-Boot%E4%B8%AD%E4%BD%BF%E7%94%A8JSP%E3%80%81Ajax&#x2F;index.html">
+<meta property="og:title" content="探索前后端分离-0：RESTful API">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;20&#x2F;%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0%EF%BC%9ARESTful-API&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="案例是动态生成下拉菜单，使用Ajax从Controller请求JSON对象">
+<meta property="og:description" content="jsp、servlet➕SpringBoot这样的前后端耦合在一起的开发实在太难熬了！ 如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-02-17T17:15:14.000Z">
-<meta property="article:modified_time" content="2020-02-18T14:33:48.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0&#x2F;MacPro2019.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0&#x2F;%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png">
+<meta property="article:published_time" content="2020-03-20T09:47:08.000Z">
+<meta property="article:modified_time" content="2020-03-20T12:10:08.000Z">
 <meta property="article:author" content="Allwayz">
-<meta property="article:tag" content="Spring-Boot">
+<meta property="article:tag" content="前后端分离">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0&#x2F;MacPro2019.png">
 
 
 
@@ -120,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/18/Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/20/探索前后端分离-0：RESTful-API/"/>
 
 
 
 
 
-  <title>Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax | Allwayz aint a coder</title>
+  <title>探索前后端分离-0：RESTful API | Allwayz aint a coder</title>
   
 
 
@@ -338,7 +341,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-7%EF%BC%9ASpring-Boot%E4%B8%AD%E4%BD%BF%E7%94%A8JSP%E3%80%81Ajax/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0%EF%BC%9ARESTful-API/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Allwayz">
@@ -355,7 +358,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax</h1>
+          <h1 class="post-title" itemprop="name headline">探索前后端分离-0：RESTful API</h1>
         
 
         <div class="post-meta">
@@ -367,8 +370,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-18T01:15:14+08:00">
-                2020-02-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T17:47:08+08:00">
+                2020-03-20
               </time>
             
 
@@ -406,41 +409,37 @@
 
       
         <blockquote>
-<p>案例是动态生成下拉菜单，使用Ajax从Controller请求JSON对象</p>
+<p><code>jsp</code>、<code>servlet</code>➕<code>SpringBoot</code>这样的前后端耦合在一起的开发实在太难熬了！</p>
+<p>如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。<br>于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。</p>
 </blockquote>
 <a id="more"></a>
 
-
-
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p><strong>具体环境看上一篇<a href="[https://allwayz.github.io/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot-%E9%9B%86%E6%88%90JSP/](https://allwayz.github.io/2020/02/18/Spring-Boot-摸索之路-6：Spring-Boot-集成JSP/)">博客</a></strong></p>
-<ul>
-<li><p>数据库准备</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="SQL"><figure class="iseeu highlight /sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="comment">-- Table structure for user</span></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`user`</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</span><br><span class="line">  <span class="string">`user_id`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`user_password`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`user_email`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`create_time`</span> <span class="built_in">timestamp</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>,</span><br><span class="line">  <span class="string">`update_time`</span> <span class="built_in">timestamp</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>,</span><br><span class="line">  <span class="string">`is_delete`</span> <span class="built_in">tinyint</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span>,</span><br><span class="line">  <span class="string">`role_id`</span> <span class="built_in">int</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`user_dtl_id`</span> <span class="built_in">int</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`user_id`</span>) <span class="keyword">USING</span> BTREE,</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`role_id`</span> (<span class="string">`role_id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`user_dtl_id`</span> (<span class="string">`user_dtl_id`</span>),</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> <span class="string">`role_id`</span> <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (<span class="string">`role_id`</span>) <span class="keyword">REFERENCES</span> <span class="string">`role`</span> (<span class="string">`role_id`</span>),</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> <span class="string">`user_dtl_id`</span> <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (<span class="string">`user_dtl_id`</span>) <span class="keyword">REFERENCES</span> <span class="string">`user_dtl`</span> (<span class="string">`user_dtl_id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">7</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_0900_ai_ci;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="comment">-- Records of user</span></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`user`</span> <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">'666666'</span>, <span class="string">'xxxxxxxx@126.com'</span>, <span class="string">'2020-02-13 11:50:32'</span>, <span class="string">'2020-02-13 11:50:32'</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`user`</span> <span class="keyword">VALUES</span> (<span class="number">2</span>, <span class="string">'123456'</span>, <span class="string">'xxxxxxx@126.com'</span>, <span class="string">'2020-02-13 12:11:01'</span>, <span class="string">'2020-02-13 12:11:01'</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`user`</span> <span class="keyword">VALUES</span> (<span class="number">3</span>, <span class="string">'123456'</span>, <span class="string">'xxxxxx@qq.com'</span>, <span class="string">'2020-02-13 12:14:10'</span>, <span class="string">'2020-02-13 12:14:10'</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`user`</span> <span class="keyword">VALUES</span> (<span class="number">4</span>, <span class="string">'123456'</span>, <span class="string">'xxxxxx@qq.com'</span>, <span class="string">'2020-02-13 12:13:45'</span>, <span class="string">'2020-02-13 12:13:45'</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`user`</span> <span class="keyword">VALUES</span> (<span class="number">5</span>, <span class="string">'123456'</span>, <span class="string">'xxxxxx@126.com'</span>, <span class="string">'2020-02-13 12:14:34'</span>, <span class="string">'2020-02-13 12:14:34'</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`user`</span> <span class="keyword">VALUES</span> (<span class="number">6</span>, <span class="string">'123456'</span>, <span class="string">'xxxxxx@qq.com'</span>, <span class="string">'2020-02-16 04:37:28'</span>, <span class="string">'2020-02-16 04:37:28'</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure></div>
-
-
-
-</li>
-</ul>
-<h2 id="创建一个JSP文件"><a href="#创建一个JSP文件" class="headerlink" title="创建一个JSP文件"></a>创建一个JSP文件</h2><p><strong>Test.jsp</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--</span><br><span class="line">  Created by IntelliJ IDEA.</span><br><span class="line">  User: allwayz</span><br><span class="line">  Date: <span class="number">2020</span>/<span class="number">2</span>/<span class="number">18</span></span><br><span class="line">  Time: <span class="number">01</span>:<span class="number">03</span></span><br><span class="line">  To change <span class="keyword">this</span> template use File | Settings | File Templates.</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;Test&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;%--下拉菜单--%&gt;</span><br><span class="line">    &lt;select id=<span class="string">"user"</span> &gt;</span><br><span class="line">        &lt;option&gt;</span><br><span class="line">            user</span><br><span class="line">        &lt;/option&gt;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="创建Controller"><a href="#创建Controller" class="headerlink" title="创建Controller"></a>创建Controller</h2><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;</span><br><span class="line">    <span class="comment">//自动注入</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserMapper userMapper;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/Test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"test"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/showUser"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">showUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;User&gt; userList = userMapper.selectList(<span class="keyword">new</span> QueryWrapper&lt;User&gt;());</span><br><span class="line">        <span class="keyword">return</span> userList;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-
-
-<h2 id="引入Jquery包"><a href="#引入Jquery包" class="headerlink" title="引入Jquery包"></a>引入Jquery包</h2><p><a href="http://code.jquery.com/jquery-2.x-git.js" target="_blank" rel="noopener">jquery库</a></p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JS"><figure class="iseeu highlight /js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"js/jquery-3.4.1.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure></div>
-
-
-
-<h2 id="Ajax发送请求"><a href="#Ajax发送请求" class="headerlink" title="Ajax发送请求"></a>Ajax发送请求</h2><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVASCRIPT"><figure class="iseeu highlight /javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">        $(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            $.ajax(&#123;</span><br><span class="line">                type:<span class="string">"GET"</span>,</span><br><span class="line">                url:<span class="string">"showUser"</span>,</span><br><span class="line">                dataType: <span class="string">"json"</span>,</span><br><span class="line">                success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">                    <span class="keyword">var</span> str =<span class="string">"&lt;div&gt;&lt;select&gt;"</span></span><br><span class="line">                    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;data.length;i++)&#123;</span><br><span class="line">                        str +=<span class="string">"&lt;option value='"</span>+data[i].user_email+<span class="string">"'&gt;"</span>+data[i].user_email+<span class="string">"&lt;/option&gt;"</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    str +=<span class="string">"&lt;/select&gt;&lt;/div&gt;"</span></span><br><span class="line">                    $(<span class="string">"#user"</span>).html(str)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure></div>
-
-
-
-<h3 id="运行程序就可以看到下拉菜单被自动加载了"><a href="#运行程序就可以看到下拉菜单被自动加载了" class="headerlink" title="运行程序就可以看到下拉菜单被自动加载了"></a>运行程序就可以看到下拉菜单被自动加载了</h3><hr>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+<p><a href="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png" target="_blank" rel="noopener"><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png" alt="壁纸"></a></p>
+<p><em>前后端分离主要不是使用什么样的技术，而是为什么要前后端分离。</em></p>
+<p>[TOC]</p>
+<h2 id="基于JSP的Java-web"><a href="#基于JSP的Java-web" class="headerlink" title="基于JSP的Java web"></a>基于JSP的Java web</h2><p><code>JSP</code>(<strong>J</strong>ava <strong>S</strong>erver <strong>P</strong>ages)，是一种服务端的网页模版技术，支持JSTL标准标签库，在传统HTML页面中插入可以在页面中执行的Java代码段。<code>JSP</code>是互联网开发中比较老的技术，以现在的技术来审视JSP不难发现JSP是一个高耦合性的东西。</p>
+<h3 id="JSP技术"><a href="#JSP技术" class="headerlink" title="JSP技术"></a>JSP技术</h3><p><em>什么叫服务端的网页模版技术呢？常见的网页是由<strong>样式</strong>➕<strong>数据</strong>构成的，当我们把数据全部去掉，就剩一个网页的架子，即网页模版。</em></p>
+<h3 id="JSP网页是如何开发的？"><a href="#JSP网页是如何开发的？" class="headerlink" title="JSP网页是如何开发的？"></a>JSP网页是如何开发的？</h3><p>前端工程师写好<code>HTML</code>，<code>CSS</code>，<code>js</code>动态效果等</p>
+<p>后端工程师写好后端逻辑，<code>Servlet</code>，数据库操作等等</p>
+<p><em>这个时候前后端如何联系呢？</em></p>
+<p>前端工程师把写好了的<code>HTML</code>页面交个后端工程师，这个时候页面是写死的，后端工程师需要把<code>HTML</code>换成<code>JSP</code>，然后写一些<code>JSP</code>标签或者<code>Java</code>代码把需要动态显示的数据添加到JSP页面中去。</p>
+<p>这时候前后端就有很强的依赖。需要后端工程师懂一些HTML，css之类的语法，也需要前端工程师懂的一些Java的语法。</p>
+<h2 id="前后端分离的Java-web"><a href="#前后端分离的Java-web" class="headerlink" title="前后端分离的Java web"></a>前后端分离的Java web</h2><p>前后端之间通过<strong>约定接口</strong>，<strong>数据样式</strong>，<strong>参数格式</strong>来进行开发。</p>
+<p>前后端可以并行开发，前后端单独部署。前端只从后端那数据，页面渲染工作只交给前端服务器进行。静态资源也不再由后端完成。后端只需要提供数据接口，接收到请求之后跟数据沟通就可以了。</p>
+<h2 id="为什么要进行前后端分离呢？"><a href="#为什么要进行前后端分离呢？" class="headerlink" title="为什么要进行前后端分离呢？"></a>为什么要进行前后端分离呢？</h2><p>在以前<code>JSP</code>模版开发的时候，前后端耦合在一起做，套模版的操作比比皆是。</p>
+<p>原因是这样的：这里引用<a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a>的话来说：前端开发没有像后端这样工程化，模块化和可复用化的开发思维。 </p>
+<p>所以前后端分离的原因是前后端的工作分来开做。把前端工程师的工作从后端工程师身上拿掉，也让前端工程师不再参与后端工程师的活儿。让前端工程是也需要工程化项目化的思维来做。这样看来，前后端分离不是一个技术问题，而是一个工程化考量和项目管理的问题。</p>
+<h2 id="技术上问题怎么解决呢"><a href="#技术上问题怎么解决呢" class="headerlink" title="技术上问题怎么解决呢"></a>技术上问题怎么解决呢</h2><p>前端慢慢出现了<strong>vue.js</strong>, <strong>react.js</strong>等等的前端组件化开发框架。随着node的出现，前端开发也借助node来开发各种各样的工具，比如npm包管理器，预编译工具等等。</p>
+<p><a href="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png" target="_blank" rel="noopener"><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png" alt="前后端"></a></p>
+<h2 id="前后端分离的实施"><a href="#前后端分离的实施" class="headerlink" title="前后端分离的实施"></a>前后端分离的实施</h2><p>一个标准的软件开发生命周期为例，分为需求分析，系统分析与设计，系统实现，测试和维护。</p>
+<p>真正的前后端分离应该渗透到以上的每一个步骤。</p>
+<p>需求分析之后，前后端根据需求来约定接口，之后就可以各干各的了。</p>
+<p>前端负责开发UI页面，所有的数据也可以通过Mock服务器来模拟，并不需要实时的后端接口。</p>
+<p>后端负责考量系统的设计，比如系统架构中的数据库，中间件，缓存，分布式架构等。主要考虑性能、容量、可扩展性、可维护性等等。然后实现接口来为前端提供数据即可。</p>
+<p>前后端项目独立部署，不需要迁就某一方面。</p>
+<p><strong>以上就是我认识的前后端分离，能力有限，一点浅见拙识</strong> </p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a></p>
+<p><a href="https://allwayz.github.io" target="_blank" rel="noopener">Allwayz</a></p>
 
       
     </div>
@@ -464,7 +463,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://allwayz.github.io/2020/02/18/Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax/" target="_blank" rel="noopener" title="Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax">allwayz.github.io/2020/02/18/Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax/</a>
+    <a href="http://allwayz.github.io/2020/03/20/探索前后端分离-0：RESTful-API/" target="_blank" rel="noopener" title="探索前后端分离-0：RESTful API">allwayz.github.io/2020/03/20/探索前后端分离-0：RESTful-API/</a>
   </li>
 
 
@@ -493,7 +492,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Spring-Boot/" rel="tag"># Spring-Boot</a>
+            <a href="/tags/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB/" rel="tag"># 前后端分离</a>
           
         </div>
       
@@ -506,8 +505,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot-%E9%9B%86%E6%88%90JSP/" rel="next" title="Spring-Boot-摸索之路-6：Spring-Boot 集成JSP">
-                <i class="fa fa-chevron-left"></i> Spring-Boot-摸索之路-6：Spring-Boot 集成JSP
+              <a href="/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-7%EF%BC%9ASpring-Boot%E4%B8%AD%E4%BD%BF%E7%94%A8JSP%E3%80%81Ajax/" rel="next" title="Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax">
+                <i class="fa fa-chevron-left"></i> Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax
               </a>
             
           </div>
@@ -516,8 +515,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0%EF%BC%9ARESTful-API/" rel="prev" title="探索前后端分离-0：RESTful API">
-                探索前后端分离-0：RESTful API <i class="fa fa-chevron-right"></i>
+              <a href="/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-1%EF%BC%9ARESTful-Login%E8%AF%A5%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0/" rel="prev" title="探索前后端分离-1：RESTful Login该如何实现（未完成）">
+                探索前后端分离-1：RESTful Login该如何实现（未完成） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -711,7 +710,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境准备"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个JSP文件"><span class="nav-number">2.</span> <span class="nav-text">创建一个JSP文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Controller"><span class="nav-number">3.</span> <span class="nav-text">创建Controller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入Jquery包"><span class="nav-number">4.</span> <span class="nav-text">引入Jquery包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ajax发送请求"><span class="nav-number">5.</span> <span class="nav-text">Ajax发送请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行程序就可以看到下拉菜单被自动加载了"><span class="nav-number">5.1.</span> <span class="nav-text">运行程序就可以看到下拉菜单被自动加载了</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于JSP的Java-web"><span class="nav-number">1.</span> <span class="nav-text">基于JSP的Java web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP技术"><span class="nav-number">1.1.</span> <span class="nav-text">JSP技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP网页是如何开发的？"><span class="nav-number">1.2.</span> <span class="nav-text">JSP网页是如何开发的？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前后端分离的Java-web"><span class="nav-number">2.</span> <span class="nav-text">前后端分离的Java web</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要进行前后端分离呢？"><span class="nav-number">3.</span> <span class="nav-text">为什么要进行前后端分离呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术上问题怎么解决呢"><span class="nav-number">4.</span> <span class="nav-text">技术上问题怎么解决呢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前后端分离的实施"><span class="nav-number">5.</span> <span class="nav-text">前后端分离的实施</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number"></span> <span class="nav-text">Reference</span></a></div>
             
 
           </div>

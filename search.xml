@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>探索前后端分离-1：RESTful Login该如何实现（未完成）</title>
+    <url>/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-1%EF%BC%9ARESTful-Login%E8%AF%A5%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>前后端分离</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>探索前后端分离-0：RESTful API</title>
+    <url>/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0%EF%BC%9ARESTful-API/</url>
+    <content><![CDATA[<blockquote>
+<p><code>jsp</code>、<code>servlet</code>➕<code>SpringBoot</code>这样的前后端耦合在一起的开发实在太难熬了！</p>
+<p>如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。<br>于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。</p>
+</blockquote>
+<a id="more"></a>
+
+<p><a href="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png" target="_blank" rel="noopener"><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png" alt="壁纸"></a></p>
+<p><em>前后端分离主要不是使用什么样的技术，而是为什么要前后端分离。</em></p>
+<p>[TOC]</p>
+<h2 id="基于JSP的Java-web"><a href="#基于JSP的Java-web" class="headerlink" title="基于JSP的Java web"></a>基于JSP的Java web</h2><p><code>JSP</code>(<strong>J</strong>ava <strong>S</strong>erver <strong>P</strong>ages)，是一种服务端的网页模版技术，支持JSTL标准标签库，在传统HTML页面中插入可以在页面中执行的Java代码段。<code>JSP</code>是互联网开发中比较老的技术，以现在的技术来审视JSP不难发现JSP是一个高耦合性的东西。</p>
+<h3 id="JSP技术"><a href="#JSP技术" class="headerlink" title="JSP技术"></a>JSP技术</h3><p><em>什么叫服务端的网页模版技术呢？常见的网页是由<strong>样式</strong>➕<strong>数据</strong>构成的，当我们把数据全部去掉，就剩一个网页的架子，即网页模版。</em></p>
+<h3 id="JSP网页是如何开发的？"><a href="#JSP网页是如何开发的？" class="headerlink" title="JSP网页是如何开发的？"></a>JSP网页是如何开发的？</h3><p>前端工程师写好<code>HTML</code>，<code>CSS</code>，<code>js</code>动态效果等</p>
+<p>后端工程师写好后端逻辑，<code>Servlet</code>，数据库操作等等</p>
+<p><em>这个时候前后端如何联系呢？</em></p>
+<p>前端工程师把写好了的<code>HTML</code>页面交个后端工程师，这个时候页面是写死的，后端工程师需要把<code>HTML</code>换成<code>JSP</code>，然后写一些<code>JSP</code>标签或者<code>Java</code>代码把需要动态显示的数据添加到JSP页面中去。</p>
+<p>这时候前后端就有很强的依赖。需要后端工程师懂一些HTML，css之类的语法，也需要前端工程师懂的一些Java的语法。</p>
+<h2 id="前后端分离的Java-web"><a href="#前后端分离的Java-web" class="headerlink" title="前后端分离的Java web"></a>前后端分离的Java web</h2><p>前后端之间通过<strong>约定接口</strong>，<strong>数据样式</strong>，<strong>参数格式</strong>来进行开发。</p>
+<p>前后端可以并行开发，前后端单独部署。前端只从后端那数据，页面渲染工作只交给前端服务器进行。静态资源也不再由后端完成。后端只需要提供数据接口，接收到请求之后跟数据沟通就可以了。</p>
+<h2 id="为什么要进行前后端分离呢？"><a href="#为什么要进行前后端分离呢？" class="headerlink" title="为什么要进行前后端分离呢？"></a>为什么要进行前后端分离呢？</h2><p>在以前<code>JSP</code>模版开发的时候，前后端耦合在一起做，套模版的操作比比皆是。</p>
+<p>原因是这样的：这里引用<a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a>的话来说：前端开发没有像后端这样工程化，模块化和可复用化的开发思维。 </p>
+<p>所以前后端分离的原因是前后端的工作分来开做。把前端工程师的工作从后端工程师身上拿掉，也让前端工程师不再参与后端工程师的活儿。让前端工程是也需要工程化项目化的思维来做。这样看来，前后端分离不是一个技术问题，而是一个工程化考量和项目管理的问题。</p>
+<h2 id="技术上问题怎么解决呢"><a href="#技术上问题怎么解决呢" class="headerlink" title="技术上问题怎么解决呢"></a>技术上问题怎么解决呢</h2><p>前端慢慢出现了<strong>vue.js</strong>, <strong>react.js</strong>等等的前端组件化开发框架。随着node的出现，前端开发也借助node来开发各种各样的工具，比如npm包管理器，预编译工具等等。</p>
+<p><a href="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png" target="_blank" rel="noopener"><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png" alt="前后端"></a></p>
+<h2 id="前后端分离的实施"><a href="#前后端分离的实施" class="headerlink" title="前后端分离的实施"></a>前后端分离的实施</h2><p>一个标准的软件开发生命周期为例，分为需求分析，系统分析与设计，系统实现，测试和维护。</p>
+<p>真正的前后端分离应该渗透到以上的每一个步骤。</p>
+<p>需求分析之后，前后端根据需求来约定接口，之后就可以各干各的了。</p>
+<p>前端负责开发UI页面，所有的数据也可以通过Mock服务器来模拟，并不需要实时的后端接口。</p>
+<p>后端负责考量系统的设计，比如系统架构中的数据库，中间件，缓存，分布式架构等。主要考虑性能、容量、可扩展性、可维护性等等。然后实现接口来为前端提供数据即可。</p>
+<p>前后端项目独立部署，不需要迁就某一方面。</p>
+<p><strong>以上就是我认识的前后端分离，能力有限，一点浅见拙识</strong> </p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a></p>
+<p><a href="https://allwayz.github.io" target="_blank" rel="noopener">Allwayz</a></p>
+]]></content>
+      <tags>
+        <tag>前后端分离</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax</title>
     <url>/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-7%EF%BC%9ASpring-Boot%E4%B8%AD%E4%BD%BF%E7%94%A8JSP%E3%80%81Ajax/</url>
     <content><![CDATA[<blockquote>
