@@ -13,6 +13,8 @@
 <li><p>禁止指令重排</p>
 </li>
 </ol>
+<a id="more"></a>
+
 <h3 id="JMM（Java内存模型）"><a href="#JMM（Java内存模型）" class="headerlink" title="JMM（Java内存模型）"></a><strong>JMM</strong>（Java内存模型）</h3><p>本身是一种抽象的概念，并不真实存在，它描述的是一组<strong>规则</strong>或者<strong>规范</strong>，通过这组规范定义了程序中各个变量（包括实例字段，静态字典和构成数组对象的元素）的访问方式。</p>
 <p><strong>JMM</strong>关于同步的规定：</p>
 <ol>
