@@ -214,16 +214,19 @@
 </ul>
 </li>
 </ol>
-<pre><code>-   禁止指令重排小总结
-
-    volatile&lt;u&gt;**实现禁止指令重排优化**&lt;/u&gt;，从而避免多线程环境下程序出现乱序执行的现象。
-
-    先了解一个概念， 内存屏障（*Memory Barrier*）又称内存栅栏，是一个CPU指令，他的作用有两个
-
-    1.  保证特定操作的执行顺序
-    2.  保证某些变量的内存可见性（利用该特性实现**volatile**的内存可见性）
-
-    由于编译器和处理器都能执行指令重排优化。如果在指令间插入一条Memory Barrier则会告诉编译器和CPU，不管什么指令都不能和这条Memory Barrier指令重排序，也就是说**通过插入内存屏障禁止在内存屏障前后的指令集执行重排序优化**。内存屏障另外一个作用时强制刷出各种CPU的缓存数据，因此任何CPU上的线程都能读取到这些数据的最新版本。</code></pre><h3 id="有了JMM，线程安全性获得保障"><a href="#有了JMM，线程安全性获得保障" class="headerlink" title="有了JMM，线程安全性获得保障"></a><strong>有了JMM，线程安全性获得保障</strong></h3><ul>
+<ul>
+<li><p>禁止指令重排小总结</p>
+<p>volatile<u><strong>实现禁止指令重排优化</strong></u>，从而避免多线程环境下程序出现乱序执行的现象。<br>先了解一个概念， 内存屏障（<em>Memory Barrier</em>）又称内存栅栏，是一个CPU指令，他的作用有两个</p>
+<ol>
+<li><p>保证特定操作的执行顺序</p>
+</li>
+<li><p>保证某些变量的内存可见性（利用该特性实现<strong>volatile</strong>的内存可见性）</p>
+<p>由于编译器和处理器都能执行指令重排优化。如果在指令间插入一条Memory Barrier则会告诉编译器和CPU，不管什么指令都不能和这条Memory Barrier指令重排序，也就是说<strong>通过插入内存屏障禁止在内存屏障前后的指令集执行重排序优化</strong>。内存屏障另外一个作用时强制刷出各种CPU的缓存数据，因此任何CPU上的线程都能读取到这些数据的最新版本。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="有了JMM，线程安全性获得保障"><a href="#有了JMM，线程安全性获得保障" class="headerlink" title="有了JMM，线程安全性获得保障"></a><strong>有了JMM，线程安全性获得保障</strong></h3><ul>
 <li><p>工作内存与主内存同步延迟现象导致的可见性问题</p>
 <p>可以使用<code>synchronized</code>和<code>volatile</code>关键字解决，他们都可以使一个线程<strong>修改后的变量立即对其他线程可见</strong></p>
 </li>
