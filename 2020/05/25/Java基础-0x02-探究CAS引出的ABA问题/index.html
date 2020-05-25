@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="JUC1. 谈谈对volatile的理解volatile是Java虚拟机提供的轻量级的同步机制。三大特性：  保证可见性 一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步  不保证原子性  禁止指令重排">
+<meta name="description" content="JUC由CAS缺陷到ABA问题   谈谈什么是ABA问题：狸猫换太子    Thread0x00, Thread0x01。 0x01比0x00 用时少，同时操作主内存。由于0x01比0x00快，所以主内存中数据已经被改了。0x01再次读取内存中的值，再次修改主内存中的值。几次循环之后，0x00执行完毕，写回主内存时，主内存的值正好是期望值，然后0x00修改成功。   表面上是风平浪静的，但是在0">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java基础-0x00：学习Volatile">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;23&#x2F;Java%E5%9F%BA%E7%A1%80-0x00-%E5%AD%A6%E4%B9%A0Volatile&#x2F;index.html">
+<meta property="og:title" content="Java基础-0x02:探究CAS引出的ABA问题">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;25&#x2F;Java%E5%9F%BA%E7%A1%80-0x02-%E6%8E%A2%E7%A9%B6CAS%E5%BC%95%E5%87%BA%E7%9A%84ABA%E9%97%AE%E9%A2%98&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="JUC1. 谈谈对volatile的理解volatile是Java虚拟机提供的轻量级的同步机制。三大特性：  保证可见性 一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步  不保证原子性  禁止指令重排">
+<meta property="og:description" content="JUC由CAS缺陷到ABA问题   谈谈什么是ABA问题：狸猫换太子    Thread0x00, Thread0x01。 0x01比0x00 用时少，同时操作主内存。由于0x01比0x00快，所以主内存中数据已经被改了。0x01再次读取内存中的值，再次修改主内存中的值。几次循环之后，0x00执行完毕，写回主内存时，主内存的值正好是期望值，然后0x00修改成功。   表面上是风平浪静的，但是在0">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-05-23T11:18:40.000Z">
-<meta property="article:modified_time" content="2020-05-24T10:47:26.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;v2-eff82b3e2b847cac06b9e7fb4db0ecc5_1200x500.jpg">
+<meta property="article:published_time" content="2020-05-25T09:33:14.000Z">
+<meta property="article:modified_time" content="2020-05-25T09:37:04.000Z">
 <meta property="article:author" content="Allwayz">
 <meta property="article:tag" content="JUC">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;v2-eff82b3e2b847cac06b9e7fb4db0ecc5_1200x500.jpg">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/05/23/Java基础-0x00-学习Volatile/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/05/25/Java基础-0x02-探究CAS引出的ABA问题/"/>
 
 
 
 
 
-  <title>Java基础-0x00：学习Volatile | Allwayz aint a coder</title>
+  <title>Java基础-0x02:探究CAS引出的ABA问题 | Allwayz aint a coder</title>
   
 
 
@@ -348,7 +350,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/23/Java%E5%9F%BA%E7%A1%80-0x00-%E5%AD%A6%E4%B9%A0Volatile/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/25/Java%E5%9F%BA%E7%A1%80-0x02-%E6%8E%A2%E7%A9%B6CAS%E5%BC%95%E5%87%BA%E7%9A%84ABA%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Allwayz">
@@ -365,7 +367,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java基础-0x00：学习Volatile</h1>
+          <h1 class="post-title" itemprop="name headline">Java基础-0x02:探究CAS引出的ABA问题</h1>
         
 
         <div class="post-meta">
@@ -377,8 +379,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-23T19:18:40+08:00">
-                2020-05-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-25T17:33:14+08:00">
+                2020-05-25
               </time>
             
 
@@ -434,168 +436,33 @@
       
 
       
-        <h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="1-谈谈对volatile的理解"><a href="#1-谈谈对volatile的理解" class="headerlink" title="1. 谈谈对volatile的理解"></a>1. 谈谈对<code>volatile</code>的理解</h2><h3 id="volatile是Java虚拟机提供的轻量级的同步机制。"><a href="#volatile是Java虚拟机提供的轻量级的同步机制。" class="headerlink" title="volatile是Java虚拟机提供的轻量级的同步机制。"></a><strong>volatile</strong>是<strong>Java</strong>虚拟机提供的轻量级的同步机制。</h3><p>三大特性：</p>
-<ol>
-<li><p>保证可见性</p>
-<p>一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步</p>
-</li>
-<li><p>不保证原子性</p>
-</li>
-<li><p>禁止指令重排</p>
-</li>
-</ol>
+        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/v2-eff82b3e2b847cac06b9e7fb4db0ecc5_1200x500.jpg" alt="Fuji"></p>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="由CAS缺陷到ABA问题"><a href="#由CAS缺陷到ABA问题" class="headerlink" title="由CAS缺陷到ABA问题"></a>由CAS缺陷到ABA问题</h2><blockquote>
+<p>  <span id = "ABA">谈谈什么是ABA问题：<strong>狸猫换太子</strong> </span></p>
+<p>  Thread<code>0x00</code>, Thread0x01。 <code>0x01</code>比0x00 用时少，同时操作主内存。由于<code>0x01</code>比0x00快，所以主内存中数据已经被改了。<code>0x01</code>再次读取内存中的值，再次修改主内存中的值。几次循环之后，<code>0x00</code>执行完毕，写回主内存时，主内存的值正好是期望值，然后0x00修改成功。</p>
+<p>  表面上是风平浪静的，但是在0x00执行过程中，0x01已经修改过多次。 这就叫ABA问题</p>
+</blockquote>
 <a id="more"></a>
 
-<h3 id="JMM（Java内存模型）"><a href="#JMM（Java内存模型）" class="headerlink" title="JMM（Java内存模型）"></a><strong>JMM</strong>（Java内存模型）</h3><p>本身是一种抽象的概念，并不真实存在，它描述的是一组<strong>规则</strong>或者<strong>规范</strong>，通过这组规范定义了程序中各个变量（包括实例字段，静态字典和构成数组对象的元素）的访问方式。</p>
-<p><strong>JMM</strong>关于同步的规定：</p>
-<ol>
-<li>线程解锁前，必须把共享变量的值刷新回主内存</li>
-<li>线程加锁前，必须读取主内存的最新值到自己的工作内存</li>
-<li>加锁解锁是同一把锁</li>
-</ol>
-<p>由于<strong>JVM</strong>运行程序的实体是线程，而每个线程创建时，<strong>JVM</strong>都会为其创建一个工作内存（有些地方称为栈空间），工作内存时每个线程的私有数据区域，而<strong>JAVA</strong>内存模型中规定所有变量都存储在<strong>主内存</strong>，主内存时共享内存区域，所有线程都可以访问，<strong>但线程对变量的操作（读取赋值等）必须在工作内存中进行，首先要将变量从主内存拷贝到自己的工作内存空间，然后对变量进行操作，操作完成后再将变量写回主内存，</strong>不能直接操作主内存中的变量，哥哥线程中的工作内存中存储着主内存中的<em>变量拷贝副本</em>，因此不同的线程间无法访问对方的工作内存，线程间的通信（传值）必须通过主内存来完成，简要访问过程如下图：</p>
-<p>![屏幕快照 2020-05-23 16.41.11](/Users/allwayz/Desktop/屏幕快照 2020-05-23 16.41.11.png)</p>
-<p><strong>JMM</strong>三大特性：</p>
-<ol>
-<li><p>可见性</p>
-<p>一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步。</p>
-<p>通过前面对<strong>JMM</strong>的介绍，我们知道各个线程对主内存中共享变量的操作都是各个线程各自拷贝到自己工作内存进行操作后再写回到主内存中的。</p>
-<p>这就可能存在一个线程<code>0x00</code>修改了共享变量<strong>X</strong>的值但还未写回主内存时，另一个线程<code>0x01</code>又对主内存中同一个共享变量<strong>X</strong>进行操作，但此时<code>0x00</code>线程工作内存中共享变量<strong>X</strong>对线程<code>0x01</code>来说并不可见。</p>
-<p><strong>这种工作内存与主内存同步延迟现象就造成了可见性问题。</strong></p>
-</li>
-<li><p>原子性</p>
-<p><strong>number++</strong>在多线程环境下是非线程安全的，如何不加synchronized解决</p>
-<p>![屏幕快照 2020-05-23 18.41.53](/Users/allwayz/Desktop/屏幕快照 2020-05-23 18.41.53.png)</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 使用原子类来进行</span></span><br><span class="line"><span class="comment">* AotmicInteger</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">AtomicInteger atomicInteger = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addMyAtomic</span><span class="params">()</span></span>&#123;</span><br><span class="line">    atomicInteger.getAndIncrement();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="ABA问题是怎么产生的"><a href="#ABA问题是怎么产生的" class="headerlink" title="ABA问题是怎么产生的"></a>ABA问题是怎么产生的</h3><p>CAS会导致”<strong>ABA问题</strong>“。</p>
+<p>CAS算法实现一个重要前提需要取出内存中某时刻的数据，并在当下时刻比较并替换，那么在这个时间差类会导致数据的变化。</p>
+<p>具体发生过程在上面<a href="#ABA">引言</a>部分已经写过，不再赘述。</p>
+<p><strong><u>尽管线程 <code>0x00</code> 的操作成功，但是不代表这个过程是没有问题的。</u></strong></p>
+<h3 id="原子引用"><a href="#原子引用" class="headerlink" title="原子引用"></a>原子引用</h3><p><code>java.util.concurrent.atomic.AtomicReference&lt;V&gt;</code></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JUC的包中给我们提供了AtomicInteger、AtomicLong、AtomicBoolean等&lt;br&gt;</span></span><br><span class="line"><span class="comment"> *     被原子包装的数据结构。&lt;br&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 如果我们希望是一个AtomicUser,AtomicOrder,AtomicCustomer这养的类也是没有问题的&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * JUC中为我们提供了AtomicReference&lt;V&gt;这个类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AtomicReferenceDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AtomicReference&lt;User&gt; userAtomicReference = <span class="keyword">new</span> AtomicReference&lt;&gt;();</span><br><span class="line">        User z3 = <span class="keyword">new</span> User(<span class="string">"z3"</span>,<span class="number">22</span>);</span><br><span class="line">        User l4 = <span class="keyword">new</span> User(<span class="string">"l4"</span>,<span class="number">23</span>);</span><br><span class="line"></span><br><span class="line">        userAtomicReference.set(z3);</span><br><span class="line">        System.out.println(</span><br><span class="line">            userAtomicReference.compareAndSet(z3,l4)+</span><br><span class="line">            <span class="string">"\t current "</span>+userAtomicReference);</span><br><span class="line"></span><br><span class="line">        System.out.println(</span><br><span class="line">            userAtomicReference.compareAndSet(z3,l4)+</span><br><span class="line">            <span class="string">"\t current "</span>+userAtomicReference);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
 
-</li>
-</ol>
-<ol start="3">
-<li><p><code>VolatileDemo</code>演示<strong>可见性</strong>➕<strong>原子性</strong></p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 1. 验证volatile的可见性&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 1.1 加入 int number = 0; number变量之前没有添加volatile关键字修饰&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * &lt;b&gt;main线程没有收到number变化的消息&lt;/b&gt;&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 1.2 在 int number = 0; 前面加上 volatile&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * &lt;b&gt;main线程在number改变的时候就监测到新的值&lt;/b&gt;&lt;br&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        MyData myData = <span class="keyword">new</span> MyData();</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t come in..."</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            myData.addT060();</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t number ==&gt; 60"</span>);</span><br><span class="line">        &#125;,<span class="string">"input thread-AAA"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (myData.number == <span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">"\t mission is over! number = "</span>+myData.number);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyData</span></span>&#123;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">int</span> number = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addT060</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.number = <span class="number">60</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
-
-</li>
-</ol>
-<ol start="4">
-<li><p>有序性</p>
-<p>计算机在执行程序时，为了提高性能，编译器和处理器的常常会对指令做重排，一般分以下三种</p>
-<p><strong>源代码</strong> –&gt; <u><strong>编译器优化的重排</strong></u> –&gt; <u><strong>指令并行的重排</strong></u> –&gt; <u><strong>内存系统的重排</strong></u> –&gt; <strong>最终的指令</strong></p>
-<p>单线程环境里面确保程序最终执行结果和代码顺序执行的结果一致</p>
-<p>处理器在进行重排序时必须要考虑指令之间的<u><strong>数据依赖性</strong></u></p>
-<p>多线程环境中线程交替执行，由于编译器优化重排的存在，两个线程中使用的变量能否保证一致性时无法确定的，结果无法预测。</p>
+<p>如何解决ABA问题？</p>
 <ul>
-<li><p>重排 0x00</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mySort</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">11</span>;	<span class="comment">//语句1</span></span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">12</span>;	<span class="comment">//语句2</span></span><br><span class="line">    x = x + <span class="number">5</span>;	<span class="comment">//语句3</span></span><br><span class="line">    y = x * x;	<span class="comment">//语句4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p> 执行顺序可能不一样</p>
-</li>
-<li><p>重排 0x01</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b,x,y = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></div>
-
-<table>
-<thead>
-<tr>
-<th>Thread 0x00</th>
-<th>Thread 0x01</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>x = a;</td>
-<td>y = b;</td>
-</tr>
-<tr>
-<td>b = 1;</td>
-<td>a = 2;</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>x = 0;    y = 0;</td>
-<td></td>
-</tr>
-</tbody></table>
-<p>如果编译器对这段程序代码执行重排优化后，可能出现下列情况</p>
-<table>
-<thead>
-<tr>
-<th>Thread 0x00</th>
-<th>Thread 0x01</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>b = 1;</td>
-<td>a = 2;</td>
-</tr>
-<tr>
-<td>x = a;</td>
-<td>y = b;</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>x = 2;   y = 1;</td>
-<td></td>
-</tr>
-</tbody></table>
-<ul>
-<li><p>案例</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReSortSeqDemo</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method01</span><span class="params">()</span></span>&#123;</span><br><span class="line">        a = <span class="number">1</span>;</span><br><span class="line">        flag = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//多线程环境下，由于编译器优化重排的存在。</span></span><br><span class="line">    <span class="comment">//两个线程中使用的变量能否保证一致性，是无法确定的，结果无法预测</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method02</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(flag)&#123;</span><br><span class="line">            a = a + <span class="number">5</span>;</span><br><span class="line">            System.out.println(<span class="string">"retValue: "</span> + a);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-
-
-</li>
+<li>原子引用</li>
+<li>增加一种机制：修改版本号（类似时间戳）</li>
 </ul>
-</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>禁止指令重排小总结</p>
-<p>volatile<u><strong>实现禁止指令重排优化</strong></u>，从而避免多线程环境下程序出现乱序执行的现象。<br>先了解一个概念， 内存屏障（<em>Memory Barrier</em>）又称内存栅栏，是一个CPU指令，他的作用有两个</p>
-<ol>
-<li><p>保证特定操作的执行顺序</p>
-</li>
-<li><p>保证某些变量的内存可见性（利用该特性实现<strong>volatile</strong>的内存可见性）</p>
-<p>由于编译器和处理器都能执行指令重排优化。如果在指令间插入一条Memory Barrier则会告诉编译器和CPU，不管什么指令都不能和这条Memory Barrier指令重排序，也就是说<strong>通过插入内存屏障禁止在内存屏障前后的指令集执行重排序优化</strong>。内存屏障另外一个作用时强制刷出各种CPU的缓存数据，因此任何CPU上的线程都能读取到这些数据的最新版本。</p>
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="有了JMM，线程安全性获得保障"><a href="#有了JMM，线程安全性获得保障" class="headerlink" title="有了JMM，线程安全性获得保障"></a><strong>有了JMM，线程安全性获得保障</strong></h3><ul>
-<li><p>工作内存与主内存同步延迟现象导致的可见性问题</p>
-<p>可以使用<code>synchronized</code>和<code>volatile</code>关键字解决，他们都可以使一个线程<strong>修改后的变量立即对其他线程可见</strong></p>
-</li>
-<li><p>对于指令重排导致的可见性问题和有序性问题</p>
-<p>可以使用volatile关键字解决，因为volatile的另外一个作用就是禁止重排序优化。</p>
-<p>​    </p>
-</li>
-</ul>
-<h3 id="在那些地方使用过volatile"><a href="#在那些地方使用过volatile" class="headerlink" title="在那些地方使用过volatile"></a>在那些地方使用过volatile</h3><ul>
-<li>最经典的案例：单例模式</li>
-<li>读写锁  手写一个缓存</li>
-<li>CAS （JUC的包里面大规模使用valatile）</li>
-</ul>
-<h4 id="单例模式DCL代码"><a href="#单例模式DCL代码" class="headerlink" title="单例模式DCL代码"></a>单例模式DCL代码</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * DCL (Double Check Lock)双端检锁机制&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 加锁之前和之后都进行判断</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingletonDemo <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (SingletonDemo<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">                instance = <span class="keyword">new</span> SingletonDemo();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="时间戳原子引用"><a href="#时间戳原子引用" class="headerlink" title="时间戳原子引用"></a>时间戳原子引用</h3><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ABA问题的解决&lt;br&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * AtomicStampedReference</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ABADemo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> AtomicReference&lt;Integer&gt; atomicReference = <span class="keyword">new</span> AtomicReference&lt;&gt;(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">static</span> AtomicStampedReference&lt;Integer&gt; atomicStampedReference = <span class="keyword">new</span> AtomicStampedReference&lt;&gt;(<span class="number">100</span>,<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="comment">//模拟ABA</span></span><br><span class="line">            atomicReference.compareAndSet(<span class="number">100</span>,<span class="number">101</span>);</span><br><span class="line">            System.out.println(<span class="string">"current number: "</span> + atomicReference.get());</span><br><span class="line">            atomicReference.compareAndSet(<span class="number">101</span>,<span class="number">100</span>);</span><br><span class="line">            System.out.println(<span class="string">"current number: "</span> + atomicReference.get());</span><br><span class="line">            System.out.println(<span class="string">"&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"</span>);</span><br><span class="line">        &#125;,<span class="string">"t1"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//暂停t2线程1秒，保证t1线程先执行</span></span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            System.out.println(atomicReference.compareAndSet(<span class="number">100</span>,<span class="number">101</span>)+</span><br><span class="line">                    <span class="string">"\t Result: "</span> + atomicReference.get());</span><br><span class="line">        &#125;,<span class="string">"t2"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123; TimeUnit.SECONDS.sleep(<span class="number">2</span>); &#125; <span class="keyword">catch</span> (InterruptedException e) &#123; e.printStackTrace(); &#125;</span><br><span class="line">        System.out.println(<span class="string">"&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;以下是ABA问题的解决&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * T3线程拿到一开始的版本号，然后暂停1秒中，等T4线程拿到一样的版本号，</span></span><br><span class="line"><span class="comment">         * 然后暂停3秒钟，确保T3线程执行一次ABA操作。</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">int</span> stamp = atomicStampedReference.getStamp();</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t 第一次版本号："</span>+stamp);</span><br><span class="line">            <span class="keyword">try</span> &#123; </span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">1</span>); </span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace(); </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//执行ABA操作</span></span><br><span class="line">            atomicStampedReference.compareAndSet(<span class="number">100</span>,<span class="number">101</span>,</span><br><span class="line">                    atomicStampedReference.getStamp(),</span><br><span class="line">                    atomicStampedReference.getStamp()+<span class="number">1</span>);</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+</span><br><span class="line">                               <span class="string">"\t 第二次版本号："</span>+atomicStampedReference.getStamp());</span><br><span class="line"></span><br><span class="line">            atomicStampedReference.compareAndSet(<span class="number">101</span>,<span class="number">100</span>,</span><br><span class="line">                    atomicStampedReference.getStamp(),</span><br><span class="line">                    atomicStampedReference.getStamp()+<span class="number">1</span>);</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+</span><br><span class="line">                               <span class="string">"\t 第三次版本号："</span>+atomicStampedReference.getStamp());</span><br><span class="line">            System.out.println(<span class="string">"&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"</span>);</span><br><span class="line">        &#125;,<span class="string">"t3"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">int</span> stamp = atomicStampedReference.getStamp();</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t 第一次版本号："</span>+stamp);</span><br><span class="line">            <span class="keyword">try</span> &#123; </span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>); </span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace(); </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">boolean</span> result = atomicStampedReference.compareAndSet(<span class="number">100</span>,<span class="number">2019</span>,stamp,stamp+<span class="number">1</span>);</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+</span><br><span class="line">                    <span class="string">"\t 修改结果： "</span>+result+</span><br><span class="line">                    <span class="string">"\n 实际版本号："</span>+atomicStampedReference.getStamp()+</span><br><span class="line">                    <span class="string">"\n 实际最新值："</span>+atomicStampedReference.getReference());</span><br><span class="line">        &#125;,<span class="string">"t4"</span>).start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-
-
-<h4 id="单例模式volatile分析"><a href="#单例模式volatile分析" class="headerlink" title="单例模式volatile分析"></a>单例模式volatile分析</h4><p>DCL（双端检锁）机制不一定线程安全，原因是有指令重排的存在，加入volatile可以禁止指令重排</p>
-<p>原因在于一个线程指定到第一次检测，读取到的instance != null时，instance的引用对象<strong>可能没有完成初始化</strong>。</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">instance &#x3D; new SignletonDemo();</span><br><span class="line">&#x2F;&#x2F;可以分为以下三步完成</span><br><span class="line">memory &#x3D; allcate(); &#x2F;&#x2F;1.分配对象内存空间</span><br><span class="line"></span><br><span class="line">instance(memory);	&#x2F;&#x2F;2.初始化对象</span><br><span class="line"></span><br><span class="line">instance &#x3D; memory;	&#x2F;&#x2F;3.设置instance只想刚分配的内存地址，此时 instance !&#x3D; null</span><br></pre></td></tr></table></figure></div>
-
-<p>步骤2和步骤3<strong><u>不存在数据依赖关系</u></strong>，而且无论重排前还是重排后程序的执行结果在单线程中并没有改变，因此这种重排优化时允许的。</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">instance &#x3D; new SignletonDemo();</span><br><span class="line">&#x2F;&#x2F;可以分为以下三步完成</span><br><span class="line">memory &#x3D; allcate(); &#x2F;&#x2F;1.分配对象内存空间</span><br><span class="line"></span><br><span class="line">instance &#x3D; memory;	&#x2F;&#x2F;3.设置instance只想刚分配的内存地址</span><br><span class="line">&#x2F;&#x2F;此时 instance !&#x3D; null,但是对象还没有初始化完成！</span><br><span class="line"></span><br><span class="line">instance(memory);	&#x2F;&#x2F;2.初始化对象</span><br></pre></td></tr></table></figure></div>
-
-<p>但是指令重排只会保证串行语义的执行的一致性（单线程），但并不会关心多线程间的语义一致性。</p>
-<p><strong>所以当一条线程访问instance不为null时，由于instance实例未必已完成初始化，也就造成了线程安全问题。</strong></p>
+<p>引入了原子时间戳之后，线程执行中共享变量被修改的问题就不会逃过检测，也就保证了线程安全。</p>
 
       
     </div>
@@ -619,7 +486,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://allwayz.github.io/2020/05/23/Java基础-0x00-学习Volatile/" target="_blank" rel="noopener" title="Java基础-0x00：学习Volatile">allwayz.github.io/2020/05/23/Java基础-0x00-学习Volatile/</a>
+    <a href="http://allwayz.github.io/2020/05/25/Java基础-0x02-探究CAS引出的ABA问题/" target="_blank" rel="noopener" title="Java基础-0x02:探究CAS引出的ABA问题">allwayz.github.io/2020/05/25/Java基础-0x02-探究CAS引出的ABA问题/</a>
   </li>
 
 
@@ -661,8 +528,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-1%EF%BC%9ARESTful-Login%E8%AF%A5%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0/" rel="next" title="探索前后端分离-1：RESTful Login该如何实现（未完成）">
-                <i class="fa fa-chevron-left"></i> 探索前后端分离-1：RESTful Login该如何实现（未完成）
+              <a href="/2020/05/24/Java%E5%9F%BA%E7%A1%80-0x01-%E5%AD%A6%E4%B9%A0CAS/" rel="next" title="Java基础-0x01:学习CAS">
+                <i class="fa fa-chevron-left"></i> Java基础-0x01:学习CAS
               </a>
             
           </div>
@@ -670,10 +537,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/05/23/Spring-Cloud-%E5%AE%8C%E6%95%B4%E8%84%91%E5%9B%BE/" rel="prev" title="Spring Cloud:完整脑图">
-                Spring Cloud:完整脑图 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -870,7 +733,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-谈谈对volatile的理解"><span class="nav-number">1.1.</span> <span class="nav-text">1. 谈谈对volatile的理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile是Java虚拟机提供的轻量级的同步机制。"><span class="nav-number">1.1.1.</span> <span class="nav-text">volatile是Java虚拟机提供的轻量级的同步机制。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JMM（Java内存模型）"><span class="nav-number">1.1.2.</span> <span class="nav-text">JMM（Java内存模型）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有了JMM，线程安全性获得保障"><span class="nav-number">1.1.3.</span> <span class="nav-text">有了JMM，线程安全性获得保障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在那些地方使用过volatile"><span class="nav-number">1.1.4.</span> <span class="nav-text">在那些地方使用过volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单例模式DCL代码"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">单例模式DCL代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单例模式volatile分析"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">单例模式volatile分析</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#由CAS缺陷到ABA问题"><span class="nav-number">1.1.</span> <span class="nav-text">由CAS缺陷到ABA问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ABA问题是怎么产生的"><span class="nav-number">1.1.1.</span> <span class="nav-text">ABA问题是怎么产生的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原子引用"><span class="nav-number">1.1.2.</span> <span class="nav-text">原子引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间戳原子引用"><span class="nav-number">1.1.3.</span> <span class="nav-text">时间戳原子引用</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
