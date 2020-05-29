@@ -3,7 +3,9 @@
   <entry>
     <title>Java基础-0x08:Synchronized 和 Lock 有什么区别</title>
     <url>/2020/05/30/Java%E5%9F%BA%E7%A1%80-0x08-Synchronized-%E5%92%8C-Lock-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="Synchronized-和-Lock-有什么区别"><a href="#Synchronized-和-Lock-有什么区别" class="headerlink" title="Synchronized 和 Lock 有什么区别"></a>Synchronized 和 Lock 有什么区别</h2><h3 id="原始构成"><a href="#原始构成" class="headerlink" title="原始构成"></a>原始构成</h3><ul>
+    <content><![CDATA[<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="Synchronized-和-Lock-有什么区别"><a href="#Synchronized-和-Lock-有什么区别" class="headerlink" title="Synchronized 和 Lock 有什么区别"></a>Synchronized 和 Lock 有什么区别</h2><a id="more"></a>
+
+<h3 id="原始构成"><a href="#原始构成" class="headerlink" title="原始构成"></a>原始构成</h3><ul>
 <li><p><code>synchronized</code>是Java关键字 属于JVM层面</p>
 <p><code>Monitorenter</code>（底层通过monitor对象来完成，其实wait/notify等方法也依赖于monitor对象，只有在同步块或方法中才能调用wait/notify等方法</p>
 <blockquote>

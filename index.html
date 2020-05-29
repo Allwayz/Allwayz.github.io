@@ -435,45 +435,14 @@
 
       
         
-          
-            <h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="Synchronized-和-Lock-有什么区别"><a href="#Synchronized-和-Lock-有什么区别" class="headerlink" title="Synchronized 和 Lock 有什么区别"></a>Synchronized 和 Lock 有什么区别</h2><h3 id="原始构成"><a href="#原始构成" class="headerlink" title="原始构成"></a>原始构成</h3><ul>
-<li><p><code>synchronized</code>是Java关键字 属于JVM层面</p>
-<p><code>Monitorenter</code>（底层通过monitor对象来完成，其实wait/notify等方法也依赖于monitor对象，只有在同步块或方法中才能调用wait/notify等方法</p>
-<blockquote>
-<p>现在情况是有一个同步代码块<code>synchronized(new Object){}</code>。</p>
-<p>将<code>.java</code>文件使用<code>java -c</code> 编译成<code>.class</code>文件之后查看java字节码可以看出。 </p>
-<p>在同步代码块中，进入时使用的是<strong>monitorenter</strong>方法，执行完毕之后调用<strong>monitorexit</strong>方法，而且调用了两次，一次是正常退出，一次是异常退出。所以<code>synchronized</code>可以保证不会出现死锁。</p>
-</blockquote>
-<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/java%E5%AD%97%E8%8A%82%E7%A0%81.png" alt="java字节码"></p>
-</li>
-<li><p>Lock是具体的类<code>(java.util.concurrent.locks.Lock)</code>。是API层面的锁。</p>
-</li>
-</ul>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ul>
-<li><p><code>synchronized</code>不需要开发者去手动释放锁，当synchronized代码执行完成后，系统会自动让线程释放对锁的占用</p>
-</li>
-<li><p><code>lock</code>则需要开发者手动释放锁，若没有主动释放锁，就可能会出现思索先行</p>
-<p>需要<code>lock()</code>&amp;<code>unlock()</code>方法配合<code>try/finally</code>代码块来完成</p>
-</li>
-</ul>
-<h3 id="等待是否中断"><a href="#等待是否中断" class="headerlink" title="等待是否中断"></a>等待是否中断</h3><ul>
-<li><code>synchronized</code>不可中断，除非抛出异常或者正常运行完成</li>
-<li><code>ReentrantLock</code>可以中断<ul>
-<li>设置超时方法 <code>tryLock(long timeout, TimeUnit unit)</code></li>
-<li><code>lockInterruptibly()</code>放在代码块中，调用<code>interrupt()</code>方法可中断</li>
-</ul>
-</li>
-</ul>
-<h3 id="加锁是否公平"><a href="#加锁是否公平" class="headerlink" title="加锁是否公平"></a>加锁是否公平</h3><ul>
-<li><code>synchronized</code>    非公平锁</li>
-<li><code>ReentrantLock</code>两者都可以，默认是非公平锁，构造方法中可以穿入<strong>boolean</strong>值，<code>true</code>为公平锁,<code>false</code>为非公平锁。</li>
-</ul>
-<h3 id="锁绑定多个条件Condition"><a href="#锁绑定多个条件Condition" class="headerlink" title="锁绑定多个条件Condition"></a>锁绑定多个条件Condition</h3><ul>
-<li><code>synchronized</code>not support</li>
-<li><code>ReentrantLock</code>用来实现分组唤醒需要唤醒的线程，可以<strong>精确唤醒</strong>。而不是像<code>synchronized</code>要么随机唤醒一个，要呢全部唤醒。</li>
-</ul>
-
-          
+          <h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="Synchronized-和-Lock-有什么区别"><a href="#Synchronized-和-Lock-有什么区别" class="headerlink" title="Synchronized 和 Lock 有什么区别"></a>Synchronized 和 Lock 有什么区别</h2>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/30/Java%E5%9F%BA%E7%A1%80-0x08-Synchronized-%E5%92%8C-Lock-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
