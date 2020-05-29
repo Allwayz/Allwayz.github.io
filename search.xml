@@ -1,6 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础-0x07:学习阻塞队列</title>
+    <url>/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x07-%E5%AD%A6%E4%B9%A0%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><blockquote>
+<p>  队列与阻塞队列</p>
+<ul>
+<li><p>阻塞队列,顾名思义 首先它是一个<strong>队列</strong>，而一个阻塞队列在数据结构中起到的作用大致如图所示好：</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E6%A8%A1%E5%9E%8B.png" alt="s"></p>
+</li>
+<li><p>当阻塞队列是<strong>空</strong>时，从队列中<strong><u>获取元素</u></strong>的操作会被阻塞。（消费者）</p>
+</li>
+<li><p>当阻塞队列是<strong>满</strong>时，向队列中<u><strong>添加元素</strong></u>的操作会被阻塞。（生产者）</p>
+</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+
+
+
+<p>在多线程领域，所谓阻塞，在某些情况下会挂起线程（即阻塞），一旦条件满足，被挂起的线程又会被自动唤醒。</p>
+<ul>
+<li><input disabled="" type="checkbox"> <p>为什么需要BlockingQueue？</p>
+<p>好处是不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，因为这写事<code>BlockingQueue</code>都做了</p>
+<p>在<strong>concurrent</strong>包发布以前，多线程环境下，开发者都需要自己控制这些细节，还需要兼顾效率和线程安全。而这会给我们的程序带来更多的复杂度。</p>
+</li>
+</ul>
+<h3 id="阻塞队列接口基础架构"><a href="#阻塞队列接口基础架构" class="headerlink" title="阻塞队列接口基础架构"></a>阻塞队列接口基础架构</h3><p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png" alt="屏幕快照 2020-05-29 15.45.21"></p>
+<p>阻塞队列接口也是集合类接口的子接口。</p>
+<p>其实现类有一下几个：</p>
+<ul>
+<li><strong><u>ArrayBlockingQueue ==&gt; 由数组结构组成的有届阻塞队列</u></strong></li>
+<li><u><strong>LinkedBlockingQueue ==&gt; 由链表结构组成的有届（但大小默认值为Integer.MAX_VALUE）阻塞队列</strong></u></li>
+<li>PriorityBlockingQueue ==&gt; 支持优先级排序的无届阻塞队列</li>
+<li>DelayQueue ==&gt; 使用优先级队列实现的延迟无届阻塞队列</li>
+<li><u><strong>SynchronousQueue ==&gt; 不存储元素的阻塞队列，也即单个元素的队列</strong></u></li>
+<li>LinkedTransferQueue ==&gt; 由链表结构组成的无届阻塞队列</li>
+<li>LinkedBlockingDeque ==&gt; 由链表结构组成的双向阻塞队列</li>
+</ul>
+<h3 id="阻塞队列主要方法的概括："><a href="#阻塞队列主要方法的概括：" class="headerlink" title="阻塞队列主要方法的概括："></a>阻塞队列主要方法的概括：</h3><table>
+<thead>
+<tr>
+<th></th>
+<th><em>Throws exception</em></th>
+<th><em>Special value</em></th>
+<th><em>Blocks</em></th>
+<th><em>Times out</em></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Insert</strong></td>
+<td><a href="#"><code>add(e)</code></a></td>
+<td><a href="#"><code>offer(e)</code></a></td>
+<td><a href="#"><code>put(e)</code></a></td>
+<td><a href="#"><code>offer(e, time, unit)</code></a></td>
+</tr>
+<tr>
+<td><strong>Remove</strong></td>
+<td><a href="#"><code>remove()</code></a></td>
+<td><a href="#"><code>poll()</code></a></td>
+<td><a href="#"><code>take()</code></a></td>
+<td><a href="#"><code>poll(time, unit)</code></a></td>
+</tr>
+<tr>
+<td><strong>Examine</strong></td>
+<td><a href="#"><code>element()</code></a></td>
+<td><a href="#"><code>peek()</code></a></td>
+<td><em>not applicable</em></td>
+<td><em>not applicable</em></td>
+</tr>
+</tbody></table>
+<p>BlockingQueue不接受空元素。实现类会在尝试添加、放置或提供<code>null</code>时抛出<code>NullPointerException</code>。空值用作标记值，以指示轮询操作失败。</p>
+<p>BlockingQueue可能受容量限制。在任何给定时间，它可能具有剩余容量，超过该容量就不能放置其他元素而不会阻塞。没有任何内部容量约束的<code>BlockingQueue</code>始终报告<code>Integer.MAX_VALUE</code>的剩余容量。</p>
+<p>BlockingQueue实现被设计为主要用于生产者-消费者队列，但另外还支持<strong>Collection</strong>接口。因此，例如，可以使用<code>remove(x)</code>从队列中删除任意元素。但是，这样的操作通常不能非常有效地执行，并且仅用于偶尔的使用，例如当取消排队的消息时。</p>
+<p>BlockingQueue实现是线程安全的。所有排队方法都是使用内部锁或其他形式的并发控制来原子地实现其效果的。但是，除非在实现中另外指定，否则批量Collection操作addAll，containsAll，retainAll和removeAll不一定是原子执行的。因此，例如，仅在c中添加一些元素之后，addAll（c）可能会失败（引发异常）。</p>
+<p>BlockingQueue本质上不支持任何类型的“close”或“shutdown”操作，以指示将不再添加任何项目。这些功能的需求和使用往往取决于实现。例如，一种常见的策略是，生产者插入特殊的流尾对象或有毒对象，当消费者采取这种方法时会对其进行相应的解释。</p>
+<p>使用示例，基于典型的生产者-消费者方案。请注意，BlockingQueue可以安全地与多个生产者和多个消费者一起使用。</p>
+<h3 id="SynchronousQueue理论："><a href="#SynchronousQueue理论：" class="headerlink" title="SynchronousQueue理论："></a>SynchronousQueue理论：</h3><p>与其他的阻塞队列不同，SynchronousQueue是一个不存储元素的阻塞队列</p>
+<p>每一个put操作必须等待一个take操作，反过来也是一样。</p>
+<h4 id="SynchronousQueueDemo："><a href="#SynchronousQueueDemo：" class="headerlink" title="SynchronousQueueDemo："></a>SynchronousQueueDemo：</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlockingQueueDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        BlockingQueue&lt;String&gt; queue = <span class="keyword">new</span> SynchronousQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t put 1"</span>);</span><br><span class="line">                queue.put(<span class="string">"1"</span>);</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t put 2"</span>);</span><br><span class="line">                queue.put(<span class="string">"2"</span>);</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t put 3"</span>);</span><br><span class="line">                queue.put(<span class="string">"3"</span>);</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                System.out.println(queue.take());</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                System.out.println(queue.take());</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                System.out.println(queue.take());</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line">Thread-0	 put 2</span><br><span class="line">2</span><br><span class="line">Thread-0	 put 3</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>
+
+<p>放一个，取一个，下一个才能放进来。</p>
+]]></content>
+      <tags>
+        <tag>JUC</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础-0x06:CountDownLatch/CyclicBarrier/Semaphore的使用</title>
     <url>/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x06-CountDownLatch-CyclicBarrier-Semaphore%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/ce10d55fe7857c41c61101e4d13cccaa.jpg" alt="s"></p>
