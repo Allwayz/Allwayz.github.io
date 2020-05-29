@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JUC," />
 
 
 
@@ -79,15 +79,20 @@
 
 
 
-<meta name="description" content="程序猿&amp;攻城狮的自我修养">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Allwayz aint a coder">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;%E5%BD%93%E6%97%B6%E5%90%AC%E5%BE%97%E6%87%82%E7%9A%84&#x2F;index.html">
+<meta name="description" content="JUCCountDownLatch&#x2F;CyclicBarrier&#x2F;Semaphore 如何使用  CountDownLatch（闭锁） CyclicBarrier（栅栏） Semaphore（信号量）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-0x06:CountDownLatch&#x2F;CyclicBarrier&#x2F;Semaphore的使用">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;29&#x2F;Java%E5%9F%BA%E7%A1%80-0x06-CountDownLatch-CyclicBarrier-Semaphore%E7%9A%84%E4%BD%BF%E7%94%A8&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="程序猿&amp;攻城狮的自我修养">
+<meta property="og:description" content="JUCCountDownLatch&#x2F;CyclicBarrier&#x2F;Semaphore 如何使用  CountDownLatch（闭锁） CyclicBarrier（栅栏） Semaphore（信号量）">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;ce10d55fe7857c41c61101e4d13cccaa.jpg">
+<meta property="article:published_time" content="2020-05-29T06:16:43.000Z">
+<meta property="article:modified_time" content="2020-05-29T06:27:35.000Z">
 <meta property="article:author" content="Allwayz">
+<meta property="article:tag" content="JUC">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;ce10d55fe7857c41c61101e4d13cccaa.jpg">
 
 
 
@@ -117,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/当时听得懂的/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/05/29/Java基础-0x06-CountDownLatch-CyclicBarrier-Semaphore的使用/"/>
 
 
 
 
 
-  <title>标签: 当时听得懂的 | Allwayz aint a coder</title>
+  <title>Java基础-0x06:CountDownLatch/CyclicBarrier/Semaphore的使用 | Allwayz aint a coder</title>
   
 
 
@@ -146,7 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -331,82 +336,239 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>当时听得懂的<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x06-CountDownLatch-CyclicBarrier-Semaphore%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/02/11/%E6%AD%A6%E6%B1%89%E5%8A%A0%E6%B2%B9%EF%BC%8C%E4%B8%AD%E5%9B%BD%E5%8A%A0%E6%B2%B9/" itemprop="url">
-              
-                <span itemprop="name">武汉加油，中国加油</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Java基础-0x06:CountDownLatch/CyclicBarrier/Semaphore的使用</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-02-11T13:10:19+08:00"
-              content="2020-02-11" >
-          02-11
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-29T14:16:43+08:00">
+                2020-05-29
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/ce10d55fe7857c41c61101e4d13cccaa.jpg" alt="s"></p>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="CountDownLatch-CyclicBarrier-Semaphore-如何使用"><a href="#CountDownLatch-CyclicBarrier-Semaphore-如何使用" class="headerlink" title="CountDownLatch/CyclicBarrier/Semaphore 如何使用"></a>CountDownLatch/CyclicBarrier/Semaphore 如何使用</h2><blockquote>
+<ul>
+<li>CountDownLatch（闭锁）</li>
+<li>CyclicBarrier（栅栏）</li>
+<li>Semaphore（信号量）</li>
+</ul>
+</blockquote>
+<a id="more"></a>
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/27/17%E5%B2%81%E7%9A%84%E5%A5%BD/" itemprop="url">
-              
-                <span itemprop="name">17岁的好</span>
-              
-            </a>
-        
-      </h2>
+<h3 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h3><p>A <code>CountDownLatch</code> is initialized with a given <em>count</em>. The <code>await</code> methods block until the current count reaches zero due to invocations of the <code>countDown()</code> method, after which all waiting threads are released and any subsequent invocations of <code>await</code> return immediately.</p>
+<p>用给定的计数初始化闭锁。 由于count down方法的调用，await方法将阻塞到当前计数为零为止。之后，释放所有等待的线程，并立即返回任何后续的“await”调用。</p>
+<p>使用的是<code>CountDownLatch.countDown()</code>+<code>CountDownLatch.await()</code>两个方法。</p>
+<p>小Demo：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountDownLatchDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">6</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t 国被灭"</span>);</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125;,CountryEnum.forEach_CountryEnum(i).getMessage()).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch.await();</span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">"\t Down..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-27T02:53:09+08:00"
-              content="2020-01-27" >
-          01-27
-        </time>
-      </div>
+<p>Enum类：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> CountryEnum &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 国家名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    ONE(<span class="number">1</span>,<span class="string">"齐"</span>),TWO(<span class="number">2</span>,<span class="string">"楚"</span>),THREE(<span class="number">3</span>,<span class="string">"燕"</span>),FORE(<span class="number">4</span>,<span class="string">"赵"</span>),FIVE(<span class="number">5</span>,<span class="string">"魏"</span>),SIX(<span class="number">6</span>,<span class="string">"韩"</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Getter</span> <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="meta">@Getter</span> <span class="keyword">private</span> String message;</span><br><span class="line">    </span><br><span class="line">    CountryEnum(Integer code,String message)&#123;</span><br><span class="line">        <span class="keyword">this</span>.code = code;</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CountryEnum <span class="title">forEach_CountryEnum</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</span><br><span class="line">        CountryEnum[] myArray = CountryEnum.values();</span><br><span class="line">        <span class="keyword">for</span>(CountryEnum countryEnum:myArray)&#123;</span><br><span class="line">            <span class="keyword">if</span>(index == countryEnum.getCode())&#123;</span><br><span class="line">                <span class="keyword">return</span> countryEnum;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-    </header>
-  </article>
+<p>当CountDownLatch中初始化的数字中减为0，才会执行接下来的线程。</p>
+<h3 id="CyclicBarrier"><a href="#CyclicBarrier" class="headerlink" title="CyclicBarrier"></a>CyclicBarrier</h3><blockquote>
+<p>  CyclicBarrier的字面意思是可循环（Cyclic）使用的屏障（Barrier）。他要做的事情时让一组线程达到一个屏障（也可以叫同步点）是被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活，线程进入屏障通过<strong>Cyclibarrier</strong>的<code>await()</code>方法。</p>
+</blockquote>
+<p>这是一个小Demo：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CyclicBarrierDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CyclicBarrier cyclicBarrier = <span class="keyword">new</span> CyclicBarrier(<span class="number">7</span>,()-&gt;&#123;</span><br><span class="line">            System.out.println(<span class="string">"召唤神龙"</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">7</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> finalI = i;</span><br><span class="line">            <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+</span><br><span class="line">                                   <span class="string">"\t 这是第"</span>+ finalI +<span class="string">"颗龙珠"</span>);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    cyclicBarrier.await();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (BrokenBarrierException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
+<p>CyclicBarrier与CountDownLatch的区别就是一个时顺序执行，一个时有一个屏障点，屏障点之前的线程可以不按顺序执行。</p>
+<h3 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h3><blockquote>
+<p>  信号量主要用于两个目的：</p>
+<ul>
+<li>多个资源共享的互斥使用</li>
+<li>并发线程数的控制</li>
+</ul>
+</blockquote>
+<p>SemaphoreDemo:</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SemaphoreDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire();</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+</span><br><span class="line">                                       <span class="string">"\t 以抢占资源"</span>);</span><br><span class="line">                    TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+</span><br><span class="line">                                       <span class="string">"\t 三秒后释放资源"</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">                    semaphore.release();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,String.valueOf(i)).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>当一个线程使用了资源的时候，在前面调用<code>semaphore.acquire()</code>方法，前面在构造Semaphore的时候填入的permits参数就会减1，然后等资源使用完成，释放资源的时候会调用<code>semaphore.release()</code>方法，下一个线程就可以进来继续使用该资源。类似于海底捞人满了，接待员告诉你可以在外面等一下，里面人吃完了你就能进去吃饭了。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>图片来自：<a href="https://travel.qunar.com/travelbook/smartlist/7083343" target="_blank" rel="noopener">去哪儿</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+      <div>
+        <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Allwayz
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://allwayz.github.io/2020/05/29/Java基础-0x06-CountDownLatch-CyclicBarrier-Semaphore的使用/" target="_blank" rel="noopener" title="Java基础-0x06:CountDownLatch/CyclicBarrier/Semaphore的使用">allwayz.github.io/2020/05/29/Java基础-0x06-CountDownLatch-CyclicBarrier-Semaphore的使用/</a>
+  </li>
+
+
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({
+          title: "",
+          text: '复制文章链接成功',
+          icon: "success",
+          showConfirmButton: true
+          });
+      });
+    });  
+</script>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JUC/" rel="tag"># JUC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/27/Java%E5%9F%BA%E7%A1%80-0x05-Java%E4%B9%8B%E9%94%81%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="Java基础-0x05:Java之锁的使用">
+                <i class="fa fa-chevron-left"></i> Java基础-0x05:Java之锁的使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -414,6 +576,14 @@
 
 
           
+
+  
+    <div id="gitalk-container">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -434,8 +604,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -556,6 +735,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CountDownLatch-CyclicBarrier-Semaphore-如何使用"><span class="nav-number">1.1.</span> <span class="nav-text">CountDownLatch&#x2F;CyclicBarrier&#x2F;Semaphore 如何使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">1.1.1.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CyclicBarrier"><span class="nav-number">1.1.2.</span> <span class="nav-text">CyclicBarrier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Semaphore"><span class="nav-number">1.1.3.</span> <span class="nav-text">Semaphore</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -773,6 +968,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -813,6 +1012,23 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'cb9c82f5420fc9ed29b1',
+          clientSecret: 'dc278f70589a66068b463515c3a7a82d05b64be5',
+          repo: 'Comment4AllwayzBlog',
+          owner: 'Allwayz',
+          admin: ['Allwayz'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
 
 

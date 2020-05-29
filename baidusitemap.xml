@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://yoursite.com/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x06-CountDownLatch-CyclicBarrier-Semaphore%E7%9A%84%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2020-05-29</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2020/05/25/Java%E5%9F%BA%E7%A1%80-0x03-ArrayList%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
+    <lastmod>2020-05-28</lastmod>
+  </url>  <url>
     <loc>http://yoursite.com/2020/05/27/Java%E5%9F%BA%E7%A1%80-0x05-Java%E4%B9%8B%E9%94%81%E7%9A%84%E4%BD%BF%E7%94%A8/</loc>
     <lastmod>2020-05-27</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2020/05/26/Java%E5%9F%BA%E7%A1%80-0x04-%E9%9B%86%E5%90%88%E7%B1%BB%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2020-05-26</lastmod>
-  </url>  <url>
-    <loc>http://yoursite.com/2020/05/25/Java%E5%9F%BA%E7%A1%80-0x03-ArrayList%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2020-05-26</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2020/05/25/Java%E5%9F%BA%E7%A1%80-0x02-%E6%8E%A2%E7%A9%B6CAS%E5%BC%95%E5%87%BA%E7%9A%84ABA%E9%97%AE%E9%A2%98/</loc>
