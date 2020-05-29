@@ -1,6 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础-0x08:Synchronized 和 Lock 有什么区别</title>
+    <url>/2020/05/30/Java%E5%9F%BA%E7%A1%80-0x08-Synchronized-%E5%92%8C-Lock-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="Synchronized-和-Lock-有什么区别"><a href="#Synchronized-和-Lock-有什么区别" class="headerlink" title="Synchronized 和 Lock 有什么区别"></a>Synchronized 和 Lock 有什么区别</h2><h3 id="原始构成"><a href="#原始构成" class="headerlink" title="原始构成"></a>原始构成</h3><ul>
+<li><p><code>synchronized</code>是Java关键字 属于JVM层面</p>
+<p><code>Monitorenter</code>（底层通过monitor对象来完成，其实wait/notify等方法也依赖于monitor对象，只有在同步块或方法中才能调用wait/notify等方法</p>
+<blockquote>
+<p>现在情况是有一个同步代码块<code>synchronized(new Object){}</code>。</p>
+<p>将<code>.java</code>文件使用<code>java -c</code> 编译成<code>.class</code>文件之后查看java字节码可以看出。 </p>
+<p>在同步代码块中，进入时使用的是<strong>monitorenter</strong>方法，执行完毕之后调用<strong>monitorexit</strong>方法，而且调用了两次，一次是正常退出，一次是异常退出。所以<code>synchronized</code>可以保证不会出现死锁。</p>
+</blockquote>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/java%E5%AD%97%E8%8A%82%E7%A0%81.png" alt="java字节码"></p>
+</li>
+<li><p>Lock是具体的类<code>(java.util.concurrent.locks.Lock)</code>。是API层面的锁。</p>
+</li>
+</ul>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ul>
+<li><p><code>synchronized</code>不需要开发者去手动释放锁，当synchronized代码执行完成后，系统会自动让线程释放对锁的占用</p>
+</li>
+<li><p><code>lock</code>则需要开发者手动释放锁，若没有主动释放锁，就可能会出现思索先行</p>
+<p>需要<code>lock()</code>&amp;<code>unlock()</code>方法配合<code>try/finally</code>代码块来完成</p>
+</li>
+</ul>
+<h3 id="等待是否中断"><a href="#等待是否中断" class="headerlink" title="等待是否中断"></a>等待是否中断</h3><ul>
+<li><code>synchronized</code>不可中断，除非抛出异常或者正常运行完成</li>
+<li><code>ReentrantLock</code>可以中断<ul>
+<li>设置超时方法 <code>tryLock(long timeout, TimeUnit unit)</code></li>
+<li><code>lockInterruptibly()</code>放在代码块中，调用<code>interrupt()</code>方法可中断</li>
+</ul>
+</li>
+</ul>
+<h3 id="加锁是否公平"><a href="#加锁是否公平" class="headerlink" title="加锁是否公平"></a>加锁是否公平</h3><ul>
+<li><code>synchronized</code>    非公平锁</li>
+<li><code>ReentrantLock</code>两者都可以，默认是非公平锁，构造方法中可以穿入<strong>boolean</strong>值，<code>true</code>为公平锁,<code>false</code>为非公平锁。</li>
+</ul>
+<h3 id="锁绑定多个条件Condition"><a href="#锁绑定多个条件Condition" class="headerlink" title="锁绑定多个条件Condition"></a>锁绑定多个条件Condition</h3><ul>
+<li><code>synchronized</code>not support</li>
+<li><code>ReentrantLock</code>用来实现分组唤醒需要唤醒的线程，可以<strong>精确唤醒</strong>。而不是像<code>synchronized</code>要么随机唤醒一个，要呢全部唤醒。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>JUC</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础-0x07:学习阻塞队列</title>
     <url>/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x07-%E5%AD%A6%E4%B9%A0%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><blockquote>
@@ -645,7 +689,7 @@
 <p>前后端项目独立部署，不需要迁就某一方面。</p>
 <p><strong>以上就是我认识的前后端分离，能力有限，一点浅见拙识</strong> </p>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a></p>
-<p><a href="https://allwayz.github.io" target="_blank" rel="noopener">Allwayz</a></p>
+<p><a href="https://allwayz.github.io">Allwayz</a></p>
 ]]></content>
       <tags>
         <tag>前后端分离</tag>
@@ -689,7 +733,7 @@
 
 
 <h3 id="运行程序就可以看到下拉菜单被自动加载了"><a href="#运行程序就可以看到下拉菜单被自动加载了" class="headerlink" title="运行程序就可以看到下拉菜单被自动加载了"></a>运行程序就可以看到下拉菜单被自动加载了</h3><hr>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://allwayz.github.io/">Allwayz</a></p>
 ]]></content>
       <tags>
         <tag>Spring-Boot</tag>
@@ -719,7 +763,7 @@
 
 
 <hr>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://allwayz.github.io/">Allwayz</a></p>
 ]]></content>
       <tags>
         <tag>Spring-Boot</tag>
@@ -922,7 +966,7 @@
     <title>Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版</title>
     <url>/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/</url>
     <content><![CDATA[<blockquote>
-<p>  接上篇博客<a href="http://allwayz.github.io/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/" target="_blank" rel="noopener">Authenticate-user-by-Email</a></p>
+<p>  接上篇博客<a href="http://allwayz.github.io/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/">Authenticate-user-by-Email</a></p>
 </blockquote>
 <a id="more"></a>
 
@@ -974,7 +1018,7 @@
 <hr>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>JetBrick-Template-2x <a href="http://subchen.github.io/jetbrick-template/2x/overview.html" target="_blank" rel="noopener">Documentation</a></p>
 <p>JetBrick-Template Github<a href="https://github.com/subchen/jetbrick-template-2x" target="_blank" rel="noopener">源码</a></p>
-<p><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+<p><a href="https://allwayz.github.io/">Allwayz</a></p>
 ]]></content>
       <tags>
         <tag>Spring-Boot</tag>
@@ -1029,7 +1073,7 @@
 <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/run.jpg" alt="Run"></p>
 <p>终于把模版整明白了，<a href="allwayz.github.io/2020/02/12/Spring-Boot-摸索之路-4：Jetx生成邮件模版/">点此链接</a></p>
 <hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>GitHub源码： <a href="https://github.com/biezhi/oh-my-email" target="_blank" rel="noopener">oh-my-email</a><br><a href="https://allwayz.github.io/" target="_blank" rel="noopener">Allwayz</a></p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>GitHub源码： <a href="https://github.com/biezhi/oh-my-email" target="_blank" rel="noopener">oh-my-email</a><br><a href="https://allwayz.github.io/">Allwayz</a></p>
 ]]></content>
       <tags>
         <tag>Spring-Boot</tag>
