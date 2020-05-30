@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Spring-Boot," />
+  <meta name="keywords" content="JUC," />
 
 
 
@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。">
+<meta name="description" content="JUC阻塞队列的使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper">
-<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;02&#x2F;14&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper&#x2F;index.html">
+<meta property="og:title" content="Java基础-0x09:阻塞队列的使用">
+<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;05&#x2F;30&#x2F;Java%E5%9F%BA%E7%A1%80-0x09-%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%BF%E7%94%A8&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。">
+<meta property="og:description" content="JUC阻塞队列的使用">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper&#x2F;Wrapper.png">
-<meta property="article:published_time" content="2020-02-14T07:58:26.000Z">
-<meta property="article:modified_time" content="2020-05-29T23:04:04.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;metal_iron_old.jpg">
+<meta property="article:published_time" content="2020-05-30T06:19:07.000Z">
+<meta property="article:modified_time" content="2020-05-30T06:27:32.000Z">
 <meta property="article:author" content="Allwayz">
-<meta property="article:tag" content="Spring-Boot">
+<meta property="article:tag" content="JUC">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper&#x2F;Wrapper.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;metal_iron_old.jpg">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://allwayz.github.io/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/"/>
+  <link rel="canonical" href="https://allwayz.github.io/2020/05/30/Java基础-0x09-阻塞队列的使用/"/>
 
 
 
 
 
-  <title>Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper | Allwayz aint a coder</title>
+  <title>Java基础-0x09:阻塞队列的使用 | Allwayz aint a coder</title>
   
 
 
@@ -350,7 +350,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/">
+    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/05/30/Java%E5%9F%BA%E7%A1%80-0x09-%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Allwayz">
@@ -367,7 +367,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper</h1>
+          <h1 class="post-title" itemprop="name headline">Java基础-0x09:阻塞队列的使用</h1>
         
 
         <div class="post-meta">
@@ -379,8 +379,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-14T15:58:26+08:00">
-                2020-02-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-30T14:19:07+08:00">
+                2020-05-30
               </time>
             
 
@@ -436,190 +436,23 @@
       
 
       
-        <blockquote>
-<p>  MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。</p>
+        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/metal_iron_old.jpg" alt="ss"></p>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="阻塞队列的使用"><a href="#阻塞队列的使用" class="headerlink" title="阻塞队列的使用"></a>阻塞队列的使用</h2><a id="more"></a>
+
+<h3 id="传统版生产者消费者Demo："><a href="#传统版生产者消费者Demo：" class="headerlink" title="传统版生产者消费者Demo："></a>传统版生产者消费者Demo：</h3><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 题目：现在两个线程，可以操作初始值为零</span></span><br><span class="line"><span class="comment"> * 的一个变量，实现一个线程对该变量加1，</span></span><br><span class="line"><span class="comment"> * 一个线程对该变量减1，实现交替，执行10</span></span><br><span class="line"><span class="comment"> * 轮，变量初始值为0。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProdConsumerTranditionDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ResourcesInfo resourcesInfo = <span class="keyword">new</span> ResourcesInfo();</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">                resourcesInfo.add();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">                resourcesInfo.minus();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResourcesInfo</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer integer = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    <span class="keyword">private</span> Condition condition = lock.newCondition();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>&#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (integer != <span class="number">0</span>)&#123;</span><br><span class="line">                condition.await();</span><br><span class="line">            &#125;</span><br><span class="line">            integer++;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() +<span class="string">"\t"</span>+ integer);</span><br><span class="line">            condition.signalAll();</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">minus</span><span class="params">()</span></span>&#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (integer == <span class="number">0</span>)&#123;</span><br><span class="line">                condition.await();</span><br><span class="line">            &#125;</span><br><span class="line">            integer = <span class="number">0</span>;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() +<span class="string">"\t"</span>+ integer);</span><br><span class="line">            condition.signalAll();</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>在资源类中初始化ReentrantLock，然后通过<code>newConrition()</code>的方法对线程实现按需调用。condition中的<code>await()</code>和<code>singal()</code>方法可以实现线程的挂起与唤醒。</p>
+<p><strong>还需要做的事防止线程的虚假唤醒</strong></p>
+<p>在<code>Object</code>类中有两个方法，<code>wait()</code>和<code>notify()</code>。在文档中写道：</p>
+<blockquote>
+<p>  <strong>As in the one argument version, interrupts and spurious wakeups are possible, and this method should always be used in a loop:</strong></p>
+  <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">stchronized(obj)&#123;</span><br><span class="line">   <span class="keyword">while</span> (&lt;condition does not hole&gt;)</span><br><span class="line">       obj.wait()l</span><br><span class="line">   ...<span class="comment">// Perform action appropriate to condition</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>  意思是:<br>  <strong>在一个参数版本中，中断和虚假的唤醒是可能的，并且这个方法应该总是在循环中使用</strong></p>
 </blockquote>
-<a id="more"></a>
-
-<h1 id="构造器关系"><a href="#构造器关系" class="headerlink" title="构造器关系"></a>构造器关系</h1><p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/Wrapper.png" alt="Wrapper"></p>
-<ul>
-<li>蓝色线连起来的是Wrapper的类，其他都是继承</li>
-<li>最下边四个是正常类，可以new对象</li>
-<li>加了Abstract的是抽象类</li>
-<li>蓝色实线是继承关系</li>
-</ul>
-<h2 id="wapper介绍-："><a href="#wapper介绍-：" class="headerlink" title="wapper介绍 ："></a>wapper介绍 ：</h2><ul>
-<li><code>Wrapper</code> ： 条件构造抽象类，最顶端父类，抽象类中提供4个方法西面贴源码展示</li>
-<li><code>AbstractWrapper</code> ： 用于查询条件封装，生成 <strong>sql</strong> 的 <strong>where</strong> 条件</li>
-<li><code>AbstractLambdaWrapper</code> ： <strong>Lambda</strong> 语法使用 <strong>Wrapper</strong>统一处理解析 <strong>lambda</strong> 获取 <strong>column</strong>。</li>
-<li><code>LambdaQueryWrapper</code> ：看名称也能明白就是用于<strong>Lambda</strong>语法使用的查询<strong>Wrapper</strong></li>
-<li><code>LambdaUpdateWrapper</code> ： <strong>Lambda</strong> 更新封装<strong>Wrapper</strong></li>
-<li><code>QueryWrapper</code> ： <strong>Entity</strong> 对象封装操作类，不是用<strong>lambda</strong>语法</li>
-<li><code>UpdateWrapper</code> ： <strong>Update</strong> 条件封装，用于<strong>Entity</strong>对象更新操作</li>
-</ul>
-<h1 id="构造器方法"><a href="#构造器方法" class="headerlink" title="构造器方法"></a>构造器方法</h1><table>
-<thead>
-<tr>
-<th>FunctionName</th>
-<th>Desc</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>eq( );</td>
-<td>等于      =</td>
-<td>eq(“name”,”Allwayz”) -&gt; name = ‘Allwayz’</td>
-</tr>
-<tr>
-<td>ne( );</td>
-<td>不等于   !=</td>
-<td>ne(“name”,”Allwayz”) -&gt; name&lt;&gt;’Allwayz’</td>
-</tr>
-<tr>
-<td>gt( );</td>
-<td>大于      &gt;</td>
-<td>gt(“age”,18) -&gt; age &gt; 18</td>
-</tr>
-<tr>
-<td>ge( );</td>
-<td>大于等于 &gt;=</td>
-<td>ge(“age”,18) -&gt; age &gt;= 18</td>
-</tr>
-<tr>
-<td>lt( );</td>
-<td>小于    &lt;</td>
-<td>lt(“age”,18) -&gt; age &lt; 18</td>
-</tr>
-<tr>
-<td>le( );</td>
-<td>小于等于 &lt;=</td>
-<td>le(“age”,18) -&gt; age &lt;= 18</td>
-</tr>
-<tr>
-<td>between( );</td>
-<td>BETWEEN</td>
-<td>between(“age”,18,30) -&gt; age between 18 and 30</td>
-</tr>
-<tr>
-<td>notBetween( );</td>
-<td>NOT BETWEEN</td>
-<td>notBetween(“age”,18,30) -&gt; age not between 18 and 30</td>
-</tr>
-<tr>
-<td>like( );</td>
-<td>LIKE ‘%value%’</td>
-<td>like(“name”,”All”) -&gt; name like ‘%All%’</td>
-</tr>
-<tr>
-<td>notLike( );</td>
-<td>NOT LIKE ‘%value%’</td>
-<td>notLike(“name”,”All”) -&gt; name not like ‘%All%’</td>
-</tr>
-<tr>
-<td>likeLeft( );</td>
-<td>LIKE ‘%value’</td>
-<td>likeLeft(“name”,”All”) -&gt; name like ‘%All’</td>
-</tr>
-<tr>
-<td>likeRight( );</td>
-<td>LIKE ‘value%’</td>
-<td>likeRight(“name”,”All”) -&gt; name like ‘All%’</td>
-</tr>
-<tr>
-<td>isNull( );</td>
-<td>Value IS NULL</td>
-<td>isNull(“name”) -&gt;name is null</td>
-</tr>
-<tr>
-<td>isNotNull( );</td>
-<td>Value IS NOT NULL</td>
-<td>isNotNull(“name”) -&gt;name is not null</td>
-</tr>
-<tr>
-<td>in( );</td>
-<td>Value IN(v0,v1…)</td>
-<td>in(“age”,{1,2,3}) -&gt; age in (1,2,3)</td>
-</tr>
-<tr>
-<td>notIn( );</td>
-<td>Value NOT IN(v0,v1…)</td>
-<td>notIn(“age”,{1,2,3}) -&gt; age not in (1,2,3)</td>
-</tr>
-<tr>
-<td>inSql( );</td>
-<td>Value IN(sql)</td>
-<td>inSql(“id”,”Select id from table where id &lt; 3”) -&gt; id in (Select id from table where id &lt; 3)</td>
-</tr>
-<tr>
-<td>notInSql( );</td>
-<td>Value NOT IN(sql)</td>
-<td>notInSql(“id”,”Select id from table where id &lt; 3”) -&gt; id not in (Select id from table where id &lt; 3)</td>
-</tr>
-<tr>
-<td>groupBy( );</td>
-<td>分组</td>
-<td>groupBy(“id”,”name”) -&gt; group by id, name</td>
-</tr>
-<tr>
-<td>orderByAsc( );</td>
-<td>升序排列</td>
-<td>orderByAsc(“id”,”name”) -&gt; order by id ASC, name ASC</td>
-</tr>
-<tr>
-<td>orderByDesc( );</td>
-<td>降序排列</td>
-<td>orderByDesc(“id”,”name”) -&gt; order by id DESC, nameDESC</td>
-</tr>
-<tr>
-<td>orderBy( );</td>
-<td>排列</td>
-<td>orderBy(true, true,”id”,”name”) -&gt; order by id ASC, name ASC</td>
-</tr>
-<tr>
-<td>having( );</td>
-<td>HAVING(sql)</td>
-<td>having(“sum(age) &gt; {0}”,11) -&gt; having sum (age) &gt;11</td>
-</tr>
-<tr>
-<td>or( );</td>
-<td>拼接 OR</td>
-<td></td>
-</tr>
-<tr>
-<td>and( );</td>
-<td>AND 嵌套</td>
-<td></td>
-</tr>
-<tr>
-<td>apply( );</td>
-<td>拼接 sql</td>
-<td></td>
-</tr>
-<tr>
-<td>last( )</td>
-<td>无视优化规则直接拼接到sql最后</td>
-<td></td>
-</tr>
-<tr>
-<td>exists( );</td>
-<td>拼接 EXISTS（sql）</td>
-<td></td>
-</tr>
-<tr>
-<td>notExists( );</td>
-<td>拼接 NOT EXIXSTS （sql）</td>
-<td></td>
-</tr>
-<tr>
-<td>nested( );</td>
-<td>正常嵌套 不带AND OR</td>
-<td></td>
-</tr>
-</tbody></table>
-<h1 id="使用过程"><a href="#使用过程" class="headerlink" title="使用过程"></a>使用过程</h1><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Fuzzy query</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMajor</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;Major&gt; majorList = majorMapper</span><br><span class="line">        .selectList(<span class="keyword">new</span> QueryWrapper&lt;Major&gt;().like(<span class="string">"major_code"</span>,<span class="string">"MC_506"</span>));</span><br><span class="line">    majorList.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>控制台</strong></p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@<span class="number">2005675644</span> wrapping com<span class="variable">.mysql</span><span class="variable">.cj</span><span class="variable">.jdbc</span><span class="variable">.ConnectionImpl</span>@b70fa38] will <span class="keyword">not</span> be managed by Spring</span><br><span class="line"><span class="comment">// SQL语句</span></span><br><span class="line">==&gt;  Preparing: SELECT major_id,major_code,major_name,major_status,create_time,update_time,is_delete FROM major WHERE is_delete=<span class="number">0</span> AND (major_code LIKE ?) </span><br><span class="line"><span class="comment">//变量</span></span><br><span class="line">==&gt; Parameters: %MC_506%(String)</span><br><span class="line"><span class="comment">//结果</span></span><br><span class="line">&lt;==    Columns: major_id, major_code, major_name, major_status, create_time, update_time, is_delete</span><br><span class="line">&lt;==        Row: <span class="number">1</span>, MC_50601, History of Architecture, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">8</span>, MC_50602, International System in the <span class="number">20</span>th Century, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">9</span>, MC_50603, Ancient Greece:Myth,Art,War, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">0</span></span><br><span class="line">&lt;==      Total: <span class="number">3</span></span><br><span class="line">Closing non transactional SqlSession </span><br><span class="line">[org<span class="variable">.apache</span><span class="variable">.ibatis</span><span class="variable">.session</span><span class="variable">.defaults</span><span class="variable">.DefaultSqlSession</span>@<span class="number">38</span>c460e8]</span><br><span class="line">Major(majorId=<span class="number">1</span>, majorCode=MC_50601, majorName=History of Architecture, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">8</span>, majorCode=MC_50602, majorName=International System in the <span class="number">20</span>th Century, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">9</span>, majorCode=MC_50603, majorName=Ancient Greece:Myth,Art,War, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, isDelete=<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
+<p>所以说，判断只能用while，因为如果线程不止两个，那么使用if判断就会出现过度消费或过度生产的问题，会导致线程不安全。</p>
+<h3 id="阻塞队列版生产者消费着通信"><a href="#阻塞队列版生产者消费着通信" class="headerlink" title="阻塞队列版生产者消费着通信"></a>阻塞队列版生产者消费着通信</h3><p>把<strong><code>volatile</code>/<code>CAS</code>/<code>atomicInteger</code>/<code>BlockingQueue</code>/<code>线程交互</code>/<code>原子引用</code></strong>融合到一个Demo中：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProdConsumerBlockingQueueDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Resourcedemo resourcedemo = <span class="keyword">new</span> Resourcedemo(<span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(<span class="number">10</span>));</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t Product Thread Start..."</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//调用生产方法</span></span><br><span class="line">                resourcedemo.myProduction();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,<span class="string">"prod"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t Consumer Thread Start..."</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//调用消费方法</span></span><br><span class="line">                resourcedemo.myConsumer();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,<span class="string">"consumer"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println();</span><br><span class="line">            System.out.println();</span><br><span class="line">            System.out.println(<span class="string">"5s time is up"</span>);</span><br><span class="line">            <span class="comment">//调用结束方法</span></span><br><span class="line">            resourcedemo.stop();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Resourcedemo</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">private</span> AtomicInteger atomicInteger = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 传类型的时候，应该穿一个接口，而不是一个具体的类</span></span><br><span class="line"><span class="comment">    * 这样做可以兼顾到兼容性的问题，后面编写的时候可以</span></span><br><span class="line"><span class="comment">    * 传任意实现BlockingQueue的类进来。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    BlockingQueue&lt;String&gt; blockingQueue = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Resourcedemo</span><span class="params">(BlockingQueue&lt;String&gt; blockingQueue)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.blockingQueue = blockingQueue;</span><br><span class="line">        System.out.println(blockingQueue.getClass().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">myProduction</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">boolean</span> retValue;</span><br><span class="line">        <span class="comment">//使用while来判断</span></span><br><span class="line">        <span class="keyword">while</span> (flag)&#123;</span><br><span class="line">            data = String.valueOf(atomicInteger.incrementAndGet());</span><br><span class="line">            retValue = blockingQueue.offer(data,<span class="number">2L</span>, TimeUnit.SECONDS);</span><br><span class="line">            <span class="keyword">if</span>(retValue)&#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t\t 插入队列"</span>+data+<span class="string">"\t 成功"</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t 插入队列"</span>+data+<span class="string">"\t 失败"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">"\t FLAG = false,生产停止"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">myConsumer</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String result = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span>(flag)&#123;</span><br><span class="line">            result = blockingQueue.poll(<span class="number">2L</span>,TimeUnit.SECONDS);</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == result || result.equalsIgnoreCase(<span class="string">""</span>))&#123;</span><br><span class="line">                flag = <span class="keyword">false</span>;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t 超过2秒钟没有取得，消费退出"</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">"\t 消费队列"</span> + result + <span class="string">"\t 成功"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        <span class="comment">//因为线程的可见性，所以只要一把flag改为false，所有线程都可以看见</span></span><br><span class="line">        <span class="keyword">this</span>.flag = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
       
@@ -644,7 +477,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://allwayz.github.io/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/" title="Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper">allwayz.github.io/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/</a>
+    <a href="http://allwayz.github.io/2020/05/30/Java基础-0x09-阻塞队列的使用/" title="Java基础-0x09:阻塞队列的使用">allwayz.github.io/2020/05/30/Java基础-0x09-阻塞队列的使用/</a>
   </li>
 
 
@@ -673,7 +506,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Spring-Boot/" rel="tag"># Spring-Boot</a>
+            <a href="/tags/JUC/" rel="tag"># JUC</a>
           
         </div>
       
@@ -686,8 +519,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/" rel="next" title="Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版">
-                <i class="fa fa-chevron-left"></i> Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版
+              <a href="/2020/05/30/Java%E5%9F%BA%E7%A1%80-0x08-Synchronized-%E5%92%8C-Lock-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/" rel="next" title="Java基础-0x08:Synchronized 和 Lock 有什么区别">
+                <i class="fa fa-chevron-left"></i> Java基础-0x08:Synchronized 和 Lock 有什么区别
               </a>
             
           </div>
@@ -695,10 +528,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot-%E9%9B%86%E6%88%90JSP/" rel="prev" title="Spring-Boot-摸索之路-6：Spring-Boot 集成JSP">
-                Spring-Boot-摸索之路-6：Spring-Boot 集成JSP <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -895,7 +724,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#构造器关系"><span class="nav-number">1.</span> <span class="nav-text">构造器关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#wapper介绍-："><span class="nav-number">1.1.</span> <span class="nav-text">wapper介绍 ：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造器方法"><span class="nav-number">2.</span> <span class="nav-text">构造器方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用过程"><span class="nav-number">3.</span> <span class="nav-text">使用过程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞队列的使用"><span class="nav-number">1.1.</span> <span class="nav-text">阻塞队列的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传统版生产者消费者Demo："><span class="nav-number">1.1.1.</span> <span class="nav-text">传统版生产者消费者Demo：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞队列版生产者消费着通信"><span class="nav-number">1.1.2.</span> <span class="nav-text">阻塞队列版生产者消费着通信</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
