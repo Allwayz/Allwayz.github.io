@@ -90,8 +90,10 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_21.59.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_38.00.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_34.02.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_.02.09.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_31.49.png">
 <meta property="article:published_time" content="2020-06-02T11:40:37.000Z">
-<meta property="article:modified_time" content="2020-06-02T11:46:22.000Z">
+<meta property="article:modified_time" content="2020-06-02T13:16:01.000Z">
 <meta property="article:author" content="Allwayz">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
@@ -446,8 +448,7 @@
 <p>对于堆内存而言：<br> <img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_38.00.png" alt="屏幕快照 2020-06-02 15.38.00"></p>
 <p>有伊甸园区，幸存者0区和幸存者1区。</p>
 <p>GC的作用与在方法区和堆。</p>
-<h2 id="常见的垃圾回收算法"><a href="#常见的垃圾回收算法" class="headerlink" title="常见的垃圾回收算法"></a>常见的垃圾回收算法</h2><ul>
-<li><p>引用计数</p>
+<h2 id="常见的垃圾回收算法"><a href="#常见的垃圾回收算法" class="headerlink" title="常见的垃圾回收算法"></a>常见的垃圾回收算法</h2><p>引用计数</p>
 <p>有对象引用的话，就+1。没有对象引用就-1。到0为止</p>
 <p><strong>缺点</strong>：</p>
 <ul>
@@ -455,10 +456,9 @@
 <li>较难处理循环引用</li>
 </ul>
 <p><strong>JVM的实现一般不采用这种方式</strong></p>
-</li>
-<li><p>复制</p>
+<p>复制</p>
 <p>复制算法在年轻代使用。</p>
-<p>==口诀：复制之后有交换，谁空谁是To==</p>
+<p><u><strong>口诀：复制之后有交换，谁空谁是To</strong></u></p>
 <p>其实就是Survivor0和Survivor1区中的复制，交换，清空。</p>
 <ol>
 <li><p>eden、SurvivorFrom复制到ServivorTo，年龄+1</p>
@@ -468,18 +468,17 @@
 <p>然后，清空Eden和SurvivorFrom中的对象，也即<strong>复制之后有交换，谁空谁是To</strong></p>
 </li>
 <li><p>SurvivorTo和SurvivorFrom互换</p>
-<p>最后，SurvivorTo和ServivorFrom互换，原ServivorTo成为下一次GC时的SruvivorFrom区。部分对象会在From区和To区域中<strong>来回复制</strong>，如此交换==15次==（由JVM参数<code>MaxTenuringThreshould</code>决定，这个参数默认是15），最终如果还是存活，就放入老年代。</p>
+<p>最后，SurvivorTo和ServivorFrom互换，原ServivorTo成为下一次GC时的SruvivorFrom区。部分对象会在From区和To区域中<strong>来回复制</strong>，如此交换<strong><u>15次</u></strong>（由JVM参数<code>MaxTenuringThreshould</code>决定，这个参数默认是15），最终如果还是存活，就放入老年代。</p>
 </li>
 </ol>
 <p><strong>优点</strong>：没有产生内存碎片，因为是整体复的。</p>
 <p><strong>缺点</strong>：浪费空间，一些大的对象复制起来会耗时。</p>
-</li>
-<li><p>标记清除（Mark-Sweep）</p>
+<p>标记清除（Mark-Sweep）</p>
 <p>先标记 –&gt; 后清除：<em>算法分为标记和清除两个阶段，先标记出要回收的对象，然后统一回收这些对象。</em></p>
 <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_34.02.png" alt="屏幕快照 2020-06-02 15.34.02"></p>
 <p><strong>优点</strong>：对象没有大面积复制，节约了内存空间</p>
 <p><strong>缺点</strong>：容易产生内存碎片</p>
-</li>
+<ul>
 <li><p>标记整理</p>
 <p>原理：</p>
 <ol>
@@ -487,7 +486,7 @@
 <p>与标记清除算法一样</p>
 </li>
 <li><p>压缩（Compact）</p>
-<p>再次扫描，并往一段==滑动==存活对象</p>
+<p>再次扫描，并往一段<strong><u>滑动</u></strong>存活对象</p>
 </li>
 </ol>
 <p><strong>优点</strong>：没有内存碎片</p>
@@ -498,6 +497,26 @@
 <p>  <code>复制</code>多用与年轻代，<code>标记清除</code>和<code>标记整理</code>多用于老生代。</p>
 <p>  <code>标记整理</code>既不会产生内存碎片，也不浪费空间，但是耗时严重。</p>
 </blockquote>
+<h2 id="JVM垃圾回收的时候如何确定垃圾"><a href="#JVM垃圾回收的时候如何确定垃圾" class="headerlink" title="JVM垃圾回收的时候如何确定垃圾"></a>JVM垃圾回收的时候如何确定垃圾</h2><blockquote>
+<p>  什么是<strong>垃圾</strong>？</p>
+<p>  简单的说就是内存中不再被使用到的空间就是垃圾</p>
+</blockquote>
+<h3 id="如何判断一个对象是否可以被回收"><a href="#如何判断一个对象是否可以被回收" class="headerlink" title="如何判断一个对象是否可以被回收"></a>如何判断一个对象是否可以被回收</h3><p>引用计数法 ==不再使用==</p>
+<ul>
+<li><p>枚举跟节点做可达性分析（<strong>跟搜索历经</strong>）</p>
+<p>为了解决引用计数法的循环引用的问题，<strong>Java</strong>使用了<strong>可达性分析</strong>的方法</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_.02.09.png" alt="屏幕快照 2020-06-02 20.02.09"></p>
+<p>所谓，<code>GC roots</code> 或者说 <code>tracing GC</code>的<strong>根集合</strong> 就是==一组必须活跃的引用==。</p>
+<p>==基本思路就是通过一斜裂名为<code>GC Root</code>的对象作为起始点==，从这个被称为GC Roots的对象开始向下搜索，如果一个对象到GC Roots没有任何引用链相连，则说明此对象不可用。也即给定一个集合的引用作为根出发，通过引用关系遍历对象，能被遍历到的（可达的）对象就被判定为存活；没有被遍历到的（不可达）就自然被判定为死亡。</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_31.49.png" alt="屏幕快照 2020-06-02 20.31.49"></p>
+</li>
+</ul>
+<h3 id="哪些对象可以作为GC-Roots的对象？"><a href="#哪些对象可以作为GC-Roots的对象？" class="headerlink" title="哪些对象可以作为GC Roots的对象？"></a>哪些对象可以作为GC Roots的对象？</h3><ul>
+<li>虚拟机栈（栈帧中的局部变量区，也叫局部变量表）中引用的对象</li>
+<li>方法去中的类静态属性引用的对象</li>
+<li>方法去中常量引用的对象</li>
+<li>本地方法栈中<code>JNI</code>（Native方法）引用的对象</li>
+</ul>
 
       
     </div>
@@ -572,6 +591,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0e-JVM%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0/" rel="prev" title="Java基础-0x0e:JVM主要参数">
+                Java基础-0x0e:JVM主要参数 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -652,7 +675,7 @@
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -768,7 +791,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">1.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM体系结构概览"><span class="nav-number">1.1.</span> <span class="nav-text">JVM体系结构概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的垃圾回收算法"><span class="nav-number">1.2.</span> <span class="nav-text">常见的垃圾回收算法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">1.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM体系结构概览"><span class="nav-number">1.1.</span> <span class="nav-text">JVM体系结构概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的垃圾回收算法"><span class="nav-number">1.2.</span> <span class="nav-text">常见的垃圾回收算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM垃圾回收的时候如何确定垃圾"><span class="nav-number">1.3.</span> <span class="nav-text">JVM垃圾回收的时候如何确定垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何判断一个对象是否可以被回收"><span class="nav-number">1.3.1.</span> <span class="nav-text">如何判断一个对象是否可以被回收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哪些对象可以作为GC-Roots的对象？"><span class="nav-number">1.3.2.</span> <span class="nav-text">哪些对象可以作为GC Roots的对象？</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

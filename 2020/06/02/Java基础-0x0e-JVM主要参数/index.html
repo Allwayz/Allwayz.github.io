@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JVM," />
 
 
 
@@ -79,28 +79,20 @@
 
 
 
-<meta name="description" content="程序猿&amp;攻城狮的自我修养">
-<meta property="og:type" content="website">
-<meta property="og:title" content="schedule">
-<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;schedule&#x2F;index.html">
+<meta name="description" content="JVMJVM调优和参数配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-0x0e:JVM主要参数">
+<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;06&#x2F;02&#x2F;Java%E5%9F%BA%E7%A1%80-0x0e-JVM%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="程序猿&amp;攻城狮的自我修养">
+<meta property="og:description" content="JVMJVM调优和参数配置">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-23T00:05:14.000Z">
-<meta property="article:modified_time" content="2020-01-23T00:05:16.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;14084.jpg">
+<meta property="article:published_time" content="2020-06-02T14:52:36.000Z">
+<meta property="article:modified_time" content="2020-06-02T14:55:56.000Z">
 <meta property="article:author" content="Allwayz">
-<meta property="article:tag" content="技术博客">
-<meta property="article:tag" content="开发博客">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="Spring">
-<meta property="article:tag" content="Spring Boot">
-<meta property="article:tag" content="Spring Cloud">
-<meta property="article:tag" content="JUC">
 <meta property="article:tag" content="JVM">
-<meta property="article:tag" content="Hexo">
-<meta property="article:tag" content="Blog">
-<meta property="article:tag" content="Next">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;14084.jpg">
 
 
 
@@ -130,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://allwayz.github.io/schedule/"/>
+  <link rel="canonical" href="https://allwayz.github.io/2020/06/02/Java基础-0x0e-JVM主要参数/"/>
 
 
 
 
 
-  <title>schedule | Allwayz aint a coder</title>
+  <title>Java基础-0x0e:JVM主要参数 | Allwayz aint a coder</title>
   
 
 
@@ -346,33 +338,293 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0e-JVM%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">schedule</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
+          <h1 class="post-title" itemprop="name headline">Java基础-0x0e:JVM主要参数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-02T22:52:36+08:00">
+                2020-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-      </div>
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/14084.jpg" alt="s"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="JVM调优和参数配置"><a href="#JVM调优和参数配置" class="headerlink" title="JVM调优和参数配置"></a>JVM调优和参数配置</h2><a id="more"></a>
+
+<h3 id="JVM参数类型"><a href="#JVM参数类型" class="headerlink" title="JVM参数类型"></a>JVM参数类型</h3><ul>
+<li><p>标配参数</p>
+<ul>
+<li><code>java -version</code></li>
+<li><code>java -help</code></li>
+<li><code>java -showversion</code></li>
+</ul>
+</li>
+<li><p>x参数（了解）</p>
+<ul>
+<li><code>-Xint</code>          解释执行</li>
+<li><code>-Xcomp</code>        第一次使用就编译成本地代码</li>
+<li><code>-Xmixed</code>      混合模式</li>
+</ul>
+</li>
+<li><p><strong><u>xx参数</u></strong> </p>
+<ul>
+<li><p>Boolean类型</p>
+<p>一般的公式为：<code>-XX:+/- 某个属性值</code></p>
+<p>➕表示开启； ➖表示关闭</p>
+<p>Case：</p>
+<ul>
+<li><p><code>-XX:+PrintGCDetails</code></p>
+</li>
+<li><p><code>-XX:-PringGCDetails</code></p>
+<p>//是否打印GC收集细节</p>
+<ol>
+<li>使用<code>jps -l</code>命令查看正在运行的<strong>Java</strong>进程</li>
+<li>使用<code>jinfo -flag PrintGCDetails {进程编号}</code>命令查看是否打开GC收集细节</li>
+</ol>
+</li>
+<li><p><code>-XX:+UseSerialGC</code></p>
+</li>
+<li><p><code>-XX:-UserSerialGC</code></p>
+<p>//是否使用串行垃圾回收器</p>
+</li>
+</ul>
+</li>
+<li><p>K,V设值类型</p>
+<p>公式：<code>-XX:属性key=属性值value</code></p>
+<p>Case：</p>
+<ul>
+<li><p><code>-XX:MetaspaceSize=128m</code></p>
+<p>使用<code>jinfo -flag MetaspaceSize {进程编号}</code> 可以查看元空间的初始值</p>
+</li>
+<li><p><code>-XX:MaxTenuringThreshold=15</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<p>​    </p>
+<p>使用<code>jinfo -flags {进程编号}</code> 查看JVM属性</p>
+<ul>
+<li><p>⚠️ 坑：</p>
+<p>有两个经典参数，如何解释</p>
+<ul>
+<li><code>-Xms</code>：等于<code>-XX:InitialHeapSize</code> 初始化堆内存</li>
+<li><code>-Xmx</code>：等于<code>-XX:MaxHeapSize</code>   最大堆内存</li>
+</ul>
+</li>
+</ul>
+<p>​    </p>
+</li>
+</ul>
+<h3 id="查看JVM默认值"><a href="#查看JVM默认值" class="headerlink" title="查看JVM默认值"></a>查看JVM默认值</h3><ul>
+<li><p><code>-XX:+PrintFlagsInitial</code></p>
+<p>主要查看初始默认</p>
+<p>公式：</p>
+<blockquote>
+<p>  <code>java -XX:+PrintFlagsInital -version</code></p>
+<p>  <code>java -XX:+PrintFlagsInital</code></p>
+</blockquote>
+</li>
+<li><p><code>-XX:+PrintFlagsFinal</code></p>
+<p>主要查看修改和更新的内容</p>
+<p>公式：<code>java -XX:+PrintFlagsFinal</code></p>
+<p>打印出<code>=</code>表示参数没有修改</p>
+<p>打印出<code>:=</code>表示人为修改了参数 或 JVM因为系统和硬件的不同，自动修改了参数</p>
+</li>
+<li><p>PrintFlagsFinal举例，运行Java命令的同时打印出参数</p>
+<p><code>java -XX:+PrintFlagsFinal -Xss128k {javaClassName}</code></p>
+</li>
+</ul>
+<ul>
+<li><p><code>-XX:+PrintCommandLineFlags</code></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ java -XX:+PrintCommandLineFlags -version</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+<pre><code><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-XX:InitialHeapSize&#x3D;268435456 -XX:MaxHeapSize&#x3D;4294967296 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC</span><br><span class="line">java version &quot;1.8.0_241&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_241-b07)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)</span><br></pre></td></tr></table></figure></div>
+
+主要看最后一个参数：`-XX:+UseParallelGC` 用来看现在使用的垃圾回收器</code></pre>
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+      <div>
+        <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Allwayz
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://allwayz.github.io/2020/06/02/Java基础-0x0e-JVM主要参数/" title="Java基础-0x0e:JVM主要参数">allwayz.github.io/2020/06/02/Java基础-0x0e-JVM主要参数/</a>
+  </li>
+
+
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({
+          title: "",
+          text: '复制文章链接成功',
+          icon: "success",
+          showConfirmButton: true
+          });
+      });
+    });  
+</script>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0d-GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%88%9D%E6%8E%A2/" rel="next" title="Java基础-0x0d:GC垃圾回收初探">
+                <i class="fa fa-chevron-left"></i> Java基础-0x0d:GC垃圾回收初探
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -409,8 +661,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -531,6 +792,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">1.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM调优和参数配置"><span class="nav-number">1.1.</span> <span class="nav-text">JVM调优和参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM参数类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">JVM参数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看JVM默认值"><span class="nav-number">1.1.2.</span> <span class="nav-text">查看JVM默认值</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
