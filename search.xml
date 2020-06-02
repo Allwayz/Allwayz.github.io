@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础-0x0c:线程池底层原理</title>
+    <url>/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0c-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/Bing_20200602.jpg" alt="ss"></p>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h3 id="线程池底层工作原理"><a href="#线程池底层工作原理" class="headerlink" title="线程池底层工作原理"></a>线程池底层工作原理</h3><a id="more"></a>
+
+<ol>
+<li><p>在创建了线程池后，等待调过来的任务请求。</p>
+</li>
+<li><p>当调用<code>execute()</code>方法添加一个请求任务时，线程池会做如下判断：</p>
+<ol>
+<li>如果正在运行的线程数量小于<code>corePoolSize</code>，那么马上创建线程运行这个任务；</li>
+<li>如果正在运行的线程数大于或等于<code>corePoolSize</code>，那么将这个任务<strong>放入队列</strong>；</li>
+<li>如果这个时候队列满了且正在运行的线程数量还小于<code>maximumPoolSize</code>,那么还是要创建非核心线程立刻来运行这个任务；</li>
+<li>如果队列满了且正在运行的线程数量大于或等于<code>maximumPoolSize</code>，那么线程池会<strong>启动饱和拒绝侧裂来执行</strong>。</li>
+</ol>
+</li>
+<li><p>当一个线程完成任务时，它会从队列中取下一个任务来执行。</p>
+</li>
+<li><p>当一个线程无事可做超过一定时间(<code>keepAliveTime</code>)时，线程池会判断：</p>
+<p>如果当权运行的线程数大雨<code>corePoolSize</code>，那么这个线程就会被停掉。</p>
+<p>所以线程池的所有任务完成后他最终会收缩到<code>corePoolSize</code>的大小。</p>
+</li>
+</ol>
+<h3 id="线程池拒绝策略"><a href="#线程池拒绝策略" class="headerlink" title="线程池拒绝策略"></a>线程池拒绝策略</h3><h4 id="AbortPolicy-Default"><a href="#AbortPolicy-Default" class="headerlink" title="AbortPolicy (Default)"></a>AbortPolicy (Default)</h4><p>直接抛出异常(<code>RejectedExecutionException</code>)，组织系统正常运行。</p>
+<h4 id="CallerRunsPolicy"><a href="#CallerRunsPolicy" class="headerlink" title="CallerRunsPolicy"></a>CallerRunsPolicy</h4><p>“调用者运行”一种调节机制，该策略即不会抛弃任务，也不会抛出异常，而是将某些人物回退到调用方</p>
+<h4 id="DiscardOldestPolicy"><a href="#DiscardOldestPolicy" class="headerlink" title="DiscardOldestPolicy"></a>DiscardOldestPolicy</h4><p>抛弃队列中等待最久的任务，然后把当前任务加入队列中尝试再次提交当前任务</p>
+<h4 id="DescardPolicy"><a href="#DescardPolicy" class="headerlink" title="DescardPolicy"></a>DescardPolicy</h4><p>直接丢弃任务，不与任何处理也不抛异常。如果允许任务丢失，这是最好的一种方案。</p>
+<blockquote>
+<p>  以上策略均实现了<code>RejectExecutionHandle</code>接口</p>
+</blockquote>
+<h3 id="手写线程池"><a href="#手写线程池" class="headerlink" title="手写线程池"></a>手写线程池</h3><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThreadPoolDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ExecutorService threadPool = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">2</span>,<span class="number">5</span>,<span class="number">1L</span>,TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;(<span class="number">3</span>),</span><br><span class="line">                Executors.defaultThreadFactory(),</span><br><span class="line">                <span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                threadPool.execute(()-&gt;&#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">"\t 办理业务"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">            threadPool.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="线程池参数配置"><a href="#线程池参数配置" class="headerlink" title="线程池参数配置"></a>线程池参数配置</h3><p>设置<code>maximumPoolSize</code>的值：</p>
+<ul>
+<li><p>CPU密集型</p>
+<p>任务需要大量的运算，且没有阻塞，CPU一直全速运行</p>
+<p>CPU密集型只有在真正的多核CPU上才可能得到加速（通过多线程）</p>
+<p>一般公式： ==CPU核数 = 线程池内线程数==</p>
+</li>
+<li><p>I/O密集型</p>
+<ul>
+<li><p>由于I/O密集型任务线程并不是一直在执行任务，则应配置尽可能多的线程，如==CPU核数*2==</p>
+</li>
+<li><p>该任务需要大量的I/O，即大量的阻塞</p>
+<p>在单线程上运行I/O密集型的任务会导致大量的浪费CPU的运算能力浪费在等待。所以在I/O密集型任务重使用多线程可以大大的加速程序运行，即使在单核CPU上，这种加速主要就是利用了被浪费掉的阻塞时间</p>
+<p>参考公式：==CPU核数/（1 - 阻塞系数）==    （<strong>阻塞系数在0.8～0.9之间</strong>）</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><blockquote>
+<p>  两个或两个以上的进程在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力干涉，那他们都将无法推进下去，如果系统资源冲粗，进程的资源请求都能得到满足，死锁出现的可能性就很低，否则就会因争夺有限的资源而陷入死锁</p>
+</blockquote>
+<p>Demo：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeadLockDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String lockA = <span class="string">"lockA"</span>;</span><br><span class="line">        String lockB = <span class="string">"lockB"</span>;</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> HoldLockThread(lockA,lockB),<span class="string">"ThreadAAA"</span>).start();</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> HoldLockThread(lockB,lockA),<span class="string">"ThreadBBB"</span>).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HoldLockThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String lockA;</span><br><span class="line">    <span class="keyword">private</span> String lockB;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HoldLockThread</span><span class="params">(String lockA,String lockB)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lockA = lockA;</span><br><span class="line">        <span class="keyword">this</span>.lockB = lockB;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lockA)&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t 自己持有"</span>+lockA+<span class="string">"\t 尝试获得"</span>+lockB);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.MILLISECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">synchronized</span> (lockB)&#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t 自己持有"</span>+lockB+<span class="string">"\t 尝试获得"</span>+lockA);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="主要原因"><a href="#主要原因" class="headerlink" title="主要原因"></a>主要原因</h4><ul>
+<li>系统资源不足</li>
+<li>进程运行推进的</li>
+<li>资源分配不当</li>
+</ul>
+<h4 id="排查方法"><a href="#排查方法" class="headerlink" title="排查方法"></a>排查方法</h4><p>使用命令行排查：</p>
+<ol>
+<li><p><code>jps -l</code></p>
+<p>查看当前运行的所有进程，定位进程编号</p>
+</li>
+<li><p><code>jstack {进程编号}</code></p>
+<p>查看某进程的所有异常 ，找到死锁查看</p>
+</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>JUC</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>为中华之崛起而读书</title>
     <url>/2020/06/01/%E4%B8%BA%E4%B8%AD%E5%8D%8E%E4%B9%8B%E5%B4%9B%E8%B5%B7%E8%80%8C%E8%AF%BB%E4%B9%A6/</url>
     <content><![CDATA[<h1 id="思厥先祖父"><a href="#思厥先祖父" class="headerlink" title="思厥先祖父"></a>思厥先祖父</h1><h1 id="暴霜露-斩荆棘"><a href="#暴霜露-斩荆棘" class="headerlink" title="暴霜露 斩荆棘"></a>暴霜露 斩荆棘</h1><h1 id="已有尺寸之地"><a href="#已有尺寸之地" class="headerlink" title="已有尺寸之地"></a>已有尺寸之地</h1><h1 id="子孙视之不甚惜-举以予人-如弃草芥"><a href="#子孙视之不甚惜-举以予人-如弃草芥" class="headerlink" title="子孙视之不甚惜 举以予人 如弃草芥"></a>子孙视之不甚惜 举以予人 如弃草芥</h1><p>​    <a id="more"></a></p>
