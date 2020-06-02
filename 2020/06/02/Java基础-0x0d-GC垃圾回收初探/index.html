@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JVM," />
 
 
 
@@ -79,26 +79,22 @@
 
 
 
-<meta name="description" content="程序猿&amp;攻城狮的自我修养">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Allwayz aint a coder">
-<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;archives&#x2F;page&#x2F;3&#x2F;index.html">
+<meta name="description" content="JVMJVM体系结构概览">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-0x0d:GC垃圾回收初探">
+<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;06&#x2F;02&#x2F;Java%E5%9F%BA%E7%A1%80-0x0d-GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%88%9D%E6%8E%A2&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="程序猿&amp;攻城狮的自我修养">
+<meta property="og:description" content="JVMJVM体系结构概览">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_21.59.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_38.00.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_34.02.png">
+<meta property="article:published_time" content="2020-06-02T11:40:37.000Z">
+<meta property="article:modified_time" content="2020-06-02T11:45:17.000Z">
 <meta property="article:author" content="Allwayz">
-<meta property="article:tag" content="技术博客">
-<meta property="article:tag" content="开发博客">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="Spring">
-<meta property="article:tag" content="Spring Boot">
-<meta property="article:tag" content="Spring Cloud">
-<meta property="article:tag" content="JUC">
 <meta property="article:tag" content="JVM">
-<meta property="article:tag" content="Hexo">
-<meta property="article:tag" content="Blog">
-<meta property="article:tag" content="Next">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_21.59.png">
 
 
 
@@ -128,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://allwayz.github.io/archives/page/3/"/>
+  <link rel="canonical" href="https://allwayz.github.io/2020/06/02/Java基础-0x0d-GC垃圾回收初探/"/>
 
 
 
 
 
-  <title>归档 | Allwayz aint a coder</title>
+  <title>Java基础-0x0d:GC垃圾回收初探 | Allwayz aint a coder</title>
   
 
 
@@ -157,7 +153,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -342,410 +338,258 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 32 篇日志。 继续努力。
-      </span>
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0d-GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%88%9D%E6%8E%A2/">
 
-      
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">Java基础-0x0d:GC垃圾回收初探</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-02T19:40:37+08:00">
+                2020-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/" itemprop="url">
+          
+
+          
+            <div class="post-wordcount">
               
-                <span itemprop="name">Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
               
-            </a>
-        
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-02-14T15:58:26+08:00"
-              content="2020-02-14" >
-          02-14
-        </time>
-      </div>
+              
 
-    </header>
-  </article>
+              
+            </div>
+          
 
+          
 
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/" itemprop="url">
-              
-                <span itemprop="name">Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-02-12T15:07:01+08:00"
-              content="2020-02-12" >
-          02-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="JVM体系结构概览"><a href="#JVM体系结构概览" class="headerlink" title="JVM体系结构概览"></a>JVM体系结构概览</h2><p> <img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_21.59.png" alt="屏幕快照 2020-06-02 15.21.59"></p>
+<a id="more"></a>
 
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/11/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-3%EF%BC%9AAuthenticate-users-by-E-mail/" itemprop="url">
-              
-                <span itemprop="name">Spring Boot 摸索之路-3：Authenticate users by E-mail</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-02-11T15:06:15+08:00"
-              content="2020-02-11" >
-          02-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+<p>对于堆内存而言：<br> <img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_38.00.png" alt="屏幕快照 2020-06-02 15.38.00"></p>
+<p>有伊甸园区，幸存者0区和幸存者1区。</p>
+<p>GC的作用与在方法区和堆。</p>
+<h2 id="常见的垃圾回收算法"><a href="#常见的垃圾回收算法" class="headerlink" title="常见的垃圾回收算法"></a>常见的垃圾回收算法</h2><ul>
+<li><p>引用计数</p>
+<p>有对象引用的话，就+1。没有对象引用就-1。到0为止</p>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>每次对对象赋值时均要维护引用计数器，且计数器本身也有一定的消耗；</li>
+<li>较难处理循环引用</li>
+</ul>
+<p><strong>JVM的实现一般不采用这种方式</strong></p>
+</li>
+<li><p>复制</p>
+<p>复制算法在年轻代使用。</p>
+<p>==口诀：复制之后有交换，谁空谁是To==</p>
+<p>其实就是Survivor0和Survivor1区中的复制，交换，清空。</p>
+<ol>
+<li><p>eden、SurvivorFrom复制到ServivorTo，年龄+1</p>
+<p>首先，当Eden区满的时候会触发第一次GC，把还活着的对象拷贝到SurvivorFrom区，当Eden区再次触发GC的时候会扫描Eden区和From区域，对这两个区域进行垃圾回收，经过这次回收后还存活的对象，则直接复制到To区域（如果有对象的年龄已经达到了老年的标准，则复制到老年代区），同时把这些对象的年龄+1.</p>
+</li>
+<li><p>清空eden、SurvivorFrom</p>
+<p>然后，清空Eden和SurvivorFrom中的对象，也即<strong>复制之后有交换，谁空谁是To</strong></p>
+</li>
+<li><p>SurvivorTo和SurvivorFrom互换</p>
+<p>最后，SurvivorTo和ServivorFrom互换，原ServivorTo成为下一次GC时的SruvivorFrom区。部分对象会在From区和To区域中<strong>来回复制</strong>，如此交换==15次==（由JVM参数<code>MaxTenuringThreshould</code>决定，这个参数默认是15），最终如果还是存活，就放入老年代。</p>
+</li>
+</ol>
+<p><strong>优点</strong>：没有产生内存碎片，因为是整体复的。</p>
+<p><strong>缺点</strong>：浪费空间，一些大的对象复制起来会耗时。</p>
+</li>
+<li><p>标记清除（Mark-Sweep）</p>
+<p>先标记 –&gt; 后清除：<em>算法分为标记和清除两个阶段，先标记出要回收的对象，然后统一回收这些对象。</em></p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_34.02.png" alt="屏幕快照 2020-06-02 15.34.02"></p>
+<p><strong>优点</strong>：对象没有大面积复制，节约了内存空间</p>
+<p><strong>缺点</strong>：容易产生内存碎片</p>
+</li>
+<li><p>标记整理</p>
+<p>原理：</p>
+<ol>
+<li><p>标记（mark）</p>
+<p>与标记清除算法一样</p>
+</li>
+<li><p>压缩（Compact）</p>
+<p>再次扫描，并往一段==滑动==存活对象</p>
+</li>
+</ol>
+<p><strong>优点</strong>：没有内存碎片</p>
+<p><strong>缺点</strong>：需要移动对象的成本</p>
+</li>
+</ul>
+<blockquote>
+<p>  <code>复制</code>多用与年轻代，<code>标记清除</code>和<code>标记整理</code>多用于老生代。</p>
+<p>  <code>标记整理</code>既不会产生内存碎片，也不浪费空间，但是耗时严重。</p>
+</blockquote>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/11/%E6%AD%A6%E6%B1%89%E5%8A%A0%E6%B2%B9%EF%BC%8C%E4%B8%AD%E5%9B%BD%E5%8A%A0%E6%B2%B9/" itemprop="url">
-              
-                <span itemprop="name">武汉加油，中国加油</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-02-11T13:10:19+08:00"
-              content="2020-02-11" >
-          02-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/09/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-2%EF%BC%9AMyBatis-Plus/" itemprop="url">
-              
-                <span itemprop="name">Spring Boot 摸索之路-2：MyBatis-Plus</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-02-09T13:09:46+08:00"
-              content="2020-02-09" >
-          02-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/27/Mamba-Out/" itemprop="url">
-              
-                <span itemprop="name">Mamba Out</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-27T20:38:23+08:00"
-              content="2020-01-27" >
-          01-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/27/17%E5%B2%81%E7%9A%84%E5%A5%BD/" itemprop="url">
-              
-                <span itemprop="name">17岁的好</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-27T02:53:09+08:00"
-              content="2020-01-27" >
-          01-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/23/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-1%EF%BC%9A%E8%BF%9E%E6%8E%A5MySql%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url">
-              
-                <span itemprop="name">Spring Boot 摸索之路-1：连接MySql数据库</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-23T14:21:17+08:00"
-              content="2020-01-23" >
-          01-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/22/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-0/" itemprop="url">
-              
-                <span itemprop="name">Spring-Boot 摸索之路-0</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-22T16:32:06+08:00"
-              content="2020-01-22" >
-          01-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/12/Java-Tools-Classes/" itemprop="url">
-              
-                <span itemprop="name">Java Tools Classes</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-12T04:02:02+08:00"
-              content="2020-01-12" >
-          01-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Allwayz
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://allwayz.github.io/2020/06/02/Java基础-0x0d-GC垃圾回收初探/" title="Java基础-0x0d:GC垃圾回收初探">allwayz.github.io/2020/06/02/Java基础-0x0d-GC垃圾回收初探/</a>
+  </li>
+
+
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({
+          title: "",
+          text: '复制文章链接成功',
+          icon: "success",
+          showConfirmButton: true
+          });
+      });
+    });  
+</script>
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0c-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="next" title="Java基础-0x0c:线程池底层原理">
+                <i class="fa fa-chevron-left"></i> Java基础-0x0c:线程池底层原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/page/2/"><i class="fa fa-angle-left" aria-label="accessibility.prev_page"></i></a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/4/"><i class="fa fa-angle-right" aria-label="accessibility.next_page"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -753,6 +597,14 @@
 
 
           
+
+  
+    <div id="gitalk-container">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -773,8 +625,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -895,6 +756,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">1.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM体系结构概览"><span class="nav-number">1.1.</span> <span class="nav-text">JVM体系结构概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的垃圾回收算法"><span class="nav-number">1.2.</span> <span class="nav-text">常见的垃圾回收算法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1112,6 +989,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -1152,6 +1033,23 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'cb9c82f5420fc9ed29b1',
+          clientSecret: 'dc278f70589a66068b463515c3a7a82d05b64be5',
+          repo: 'Comment4AllwayzBlog',
+          owner: 'Allwayz',
+          admin: ['Allwayz'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
 
 
