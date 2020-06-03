@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础-0x0f:JVM常用参数及配置</title>
+    <url>/2020/06/04/Java%E5%9F%BA%E7%A1%80-0x0f-JVM%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E5%8F%8A%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/Bing_20200604.jpg" alt="s"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="JVM常用参数"><a href="#JVM常用参数" class="headerlink" title="JVM常用参数"></a>JVM常用参数</h2><h3 id="Xms"><a href="#Xms" class="headerlink" title="-Xms"></a><code>-Xms</code></h3><p>初始大小内存，默认为物理内存的<strong>1/64</strong></p>
+<p>等价于：<code>-XX:InitialHeapSize</code></p>
+<h3 id="Xmx"><a href="#Xmx" class="headerlink" title="-Xmx"></a><code>-Xmx</code></h3><p>最大分配内存，默认为物理内存<strong>1/4</strong></p>
+<p>等价于：<code>-XX:MaxHeapSize</code></p>
+<h3 id="Xss"><a href="#Xss" class="headerlink" title="-Xss"></a><code>-Xss</code></h3><p>设置单线程栈的大小，即栈空间的初始大小。一般默认为<strong>512k~1024k</strong></p>
+<p>等价于：<code>-XX:ThreadStackSize</code></p>
+<blockquote>
+<p>  当使用<code>jps -l</code>+<code>jinfo -flag ThreadStackSize {进程Id}</code>查看栈空间大小时会打印出</p>
+  <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="code"><pre><span class="line">-XX:ThreadStackSize&#x3D;0</span><br></pre></td></tr></table></figure></div>
+
+<p>  这是因为当打印出<strong>0</strong>值时，代表使用的是系统默认值，当设置<code>-Xss</code>之后在查看栈空间大小就会打印出设置的值</p>
+</blockquote>
+<h3 id="Xmn"><a href="#Xmn" class="headerlink" title="-Xmn"></a><code>-Xmn</code></h3><p>设置年轻代大小</p>
+<p>默认<strong>1/3</strong>堆空间</p>
+<h3 id="XX-MetaspaceSize"><a href="#XX-MetaspaceSize" class="headerlink" title="-XX:MetaspaceSize"></a><code>-XX:MetaspaceSize</code></h3><p>设置元空间</p>
+<p>​    元空间的本质和永久代类似，都是对JVM规范中方法区的实现。不过元空间与永久代之间最大的区别在于 <strong>元空间并不在虚拟机中，而是使用本地内存。</strong> 因此，默认情况下，元空间的大小受本地内存限制</p>
+<blockquote>
+<p>  ⚠️：<code>java.lang.OutOfMemoryError: Metaspace</code></p>
+<p>  元空间仅受本地内存限制，那为什么还会暴OOM的异常？</p>
+<p>  使用<code>java -XX:+PringFlagsFinal -version</code>查看JVM参数可以发现：</p>
+<p>  <code>unitx MetaspaceSize = 21807104</code> 。虽说物理内存很多，但是元空间只取这么多，所以说如果频繁new一些对象，就会把元空间占满，溢出。</p>
+</blockquote>
+<p>可以使用<code>-XX:MeatspaceSize=1024m</code>来设置元空间的大小</p>
+<h3 id="经典配置案例"><a href="#经典配置案例" class="headerlink" title="经典配置案例"></a>经典配置案例</h3><ul>
+<li><code>-Xms128m</code></li>
+<li><code>-Xmx4096</code></li>
+<li><code>-Xss1024k</code></li>
+<li><code>-XX:MetaspaceSize=512m</code></li>
+<li><code>-XX:+PringCommandLineFlags</code></li>
+<li><code>-XX:+PringGCDetails</code></li>
+<li><code>-XX:+IseSerialGC</code></li>
+</ul>
+<h3 id="XX-PringGCDetails"><a href="#XX-PringGCDetails" class="headerlink" title="-XX:+PringGCDetails"></a><code>-XX:+PringGCDetails</code></h3><p>输出详细GC手机日志信息</p>
+<p>例子：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="POWERSHELL"><figure class="iseeu highlight /powershell"><table><tr><td class="code"><pre><span class="line">[GC (Allocation Failure) [PSYoungGen: <span class="number">2048</span>k-&gt;<span class="number">496</span>k(<span class="number">2560</span>k)] <span class="number">2048</span>k-&gt;<span class="number">777</span>k(<span class="number">9728</span>k), <span class="number">0.0042229</span> secs][Times:user=<span class="number">0.03</span> sys=<span class="number">0.00</span> real=<span class="number">0.02</span> secs]</span><br></pre></td></tr></table></figure></div>
+
+<p>解释：</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_54.09.png" alt="屏幕快照 2020-06-04 05.54.09"></p>
+<h3 id="XX-SurvivorRatio"><a href="#XX-SurvivorRatio" class="headerlink" title="-XX:SurvivorRatio"></a><code>-XX:SurvivorRatio</code></h3><p>设置新生代中eden和s0/s1空间的比例</p>
+<p>默认为：<code>-XX:SurvivorRatio=8</code>, Eden:S0:S1 = 8:1:1</p>
+<p>假如：<code>-XX:SurvivorRatio=4</code>  则 Eden:S0:S1 = 4:1:1</p>
+<p>SurvivorRatio的值就是设置Eden取的比例，S0/S1相同</p>
+<h3 id="XX-NewRatio"><a href="#XX-NewRatio" class="headerlink" title="-XX:NewRatio"></a><code>-XX:NewRatio</code></h3><p>配置年轻代与老年代在对结构中的结构占比</p>
+<p>默认<code>-XX:NewRatio=2</code>    新生代占1，老年代占2</p>
+<p>如果<code>-XX:NewRatio=4</code>  则新生代占1，老年代占4   意思为新生代占整个堆的1/5，老年代占整个堆的4/5</p>
+<h3 id="XX-MaxTenuringThreshold"><a href="#XX-MaxTenuringThreshold" class="headerlink" title="-XX:MaxTenuringThreshold"></a><code>-XX:MaxTenuringThreshold</code></h3><p>默认值为<strong>15</strong></p>
+<p>设置垃圾的对大年龄。日过设置为0的话，则年轻代对象不经过Survivor区，直接进入老年代。对于老年代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象在年轻代的存活时间，增加在年轻代即被回收的概率。</p>
+]]></content>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础-0x0e:JVM主要参数</title>
     <url>/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0e-JVM%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0/</url>
     <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/14084.jpg" alt="s"></p>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Spring-Boot," />
+  <meta name="keywords" content="JVM," />
 
 
 
@@ -79,20 +79,21 @@
 
 
 
-<meta name="description" content="MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。">
+<meta name="description" content="JVMJVM常用参数-Xms初始大小内存，默认为物理内存的1&#x2F;64 等价于：-XX:InitialHeapSize -Xmx最大分配内存，默认为物理内存1&#x2F;4 等价于：-XX:MaxHeapSize -Xss设置单线程栈的大小，即栈空间的初始大小。一般默认为512k~1024k 等价于：-XX:ThreadStackSize    当使用jps -l+jinfo -flag ThreadStac">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper">
-<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;02&#x2F;14&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper&#x2F;index.html">
+<meta property="og:title" content="Java基础-0x0f:JVM常用参数及配置">
+<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;06&#x2F;04&#x2F;Java%E5%9F%BA%E7%A1%80-0x0f-JVM%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E5%8F%8A%E9%85%8D%E7%BD%AE&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。">
+<meta property="og:description" content="JVMJVM常用参数-Xms初始大小内存，默认为物理内存的1&#x2F;64 等价于：-XX:InitialHeapSize -Xmx最大分配内存，默认为物理内存1&#x2F;4 等价于：-XX:MaxHeapSize -Xss设置单线程栈的大小，即栈空间的初始大小。一般默认为512k~1024k 等价于：-XX:ThreadStackSize    当使用jps -l+jinfo -flag ThreadStac">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper&#x2F;Wrapper.png">
-<meta property="article:published_time" content="2020-02-14T07:58:26.000Z">
-<meta property="article:modified_time" content="2020-05-29T23:04:04.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;Bing_20200604.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;JVM_54.09.png">
+<meta property="article:published_time" content="2020-06-03T22:37:22.000Z">
+<meta property="article:modified_time" content="2020-06-03T22:39:47.000Z">
 <meta property="article:author" content="Allwayz">
-<meta property="article:tag" content="Spring-Boot">
+<meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper&#x2F;Wrapper.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;Bing_20200604.jpg">
 
 
 
@@ -122,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://allwayz.github.io/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/"/>
+  <link rel="canonical" href="https://allwayz.github.io/2020/06/04/Java基础-0x0f-JVM常用参数及配置/"/>
 
 
 
 
 
-  <title>Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper | Allwayz aint a coder</title>
+  <title>Java基础-0x0f:JVM常用参数及配置 | Allwayz aint a coder</title>
   
 
 
@@ -350,7 +351,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/">
+    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/06/04/Java%E5%9F%BA%E7%A1%80-0x0f-JVM%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E5%8F%8A%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Allwayz">
@@ -367,7 +368,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper</h1>
+          <h1 class="post-title" itemprop="name headline">Java基础-0x0f:JVM常用参数及配置</h1>
         
 
         <div class="post-meta">
@@ -379,8 +380,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-14T15:58:26+08:00">
-                2020-02-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-04T06:37:22+08:00">
+                2020-06-04
               </time>
             
 
@@ -436,191 +437,54 @@
       
 
       
-        <blockquote>
-<p>  MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。</p>
+        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/Bing_20200604.jpg" alt="s"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="JVM常用参数"><a href="#JVM常用参数" class="headerlink" title="JVM常用参数"></a>JVM常用参数</h2><h3 id="Xms"><a href="#Xms" class="headerlink" title="-Xms"></a><code>-Xms</code></h3><p>初始大小内存，默认为物理内存的<strong>1/64</strong></p>
+<p>等价于：<code>-XX:InitialHeapSize</code></p>
+<h3 id="Xmx"><a href="#Xmx" class="headerlink" title="-Xmx"></a><code>-Xmx</code></h3><p>最大分配内存，默认为物理内存<strong>1/4</strong></p>
+<p>等价于：<code>-XX:MaxHeapSize</code></p>
+<h3 id="Xss"><a href="#Xss" class="headerlink" title="-Xss"></a><code>-Xss</code></h3><p>设置单线程栈的大小，即栈空间的初始大小。一般默认为<strong>512k~1024k</strong></p>
+<p>等价于：<code>-XX:ThreadStackSize</code></p>
+<blockquote>
+<p>  当使用<code>jps -l</code>+<code>jinfo -flag ThreadStackSize {进程Id}</code>查看栈空间大小时会打印出</p>
+  <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-XX:ThreadStackSize&#x3D;0</span><br></pre></td></tr></table></figure></div>
+
+<p>  这是因为当打印出<strong>0</strong>值时，代表使用的是系统默认值，当设置<code>-Xss</code>之后在查看栈空间大小就会打印出设置的值</p>
 </blockquote>
-<a id="more"></a>
-
-<h1 id="构造器关系"><a href="#构造器关系" class="headerlink" title="构造器关系"></a>构造器关系</h1><p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/Wrapper.png" alt="Wrapper"></p>
-<ul>
-<li>蓝色线连起来的是Wrapper的类，其他都是继承</li>
-<li>最下边四个是正常类，可以new对象</li>
-<li>加了Abstract的是抽象类</li>
-<li>蓝色实线是继承关系</li>
+<h3 id="Xmn"><a href="#Xmn" class="headerlink" title="-Xmn"></a><code>-Xmn</code></h3><p>设置年轻代大小</p>
+<p>默认<strong>1/3</strong>堆空间</p>
+<h3 id="XX-MetaspaceSize"><a href="#XX-MetaspaceSize" class="headerlink" title="-XX:MetaspaceSize"></a><code>-XX:MetaspaceSize</code></h3><p>设置元空间</p>
+<p>​    元空间的本质和永久代类似，都是对JVM规范中方法区的实现。不过元空间与永久代之间最大的区别在于 <strong>元空间并不在虚拟机中，而是使用本地内存。</strong> 因此，默认情况下，元空间的大小受本地内存限制</p>
+<blockquote>
+<p>  ⚠️：<code>java.lang.OutOfMemoryError: Metaspace</code></p>
+<p>  元空间仅受本地内存限制，那为什么还会暴OOM的异常？</p>
+<p>  使用<code>java -XX:+PringFlagsFinal -version</code>查看JVM参数可以发现：</p>
+<p>  <code>unitx MetaspaceSize = 21807104</code> 。虽说物理内存很多，但是元空间只取这么多，所以说如果频繁new一些对象，就会把元空间占满，溢出。</p>
+</blockquote>
+<p>可以使用<code>-XX:MeatspaceSize=1024m</code>来设置元空间的大小</p>
+<h3 id="经典配置案例"><a href="#经典配置案例" class="headerlink" title="经典配置案例"></a>经典配置案例</h3><ul>
+<li><code>-Xms128m</code></li>
+<li><code>-Xmx4096</code></li>
+<li><code>-Xss1024k</code></li>
+<li><code>-XX:MetaspaceSize=512m</code></li>
+<li><code>-XX:+PringCommandLineFlags</code></li>
+<li><code>-XX:+PringGCDetails</code></li>
+<li><code>-XX:+IseSerialGC</code></li>
 </ul>
-<h2 id="wapper介绍-："><a href="#wapper介绍-：" class="headerlink" title="wapper介绍 ："></a>wapper介绍 ：</h2><ul>
-<li><code>Wrapper</code> ： 条件构造抽象类，最顶端父类，抽象类中提供4个方法西面贴源码展示</li>
-<li><code>AbstractWrapper</code> ： 用于查询条件封装，生成 <strong>sql</strong> 的 <strong>where</strong> 条件</li>
-<li><code>AbstractLambdaWrapper</code> ： <strong>Lambda</strong> 语法使用 <strong>Wrapper</strong>统一处理解析 <strong>lambda</strong> 获取 <strong>column</strong>。</li>
-<li><code>LambdaQueryWrapper</code> ：看名称也能明白就是用于<strong>Lambda</strong>语法使用的查询<strong>Wrapper</strong></li>
-<li><code>LambdaUpdateWrapper</code> ： <strong>Lambda</strong> 更新封装<strong>Wrapper</strong></li>
-<li><code>QueryWrapper</code> ： <strong>Entity</strong> 对象封装操作类，不是用<strong>lambda</strong>语法</li>
-<li><code>UpdateWrapper</code> ： <strong>Update</strong> 条件封装，用于<strong>Entity</strong>对象更新操作</li>
-</ul>
-<h1 id="构造器方法"><a href="#构造器方法" class="headerlink" title="构造器方法"></a>构造器方法</h1><table>
-<thead>
-<tr>
-<th>FunctionName</th>
-<th>Desc</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>eq( );</td>
-<td>等于      =</td>
-<td>eq(“name”,”Allwayz”) -&gt; name = ‘Allwayz’</td>
-</tr>
-<tr>
-<td>ne( );</td>
-<td>不等于   !=</td>
-<td>ne(“name”,”Allwayz”) -&gt; name&lt;&gt;’Allwayz’</td>
-</tr>
-<tr>
-<td>gt( );</td>
-<td>大于      &gt;</td>
-<td>gt(“age”,18) -&gt; age &gt; 18</td>
-</tr>
-<tr>
-<td>ge( );</td>
-<td>大于等于 &gt;=</td>
-<td>ge(“age”,18) -&gt; age &gt;= 18</td>
-</tr>
-<tr>
-<td>lt( );</td>
-<td>小于    &lt;</td>
-<td>lt(“age”,18) -&gt; age &lt; 18</td>
-</tr>
-<tr>
-<td>le( );</td>
-<td>小于等于 &lt;=</td>
-<td>le(“age”,18) -&gt; age &lt;= 18</td>
-</tr>
-<tr>
-<td>between( );</td>
-<td>BETWEEN</td>
-<td>between(“age”,18,30) -&gt; age between 18 and 30</td>
-</tr>
-<tr>
-<td>notBetween( );</td>
-<td>NOT BETWEEN</td>
-<td>notBetween(“age”,18,30) -&gt; age not between 18 and 30</td>
-</tr>
-<tr>
-<td>like( );</td>
-<td>LIKE ‘%value%’</td>
-<td>like(“name”,”All”) -&gt; name like ‘%All%’</td>
-</tr>
-<tr>
-<td>notLike( );</td>
-<td>NOT LIKE ‘%value%’</td>
-<td>notLike(“name”,”All”) -&gt; name not like ‘%All%’</td>
-</tr>
-<tr>
-<td>likeLeft( );</td>
-<td>LIKE ‘%value’</td>
-<td>likeLeft(“name”,”All”) -&gt; name like ‘%All’</td>
-</tr>
-<tr>
-<td>likeRight( );</td>
-<td>LIKE ‘value%’</td>
-<td>likeRight(“name”,”All”) -&gt; name like ‘All%’</td>
-</tr>
-<tr>
-<td>isNull( );</td>
-<td>Value IS NULL</td>
-<td>isNull(“name”) -&gt;name is null</td>
-</tr>
-<tr>
-<td>isNotNull( );</td>
-<td>Value IS NOT NULL</td>
-<td>isNotNull(“name”) -&gt;name is not null</td>
-</tr>
-<tr>
-<td>in( );</td>
-<td>Value IN(v0,v1…)</td>
-<td>in(“age”,{1,2,3}) -&gt; age in (1,2,3)</td>
-</tr>
-<tr>
-<td>notIn( );</td>
-<td>Value NOT IN(v0,v1…)</td>
-<td>notIn(“age”,{1,2,3}) -&gt; age not in (1,2,3)</td>
-</tr>
-<tr>
-<td>inSql( );</td>
-<td>Value IN(sql)</td>
-<td>inSql(“id”,”Select id from table where id &lt; 3”) -&gt; id in (Select id from table where id &lt; 3)</td>
-</tr>
-<tr>
-<td>notInSql( );</td>
-<td>Value NOT IN(sql)</td>
-<td>notInSql(“id”,”Select id from table where id &lt; 3”) -&gt; id not in (Select id from table where id &lt; 3)</td>
-</tr>
-<tr>
-<td>groupBy( );</td>
-<td>分组</td>
-<td>groupBy(“id”,”name”) -&gt; group by id, name</td>
-</tr>
-<tr>
-<td>orderByAsc( );</td>
-<td>升序排列</td>
-<td>orderByAsc(“id”,”name”) -&gt; order by id ASC, name ASC</td>
-</tr>
-<tr>
-<td>orderByDesc( );</td>
-<td>降序排列</td>
-<td>orderByDesc(“id”,”name”) -&gt; order by id DESC, nameDESC</td>
-</tr>
-<tr>
-<td>orderBy( );</td>
-<td>排列</td>
-<td>orderBy(true, true,”id”,”name”) -&gt; order by id ASC, name ASC</td>
-</tr>
-<tr>
-<td>having( );</td>
-<td>HAVING(sql)</td>
-<td>having(“sum(age) &gt; {0}”,11) -&gt; having sum (age) &gt;11</td>
-</tr>
-<tr>
-<td>or( );</td>
-<td>拼接 OR</td>
-<td></td>
-</tr>
-<tr>
-<td>and( );</td>
-<td>AND 嵌套</td>
-<td></td>
-</tr>
-<tr>
-<td>apply( );</td>
-<td>拼接 sql</td>
-<td></td>
-</tr>
-<tr>
-<td>last( )</td>
-<td>无视优化规则直接拼接到sql最后</td>
-<td></td>
-</tr>
-<tr>
-<td>exists( );</td>
-<td>拼接 EXISTS（sql）</td>
-<td></td>
-</tr>
-<tr>
-<td>notExists( );</td>
-<td>拼接 NOT EXIXSTS （sql）</td>
-<td></td>
-</tr>
-<tr>
-<td>nested( );</td>
-<td>正常嵌套 不带AND OR</td>
-<td></td>
-</tr>
-</tbody></table>
-<h1 id="使用过程"><a href="#使用过程" class="headerlink" title="使用过程"></a>使用过程</h1><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Fuzzy query</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMajor</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;Major&gt; majorList = majorMapper</span><br><span class="line">        .selectList(<span class="keyword">new</span> QueryWrapper&lt;Major&gt;().like(<span class="string">"major_code"</span>,<span class="string">"MC_506"</span>));</span><br><span class="line">    majorList.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="XX-PringGCDetails"><a href="#XX-PringGCDetails" class="headerlink" title="-XX:+PringGCDetails"></a><code>-XX:+PringGCDetails</code></h3><p>输出详细GC手机日志信息</p>
+<p>例子：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="POWERSHELL"><figure class="iseeu highlight /powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[GC (Allocation Failure) [PSYoungGen: <span class="number">2048</span>k-&gt;<span class="number">496</span>k(<span class="number">2560</span>k)] <span class="number">2048</span>k-&gt;<span class="number">777</span>k(<span class="number">9728</span>k), <span class="number">0.0042229</span> secs][Times:user=<span class="number">0.03</span> sys=<span class="number">0.00</span> real=<span class="number">0.02</span> secs]</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>控制台</strong></p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@<span class="number">2005675644</span> wrapping com<span class="variable">.mysql</span><span class="variable">.cj</span><span class="variable">.jdbc</span><span class="variable">.ConnectionImpl</span>@b70fa38] will <span class="keyword">not</span> be managed by Spring</span><br><span class="line"><span class="comment">// SQL语句</span></span><br><span class="line">==&gt;  Preparing: SELECT major_id,major_code,major_name,major_status,create_time,update_time,is_delete FROM major WHERE is_delete=<span class="number">0</span> AND (major_code LIKE ?) </span><br><span class="line"><span class="comment">//变量</span></span><br><span class="line">==&gt; Parameters: %MC_506%(String)</span><br><span class="line"><span class="comment">//结果</span></span><br><span class="line">&lt;==    Columns: major_id, major_code, major_name, major_status, create_time, update_time, is_delete</span><br><span class="line">&lt;==        Row: <span class="number">1</span>, MC_50601, History of Architecture, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">8</span>, MC_50602, International System in the <span class="number">20</span>th Century, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">9</span>, MC_50603, Ancient Greece:Myth,Art,War, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">0</span></span><br><span class="line">&lt;==      Total: <span class="number">3</span></span><br><span class="line">Closing non transactional SqlSession </span><br><span class="line">[org<span class="variable">.apache</span><span class="variable">.ibatis</span><span class="variable">.session</span><span class="variable">.defaults</span><span class="variable">.DefaultSqlSession</span>@<span class="number">38</span>c460e8]</span><br><span class="line">Major(majorId=<span class="number">1</span>, majorCode=MC_50601, majorName=History of Architecture, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">8</span>, majorCode=MC_50602, majorName=International System in the <span class="number">20</span>th Century, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">9</span>, majorCode=MC_50603, majorName=Ancient Greece:Myth,Art,War, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, isDelete=<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
-
+<p>解释：</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/JVM_54.09.png" alt="屏幕快照 2020-06-04 05.54.09"></p>
+<h3 id="XX-SurvivorRatio"><a href="#XX-SurvivorRatio" class="headerlink" title="-XX:SurvivorRatio"></a><code>-XX:SurvivorRatio</code></h3><p>设置新生代中eden和s0/s1空间的比例</p>
+<p>默认为：<code>-XX:SurvivorRatio=8</code>, Eden:S0:S1 = 8:1:1</p>
+<p>假如：<code>-XX:SurvivorRatio=4</code>  则 Eden:S0:S1 = 4:1:1</p>
+<p>SurvivorRatio的值就是设置Eden取的比例，S0/S1相同</p>
+<h3 id="XX-NewRatio"><a href="#XX-NewRatio" class="headerlink" title="-XX:NewRatio"></a><code>-XX:NewRatio</code></h3><p>配置年轻代与老年代在对结构中的结构占比</p>
+<p>默认<code>-XX:NewRatio=2</code>    新生代占1，老年代占2</p>
+<p>如果<code>-XX:NewRatio=4</code>  则新生代占1，老年代占4   意思为新生代占整个堆的1/5，老年代占整个堆的4/5</p>
+<h3 id="XX-MaxTenuringThreshold"><a href="#XX-MaxTenuringThreshold" class="headerlink" title="-XX:MaxTenuringThreshold"></a><code>-XX:MaxTenuringThreshold</code></h3><p>默认值为<strong>15</strong></p>
+<p>设置垃圾的对大年龄。日过设置为0的话，则年轻代对象不经过Survivor区，直接进入老年代。对于老年代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象在年轻代的存活时间，增加在年轻代即被回收的概率。</p>
 
       
     </div>
@@ -644,7 +508,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://allwayz.github.io/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/" title="Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper">allwayz.github.io/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/</a>
+    <a href="http://allwayz.github.io/2020/06/04/Java基础-0x0f-JVM常用参数及配置/" title="Java基础-0x0f:JVM常用参数及配置">allwayz.github.io/2020/06/04/Java基础-0x0f-JVM常用参数及配置/</a>
   </li>
 
 
@@ -673,7 +537,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Spring-Boot/" rel="tag"># Spring-Boot</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -686,8 +550,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/" rel="next" title="Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版">
-                <i class="fa fa-chevron-left"></i> Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版
+              <a href="/2020/06/02/Java%E5%9F%BA%E7%A1%80-0x0e-JVM%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0/" rel="next" title="Java基础-0x0e:JVM主要参数">
+                <i class="fa fa-chevron-left"></i> Java基础-0x0e:JVM主要参数
               </a>
             
           </div>
@@ -695,10 +559,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot-%E9%9B%86%E6%88%90JSP/" rel="prev" title="Spring-Boot-摸索之路-6：Spring-Boot 集成JSP">
-                Spring-Boot-摸索之路-6：Spring-Boot 集成JSP <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -895,7 +755,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#构造器关系"><span class="nav-number">1.</span> <span class="nav-text">构造器关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#wapper介绍-："><span class="nav-number">1.1.</span> <span class="nav-text">wapper介绍 ：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造器方法"><span class="nav-number">2.</span> <span class="nav-text">构造器方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用过程"><span class="nav-number">3.</span> <span class="nav-text">使用过程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">1.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM常用参数"><span class="nav-number">1.1.</span> <span class="nav-text">JVM常用参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Xms"><span class="nav-number">1.1.1.</span> <span class="nav-text">-Xms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xmx"><span class="nav-number">1.1.2.</span> <span class="nav-text">-Xmx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xss"><span class="nav-number">1.1.3.</span> <span class="nav-text">-Xss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xmn"><span class="nav-number">1.1.4.</span> <span class="nav-text">-Xmn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XX-MetaspaceSize"><span class="nav-number">1.1.5.</span> <span class="nav-text">-XX:MetaspaceSize</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#经典配置案例"><span class="nav-number">1.1.6.</span> <span class="nav-text">经典配置案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XX-PringGCDetails"><span class="nav-number">1.1.7.</span> <span class="nav-text">-XX:+PringGCDetails</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XX-SurvivorRatio"><span class="nav-number">1.1.8.</span> <span class="nav-text">-XX:SurvivorRatio</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XX-NewRatio"><span class="nav-number">1.1.9.</span> <span class="nav-text">-XX:NewRatio</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XX-MaxTenuringThreshold"><span class="nav-number">1.1.10.</span> <span class="nav-text">-XX:MaxTenuringThreshold</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
