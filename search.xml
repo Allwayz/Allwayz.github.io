@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础-0x10:强、软、弱、虚引用</title>
+    <url>/2020/06/04/Java%E5%9F%BA%E7%A1%80-0x10-%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8/</url>
+    <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/20180507.jpg" alt="s"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="强、软、弱、虚引用"><a href="#强、软、弱、虚引用" class="headerlink" title="强、软、弱、虚引用"></a>强、软、弱、虚引用</h2><a id="more"></a>
+
+<h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><p>（默认支持的模式）</p>
+<p>当内存不足时，JVM开始垃圾回收，对于强引用的对象，<strong><u>就算是出现了OOM也不会对该对象进行回收</u></strong>。</p>
+<p>强引用是我们最常见的普通对象引用，只要还有强引用指向一个对象，就能表明对象还“活着”，垃圾回收器不会碰这种对象。在Java中最常见的就是强引用，把一个对象赋给一个引用变量，这个引用变量就是一个强引用。当一个对象被强引用变量引用时，他出狱<strong>可达</strong>状态，他是不可能被垃圾回收机制回收的，<strong>即使该对象以后永远都不会被用到，JVM也不会回收</strong>。因此强引用是造成<strong>Java内存泄漏</strong>的主要原因之一。</p>
+<p>对于一个普通的对象，如果没有其他引用关系，只要超过了引用的作用域或者显式的将相应（强）引用赋值为null，一般认为就是可以被垃圾手机的了。</p>
+<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><p>软引用是一种相对弱化了一些的引用，需要用<code>java.lang.ref.SoftReference</code>类来实现，可以让对象和面一些垃圾收集。</p>
+<p>对于只有软引用的对象来说：</p>
+<ul>
+<li><p>当系统内存充足时   不会被回收</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">softRed_Memory_Enough</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">    SoftReference&lt;Object&gt; softReference = <span class="keyword">new</span> SoftReference&lt;&gt;(o1);</span><br><span class="line">    System.out.println(o1);</span><br><span class="line">    System.out.println(softReference.get());</span><br><span class="line">    </span><br><span class="line">    o1 = <span class="keyword">null</span>;</span><br><span class="line">    System.gc();</span><br><span class="line">    System.out.println(o1);</span><br><span class="line">    System.out.println(softReference.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="POWERSHELL"><figure class="iseeu highlight /powershell"><table><tr><td class="code"><pre><span class="line">java.lang.Object@<span class="number">61</span>bbe9ba</span><br><span class="line">java.lang.Object@<span class="number">61</span>bbe9ba</span><br><span class="line">null</span><br><span class="line">java.lang.Object@<span class="number">61</span>bbe9ba</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>当系统内存不足时   会被回收</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * JVM参数： -Xms5m -Xmx5m -XX:+PrintGCDetails</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">softRed_Memory_NotEnough</span><span class="params">()</span></span>&#123;</span><br><span class="line">       Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">       SoftReference&lt;Object&gt; softReference = <span class="keyword">new</span> SoftReference&lt;&gt;(o1);</span><br><span class="line">       System.out.println(o1);</span><br><span class="line">       System.out.println(softReference.get());</span><br><span class="line">    </span><br><span class="line">       o1 = <span class="keyword">null</span>;</span><br><span class="line">    </span><br><span class="line">       <span class="keyword">try</span>&#123;</span><br><span class="line">       <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">30</span>*<span class="number">1024</span>*<span class="number">1024</span>];</span><br><span class="line">       &#125; <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">           System.out.println(o1);</span><br><span class="line">           System.out.println(softReference.get());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="SHELL"><figure class="iseeu highlight /shell"><table><tr><td class="code"><pre><span class="line">[GC (Allocation Failure) [PSYoungGen: 1024K-&gt;512K(1536K)] 1024K-&gt;544K(5632K), 0.0010438 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] </span><br><span class="line">java.lang.Object@61bbe9ba</span><br><span class="line">java.lang.Object@61bbe9ba</span><br><span class="line">[GC (Allocation Failure) [PSYoungGen: 820K-&gt;496K(1536K)] 852K-&gt;544K(5632K), 0.0010427 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span><br><span class="line">[GC (Allocation Failure) [PSYoungGen: 496K-&gt;400K(1536K)] 544K-&gt;456K(5632K), 0.0010177 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] </span><br><span class="line">[Full GC (Allocation Failure) [PSYoungGen: 400K-&gt;0K(1536K)] [ParOldGen: 56K-&gt;356K(4096K)] 456K-&gt;356K(5632K), [Metaspace: 2920K-&gt;2920K(1056768K)], 0.0035085 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </span><br><span class="line">[GC (Allocation Failure) [PSYoungGen: 0K-&gt;0K(1536K)] 356K-&gt;356K(5632K), 0.0007770 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] </span><br><span class="line">[Full GC (Allocation Failure) [PSYoungGen: 0K-&gt;0K(1536K)] [ParOldGen: 356K-&gt;339K(4096K)] 356K-&gt;339K(5632K), [Metaspace: 2920K-&gt;2920K(1056768K)], 0.0034788 secs] [Times: user=0.01 sys=0.01, real=0.00 secs] </span><br><span class="line">null</span><br><span class="line">null</span><br><span class="line">Heap</span><br><span class="line"> PSYoungGen      total 1536K, used 82K [0x00000007bfe00000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line">  eden space 1024K, 8% used [0x00000007bfe00000,0x00000007bfe149f0,0x00000007bff00000)</span><br><span class="line">  from space 512K, 0% used [0x00000007bff80000,0x00000007bff80000,0x00000007c0000000)</span><br><span class="line">  to   space 512K, 0% used [0x00000007bff00000,0x00000007bff00000,0x00000007bff80000)</span><br><span class="line"> ParOldGen       total 4096K, used 339K [0x00000007bfa00000, 0x00000007bfe00000, 0x00000007bfe00000)</span><br><span class="line">  object space 4096K, 8% used [0x00000007bfa00000,0x00000007bfa54e48,0x00000007bfe00000)</span><br><span class="line"> Metaspace       used 2972K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 323K, capacity 388K, committed 512K, reserved 1048576K</span><br><span class="line">Exception in thread "main" java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">	at com.allwayz.jvm.SoftReferenceDemo.softRed_Memory_NotEnough(SoftReferenceDemo.java:37)</span><br><span class="line">	at com.allwayz.jvm.SoftReferenceDemo.main(SoftReferenceDemo.java:13)</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+<p>软引用通常在堆内存敏感的程序中，比如高速缓存就有用到软引用，<strong>内存足够就保留，不够用就回收</strong>。</p>
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><p>弱引用需要用<code>java.lang.ref.WeakReference</code>类来实现，它比软引用的生存期更短</p>
+<p>对于只有弱引用的对象来说，只要垃圾回收机制一运行，不管JVM内存空间是否足够，都会回收该对象占用的内存。</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeakReferenceDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">        WeakReference&lt;Object&gt; weakReference = <span class="keyword">new</span> WeakReference&lt;&gt;(o1);</span><br><span class="line">        System.out.println(o1);</span><br><span class="line">        System.out.println(weakReference.get());</span><br><span class="line"></span><br><span class="line">        o1 = <span class="keyword">null</span>;</span><br><span class="line">        System.gc();</span><br><span class="line">        System.out.println(<span class="string">"=============================="</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(o1);</span><br><span class="line">        System.out.println(weakReference.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="POWERSHELL"><figure class="iseeu highlight /powershell"><table><tr><td class="code"><pre><span class="line">java.lang.Object@<span class="number">61</span>bbe9ba</span><br><span class="line">java.lang.Object@<span class="number">61</span>bbe9ba</span><br><span class="line">==============================</span><br><span class="line">null</span><br><span class="line">null</span><br></pre></td></tr></table></figure></div>
+
+<p>应用场景：</p>
+<p>假如有一个应用需要读取大量的本地图片：</p>
+<ul>
+<li>如果每次读取都从硬盘读取，则会严重影响性能</li>
+<li>如果一次性夹杂到内存，则又有可能造成内存溢出</li>
+</ul>
+<p>此时可用软引用解决这个问题。</p>
+<p>设计思路是：用一个HashMap来保存图片的路径和相对应图片关联对象的软引用之间的映射关系，在内存不足时，JVM会自动回收这些缓存图片堆想所占的空间，从而有效避免了<strong>OOM</strong>的问题。</p>
+<p><code>Map&lt;String,SorftReference&lt;Bitmap&gt;&gt; imageCache = new HashMap&lt;String,SoftReference&lt;Bitmap&gt;&gt;();</code></p>
+<h4 id="关于WeakHashMap"><a href="#关于WeakHashMap" class="headerlink" title="关于WeakHashMap"></a>关于WeakHashMap</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">myHashMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">    WeakHashMap&lt;Integer,String&gt; map = <span class="keyword">new</span> WeakHashMap&lt;&gt;();</span><br><span class="line">    Integer key = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line">    String value = <span class="string">"WeakHashMap"</span>;</span><br><span class="line">    map.put(key,value);</span><br><span class="line">    System.out.println(map);</span><br><span class="line">    key = <span class="keyword">null</span>;</span><br><span class="line">    System.out.println(map);</span><br><span class="line"></span><br><span class="line">    System.gc();</span><br><span class="line">    System.out.println(map);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><p>虚引用需要<code>java.lang.ref.PhantomReference</code>类来实现。</p>
+<p>顾名思义，就是形同虚设，一其他几种引用不同，虚引用并不会决定对象的生命周期。</p>
+<p>如果一个对象仅持有虚引用，那么他就和没有任何引用一样，在任何时候都可能被垃圾回收，他不能单独使用也不能通过它访问对象，虚引用必须和引用队列（ReferenceQueue）联合使用</p>
+<p>虚引用的主要作用是跟踪对象被垃圾回收的状态。仅仅是提供了一种且包对象被<code>finalize</code>以后，做某些事情的机制。</p>
+<p><strong>PhantomRefernce</strong>的get方法总是返回null，因此无法访问对应的引用对象。其意义在于说明一个对象已经进入finalization阶段，可以背GC回收，用来实现比finalization更加灵活的回收操作。</p>
+<p>换句话说，设置虚引用关联的唯一目的，就是在这个对象被收集器回收的时候收到一个系统通知，或者后者添加进一步的处理。</p>
+<p>Java技术允许使用finalize()方法在垃圾回收器将对象从内存中清除出去之前做必要的清理工作。</p>
+<p><strong>引用队列</strong></p>
+<p>对象在被回收之前，需要被引用队列保存一下</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">    Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">    ReferenceQueue&lt;Object&gt; referenceQueue = <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</span><br><span class="line">    PhantomReference&lt;Object&gt; phantomReference = <span class="keyword">new</span> PhantomReference&lt;&gt;(o1,referenceQueue);</span><br><span class="line">    System.out.println(o1+<span class="string">" | "</span>+phantomReference.get()+<span class="string">" | "</span>+referenceQueue.poll());</span><br><span class="line">    System.out.println(<span class="string">"====================="</span>);</span><br><span class="line">    o1 = <span class="keyword">null</span>;</span><br><span class="line">    System.gc();</span><br><span class="line">    Thread.sleep(<span class="number">500</span>);</span><br><span class="line">    System.out.println(o1+<span class="string">" | "</span>+phantomReference.get()+<span class="string">" | "</span>+referenceQueue.poll());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="POWERSHELL"><figure class="iseeu highlight /powershell"><table><tr><td class="code"><pre><span class="line">java.lang.Object@<span class="number">61</span>bbe9ba | null | null</span><br><span class="line">=====================</span><br><span class="line">null | null | java.lang.ref.PhantomReference@<span class="number">610455</span>d6</span><br></pre></td></tr></table></figure></div>
+
+<p><code>phantomReference.get()</code>方法永远返回null值。</p>
+<p>前三者有没有引用队列都可以工作，虚引用一般根引用队列和用</p>
+]]></content>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础-0x0f:JVM常用参数及配置</title>
     <url>/2020/06/04/Java%E5%9F%BA%E7%A1%80-0x0f-JVM%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E5%8F%8A%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/Bing_20200604.jpg" alt="s"></p>
