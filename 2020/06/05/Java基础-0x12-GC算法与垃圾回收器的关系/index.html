@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="JUC," />
+  <meta name="keywords" content="JVM," />
 
 
 
@@ -79,20 +79,21 @@
 
 
 
-<meta name="description" content="JUC线程池为什么使用线程池线程池做的工作主要是控制运行的线程的数量。处理过程中将任务放入队列，然后在线程创建后启动这些任务，如果任务数量超过的最大数量，超出数量的线程，排队等候等其他线程执行完毕，在从队列中获取出任务来执行。 主要特点：（优势）  线程复用 降低资源消耗。通过复用一创建的线程降低线程创建和销毁造成的消耗  控制最大并发数 提高响应速度。当任务到达时，任务可以不需要等到线程创建就">
+<meta name="description" content="JVM垃圾回收算法和垃圾收集器的关系   GC算法（引用计数&#x2F;复制&#x2F;标记清除&#x2F;标记整理）是内存回收的方法论   垃圾收集器就是算法的落地实现。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java基础-0x0b:线程池初探">
-<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;05&#x2F;31&#x2F;Java%E5%9F%BA%E7%A1%80-0x0b-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%88%9D%E6%8E%A2&#x2F;index.html">
+<meta property="og:title" content="Java基础-0x12:GC算法与垃圾回收器的关系">
+<meta property="og:url" content="https:&#x2F;&#x2F;allwayz.github.io&#x2F;2020&#x2F;06&#x2F;05&#x2F;Java%E5%9F%BA%E7%A1%80-0x12-GC%E7%AE%97%E6%B3%95%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%9A%84%E5%85%B3%E7%B3%BB&#x2F;index.html">
 <meta property="og:site_name" content="Allwayz aint a coder">
-<meta property="og:description" content="JUC线程池为什么使用线程池线程池做的工作主要是控制运行的线程的数量。处理过程中将任务放入队列，然后在线程创建后启动这些任务，如果任务数量超过的最大数量，超出数量的线程，排队等候等其他线程执行完毕，在从队列中获取出任务来执行。 主要特点：（优势）  线程复用 降低资源消耗。通过复用一创建的线程降低线程创建和销毁造成的消耗  控制最大并发数 提高响应速度。当任务到达时，任务可以不需要等到线程创建就">
+<meta property="og:description" content="JVM垃圾回收算法和垃圾收集器的关系   GC算法（引用计数&#x2F;复制&#x2F;标记清除&#x2F;标记整理）是内存回收的方法论   垃圾收集器就是算法的落地实现。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;Mojave.webp">
-<meta property="article:published_time" content="2020-05-31T08:57:06.000Z">
-<meta property="article:modified_time" content="2020-05-31T19:40:58.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;2020-0605-1.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;53.52.png">
+<meta property="article:published_time" content="2020-06-05T08:14:25.000Z">
+<meta property="article:modified_time" content="2020-06-05T08:16:45.000Z">
 <meta property="article:author" content="Allwayz">
-<meta property="article:tag" content="JUC">
+<meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;Mojave.webp">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com&#x2F;publicImage&#x2F;Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile&#x2F;2020-0605-1.jpg">
 
 
 
@@ -122,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://allwayz.github.io/2020/05/31/Java基础-0x0b-线程池初探/"/>
+  <link rel="canonical" href="https://allwayz.github.io/2020/06/05/Java基础-0x12-GC算法与垃圾回收器的关系/"/>
 
 
 
 
 
-  <title>Java基础-0x0b:线程池初探 | Allwayz aint a coder</title>
+  <title>Java基础-0x12:GC算法与垃圾回收器的关系 | Allwayz aint a coder</title>
   
 
 
@@ -350,7 +351,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/05/31/Java%E5%9F%BA%E7%A1%80-0x0b-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%88%9D%E6%8E%A2/">
+    <link itemprop="mainEntityOfPage" href="https://allwayz.github.io/2020/06/05/Java%E5%9F%BA%E7%A1%80-0x12-GC%E7%AE%97%E6%B3%95%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%9A%84%E5%85%B3%E7%B3%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Allwayz">
@@ -367,7 +368,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java基础-0x0b:线程池初探</h1>
+          <h1 class="post-title" itemprop="name headline">Java基础-0x12:GC算法与垃圾回收器的关系</h1>
         
 
         <div class="post-meta">
@@ -379,8 +380,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-31T16:57:06+08:00">
-                2020-05-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-05T16:14:25+08:00">
+                2020-06-05
               </time>
             
 
@@ -436,96 +437,240 @@
       
 
       
-        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/Mojave.webp" alt="s"></p>
-<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h3 id="为什么使用线程池"><a href="#为什么使用线程池" class="headerlink" title="为什么使用线程池"></a>为什么使用线程池</h3><p>线程池做的工作主要是控制运行的线程的数量。处理过程中将任务放入队列，然后在线程创建后启动这些任务，如果任务数量超过的最大数量，超出数量的线程，排队等候等其他线程执行完毕，在从队列中获取出任务来执行。</p>
-<p>主要特点：（优势）</p>
-<ul>
-<li><p><strong>线程复用</strong></p>
-<p>降低资源消耗。通过复用一创建的线程降低线程创建和销毁造成的消耗</p>
-</li>
-<li><p><strong>控制最大并发数</strong></p>
-<p>提高响应速度。当任务到达时，任务可以不需要等到线程创建就能立即执行</p>
-</li>
-<li><p><strong>管理线程</strong></p>
-<p>提高线程的可管理性。线程时稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配、调优和监控</p>
-</li>
-</ul>
+        <p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/2020-0605-1.jpg" alt="s"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="垃圾回收算法和垃圾收集器的关系"><a href="#垃圾回收算法和垃圾收集器的关系" class="headerlink" title="垃圾回收算法和垃圾收集器的关系"></a>垃圾回收算法和垃圾收集器的关系</h2><blockquote>
+<p>  GC算法（<strong>引用计数/复制/标记清除/标记整理</strong>）是内存回收的<strong>方法论</strong></p>
+<p>  垃圾收集器就是<strong>算法</strong>的<strong>落地实现</strong>。</p>
+</blockquote>
 <a id="more"></a>
 
-<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><h4 id="架构说明"><a href="#架构说明" class="headerlink" title="架构说明"></a>架构说明</h4><p>Java中的线程池使用过<strong>Executor</strong>框架实现的，这个框架用到了<strong>Executor</strong>，<strong>Executors</strong>，<strong>ExecutorService</strong>和<strong>ThreadPoolExecutor</strong>这几个类</p>
-<p>![屏幕快照 2020-05-31 14.41.13](/Users/allwayz/Desktop/屏幕快照 2020-05-31 14.41.13.png)</p>
-<p>线程池的底层就是<strong><u>ThreadPoolExecutor</u></strong>。</p>
-<h4 id="编码实现"><a href="#编码实现" class="headerlink" title="编码实现"></a>编码实现</h4><ul>
-<li><p><strong>Executors.newFixedThreadPool(int)</strong>    执行长期的任务，一个线程池中有固定的线程数</p>
-<p>创建一个定长的线程池，可控制线程最大并发数，超出的线程会在队列中等待。</p>
-<p><code>newFixedThreadPool</code>创建的线程池<code>corePoolSize</code>和<code>maximumPoolSize</code>值是相等的，它使用的<strong>LinkedBlockingQueue</strong>；</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThreadPoolDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ExecutorService threadPool = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line">        <span class="comment">//模拟10个用户来办理业务，每个用户就是来自外部的请求线程</span></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                threadPool.execute(()-&gt;&#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">"\t 执行业务"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">            threadPool.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>执行结果：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">3</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">3</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span>	 执行业务</span><br></pre></td></tr></table></figure></div>
-
-<p>可以看出<code>pool-1-thread-5</code>被使用了三次，所以线程池中的线程时可服用的</p>
-</li>
-<li><p><strong>Executors.newSingleThreadExecutor()</strong>    一个任务一个任务执行，一个池子中只有一个线程</p>
-<p>创建一个<strong>单线程化</strong>的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序执行。使用的是LinkBlockingQueue</p>
-<p><code>newSingleThreadExecutor()</code>将<strong>corePoolSize</strong>和<strong>maximumPoolSize</strong>的值都设为1</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService threadPool = Executors.newSingleThreadExecutor();</span><br></pre></td></tr></table></figure></div>
-
-<p>执行结果：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br></pre></td></tr></table></figure></div>
-
-
-
-</li>
-</ul>
+<p><strong><u>分代收集</u></strong></p>
+<p>目前还没有完美的收集器出现，更加没有万能的收集器，只是针对具体应用最合适的收集器，分别进行收集</p>
 <ul>
-<li><p><strong>Executors.newCachedThreadPool()</strong>    可扩容的线程池，适合执行很多短任务的场景</p>
-<p>创建一个<strong>可缓存线程池</strong>，如果线程长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。</p>
-<p><code>newCachedThreadPool</code>将<strong>corePoolSize</strong>设置为0，将<strong>maximumPoolSize</strong>设置为<code>Integer.MAX_VALUE</code>，使用的是<strong>SnchronousQueue</strong>，也就是说来了任务就创建线程运行，如果线程空闲超过60s，就销毁线程。</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecutorSer	vice threadPool = Executors.newCachedThreadPool();</span><br></pre></td></tr></table></figure></div>
-
-<p>加停顿<code>(TimeUnit)</code>执行结果：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br></pre></td></tr></table></figure></div>
-
-<p>一个短业务，一个线程就足够应付，所以不会创建新的线程</p>
-<p>不加停顿执行结果：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">3</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">6</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">7</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">8</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">6</span>	 执行业务</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">8</span>	 执行业务</span><br></pre></td></tr></table></figure></div>
-
-<p>业务有点复杂，一个线程不够了，就多创建几个线程来执行。</p>
+<li>新生代<ul>
+<li>复制</li>
+</ul>
+</li>
+<li>老年代<ul>
+<li>标记清除</li>
+<li>标记整理</li>
+</ul>
 </li>
 </ul>
-<h3 id="线程池重要参数"><a href="#线程池重要参数" class="headerlink" title="线程池重要参数"></a>线程池重要参数</h3><ul>
-<li><p><strong>int corePoolSize</strong></p>
-<p>线程池中的常驻核心线程数</p>
-<p>在创建了线程池后，当有请求任务来之后，就会安排池中的线程取执行请求任务，近似理解为当前可用线程</p>
-<p>当线程池中的线程数目达到<strong>corePoolSize</strong>之后，就会把到达的任务放到缓存队列当中</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/53.52.png" alt="屏幕快照 2020-06-05 12.53.52"></p>
+<blockquote>
+<p>  Java11之后又多了一种叫：<strong>ZGC</strong></p>
+</blockquote>
+<h3 id="四种主要的垃圾回收器"><a href="#四种主要的垃圾回收器" class="headerlink" title="四种主要的垃圾回收器"></a>四种主要的垃圾回收器</h3><ul>
+<li><p><strong>串行</strong>垃圾回收器（Serial）</p>
+<p>它为单线程环境设计，且只使用一个线程进行垃圾回收，会暂停所有用户线程。所以不适合服务器环境。</p>
 </li>
-<li><p><strong>int maximumPoolSize</strong></p>
-<p>线程池能够容纳同时执行的最大线程数，此值必须大于等于1</p>
+<li><p><strong>并行</strong>垃圾回收器（Parallel）</p>
+<p>多个垃圾手机线程并行工作，此时用户线程是暂停的，适用于科学计算、大数据处理、首台处理等弱交互场景</p>
 </li>
-<li><p><strong>keepAliveTime</strong></p>
-<p>多余的空闲的线程的存活时间。</p>
-<p>当线程池数量超过corePoolSize时，当空闲时间达到keepAliveTime值时，多余空闲线程会被销毁知道只剩下<code>corePoolSize</code>个线程为止</p>
+<li><p><strong>并发</strong>垃圾回收器（CMS）</p>
+<p>用户线程和垃圾收集线程同时执行（不一定是并行，可能是交替执行），不需要停顿用户线程。</p>
+<p>互联网公司多用这种方式，适用堆响应时间有要求的场景</p>
 </li>
-<li><p><strong>TimeUnit unit</strong></p>
-<p>keepAliveTime的单位</p>
+<li><p><strong>G1垃圾回收器</strong>（Garbage First）</p>
+<p>Java7开始准备 -&gt; Java8落地 -&gt; Java9的默认垃圾回收器 -&gt; Java11变成了ZGC</p>
+<p>G1垃圾回收器将堆内存凡哥成不同的区域，然后并发的对其进行垃圾回收</p>
 </li>
-<li><p><strong>BlockingQueue<Runnable> workQueue</strong></p>
-<p>任务队列，被提交但尚未被执行的任务</p>
-</li>
-<li><p><strong>ThreadFactory threadFactory</strong></p>
-<p>标示生成线程池中工作线程的线程工厂，用于创建线程<strong>一般用默认的即可</strong></p>
-</li>
-<li><p><strong>RejectedExecutionHandler handler</strong></p>
-<p>拒绝策略，表示当队列满了并且工作线程大于等于线程池的最大线程数（<code>maximumPoolSize</code>）</p>
+</ul>
+<h3 id="查看服务器默认的垃圾回收器"><a href="#查看服务器默认的垃圾回收器" class="headerlink" title="查看服务器默认的垃圾回收器"></a>查看服务器默认的垃圾回收器</h3><p><code>java -XX:+PrintCommandLineFlags -version</code></p>
+<p>Java8默认垃圾回收器是：<strong>Parallel GC</strong></p>
+<p><strong>Java的gc的类型主要有几种：</strong></p>
 <ul>
-<li>AbortPolicy (Default)</li>
-<li>DiscardPolicy</li>
-<li>CallerRunsPolicy</li>
-<li>DiscardOldestPolicy</li>
+<li>UseSerialGC</li>
+<li>UseParallelGC</li>
+<li>UseConcMarkSweepGC</li>
+<li>UseParNewGC</li>
+<li>UseParallelOldGC</li>
+<li>UseG1GC</li>
+</ul>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="==垃圾收集器=="></a>==垃圾收集器==</h3><ul>
+<li><p>部分参数预先说明</p>
+<ul>
+<li>DefNew          Default New Generation</li>
+<li>Tenured          Old</li>
+<li>ParNew          Parallel New Generation</li>
+<li>PSYoungGen       Parallel Scavenge</li>
+<li>ParOldGen         Parallel Old Generation</li>
+</ul>
+</li>
+<li><p>Server/Client模式分别是什么意思</p>
+<p>只需要掌握Server模式即可，Client模式基本不会用</p>
+<p>操作系统</p>
+<ul>
+<li>32位Windows操作系统，无论硬件如何都默认使用Client的JVM模式。</li>
+<li>32位其他操作系统，2G内存同时有2个CPU以上用Server模式，低于该配置还是Clien模式</li>
+<li>64位 Only Server 模式</li>
+</ul>
+</li>
+<li><p><strong>新生代</strong></p>
+<ul>
+<li><p><strong>串行（serial）</strong></p>
+<p>一个线程的收集器，在进行垃圾收集的时候，必须展厅其他所有的工作线程直到他收集结束。</p>
+<p>串行收集器是最古老，最稳定以及效率高的收集器，只使用一个线程去回收。但其在进行垃圾回收的过程中可能会产生较长的停顿（<code>Stop-The-World</code>状态）。虽然在收集垃圾过程中需要暂停所有其他工作线程，但是它简单高效，对于限定耽搁CPU的环境来说，没有线程交互的开销可以获得最高的单线程垃圾收集效率，因此Serial垃圾收集器依然是Java虚拟机运行在Client模式下默认的新生代垃圾收集器。</p>
+<p><em>对应的JVM参数是：<code>-XX:+UseSerialGC</code></em></p>
+<p>开启后会使用：<code>Serial(Young区)+Serial Old(Old区)</code>的收集器组合</p>
+</li>
 </ul>
 </li>
 </ul>
+<pre><code>-   **并行**（ParNew）
+
+    使用多线程进行垃圾回收，在垃圾回收时，会*Stop-The-World*暂停其他所有工作线程直到他实际结束。
+
+    ParNew收集器就是Serial收集器的并行多线程版本，最常见的应用场景是配和老年代的CMS GC工作，其余的行为和Serial收集器玩去哪一样，ParNew垃圾收集器在垃圾收集过程中同样也要暂停所有工作线程，是很多Java虚拟机运行在Server模式下新生代的默认垃圾收集器。
+
+    JVM 参数：`-XX:+UseParNewGC` 只影响新生代的收集，不影响老年代
+
+
+
+-   **并行回收**（Parallel）
+
+    Parallel Scavenge收集器类似ParNew，也是个新生代垃圾收集器，使用复制算法。也是一个并行的多线程的垃圾收集器，俗称吞吐量优先收集器
+
+    **串行收集器在新生代和老年代的并行化**
+
+    他关注的重点是：
+
+    -   可控制的吞吐量(Toughput=运行用户代码时间/(运行用户代码时间+垃圾回收时间))
+
+        吞吐量高意味着高效利用CPU的时间，它多用于在后台运算而不需要太多交互的任务
+
+    -   自适应调节策略也是Parallel Scavenge收集器与ParNew收集器的一个重要的区别
+
+        虚拟机会根据当前系统运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间(`-XX:MaxGCPauseMillis`)或最大的吞吐量
+
+    JVM参数：`-XX:+UseParallelGC`/`-XX:UseParallelOldGC`(可相互激活) 使用Parallel Scanvenge收集器</code></pre><ul>
+<li><p><strong>老年代</strong></p>
+<ul>
+<li><p><strong>串行（Serial Old）/（Serial MSC）</strong></p>
+<p>  Serial Old是Serial垃圾收集器的老年代版本，他同样是一个单线程的收集器，使用<strong>标记-清除</strong>算法，这个收集器主要是运行在Client模式下的JVM默认垃圾收集器。</p>
+<p>  在Server模式下，主要有两个用途（了解）：</p>
+<ol>
+<li>在JDK1.5之前中与新生代的Parallel Scavenge收集器搭配使用</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li>作为来年呆板中使用CMS收集器的后背垃圾收集方案</li>
+</ol>
+</li>
+<li><p><strong>并行（Parallel Old）/（Parallel Scavenge）</strong></p>
+<p>Parallel Old收集器是Parallel Scavenge的老年代版本，使用多线程的<strong>标记-整理</strong>算法，Parallel Old收集器在JDK1.6才开始提供</p>
+<p>在JDK1.6之前，新生代使用ParallelScavenge收集器只能搭配老年代的Serial Old收集器，只能保证新生代的吞吐量优先，无法保证整体的吞吐量。在JDK1.6之前（Parallel Scavenge + Serial Old）</p>
+<p>Parallel Old 正是为了在老年代同样提供吞吐量优先的垃圾收集器，如果系统对吞吐量的要求较高，JDK1.8后可以优先考虑新生代Parallel Scavenge 和老年代Parllel Old收集器的搭配策略。 在JDJ1.8及以后 （Paralle Scavenge + Parallel Old）</p>
+<p>JVM参数：<code>-XX:+UseParallelOldGC</code> 设置参数之后：<strong>Paralle Scavenge（Young） + Parallel Old（Old）</strong></p>
+</li>
+<li><p><strong>CMS收集器</strong></p>
+<p>是一种以获取最短暂停时间为目标的收集器</p>
+<p>适合应用在互联网站或者B/S系统的服务器上，这类应用尤其重视服务器的响应速度，<strong>希望系统停顿时间最短</strong></p>
+<p>CMS非常适合堆内存大，CPU核数多的服务端应用，也是G1出现之前大型应用的首选收集器</p>
+<p>CMS（ConcurrentMarkSweep），并发收集、低停顿。并发指的是与用户线程一起执行。</p>
+<p>JVM参数：<code>-XX:+UseConcMarkSweepGC</code> 开启该参数后将会自动将<code>-XX:+UseParNewGC</code>打开</p>
+<p>使用ParNew（Young）+ CMS（Old）+ Serial Old 的收集器组合，<em>Serial Old</em>将作为CMS出错的<strong>后备处理</strong>方案</p>
+<p><strong><em>CMS算法简略描述</em></strong></p>
+<ol>
+<li><p>Initial Mark <code>(STW)</code></p>
+<p>标记GC Root 可直达对象，耗时短</p>
+</li>
+<li><p>Concurrent Mark <code>(Concurrent)</code></p>
+<p>从第一部标记的对象出发，并发地标记可达对象</p>
+</li>
+<li><p>Remark <code>(STW)</code></p>
+<p>重新进行标记，修正ConcurrentMark期间由于用户程序运行而导致对象关系间的变换及新创建的对象，耗时短</p>
+</li>
+<li><p>Concurrent Sweep <code>(Concurrent)</code></p>
+<p>并发地进行无用对象回收</p>
+</li>
+</ol>
+<p>优缺点：</p>
+<p>​    <strong>优</strong>： </p>
+<ul>
+<li>并发收集，停顿地</li>
+</ul>
+<p>​    <strong>缺</strong>： </p>
+<ul>
+<li><p>并发执行，对CPU压力大</p>
+<blockquote>
+<p>  由于并发进行，CMS在收集与应用线程会同时增加对堆内存的占用，也就是说，CMS必须要在老年代堆内存用尽之前完成垃圾回收，否则CMS回收失败，将触发担保机制，串行老年代收集器将会以STW的方式进行一次GC，从而造成较大时间的停顿</p>
+</blockquote>
+<ul>
+<li><p>采用的标记清除算法会导致大量的碎片</p>
+<blockquote>
+<p>  标记清楚算法无法整理空间碎片，老年代空间会随着应用时长被逐步耗尽，最后将不得不通过担保机制对堆内存进行压缩。CMS也提供了参数<code>-XX:CMSFullGCsBeForeComaction</code>（默认0，即每次都进行内存整理）来指定多少次CMS手机之后进行一次压缩的Full GC。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="如何选择垃圾收集器"><a href="#如何选择垃圾收集器" class="headerlink" title="如何选择垃圾收集器"></a>如何选择垃圾收集器</h3><p>组合的选择</p>
+<ul>
+<li>单CPU或小内存，单机程序<ul>
+<li><code>-XX:+UseSerialGC</code></li>
+</ul>
+</li>
+<li>多CPU，需要最大吞吐量，如后台计算型应用<ul>
+<li><code>-XX:+UseParallelGC</code>/<code>-XX:+UseParallelOldGC</code></li>
+</ul>
+</li>
+<li>多CPU，追求低停顿时间，需要快速响应<ul>
+<li><code>-XX:+UseConcMarkSweepGC</code></li>
+<li><code>-XX:+UseParNewGC</code></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th align="center">新生代垃圾收集器</th>
+<th align="center">新生代算法</th>
+<th align="center">老年代垃圾收集器</th>
+<th align="center">老年代算法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-XX:+UseSerialGC</code></td>
+<td align="center">SerialGC</td>
+<td align="center">复制</td>
+<td align="center">SerialOldGC</td>
+<td align="center">标记整理</td>
+</tr>
+<tr>
+<td><code>-XX:+UseParNewGC</code></td>
+<td align="center">ParNew</td>
+<td align="center">复制</td>
+<td align="center">SerialOldGC</td>
+<td align="center">标记整理</td>
+</tr>
+<tr>
+<td><code>-XX:+UseParallelGC</code></td>
+<td align="center">Parallel [Scavenge]</td>
+<td align="center">复制</td>
+<td align="center">Parallel Old</td>
+<td align="center">标记整理</td>
+</tr>
+<tr>
+<td><code>-XX:+UseConcMarkSweepGC</code></td>
+<td align="center">ParNew</td>
+<td align="center">复制</td>
+<td align="center">CMS<br>(SerialOld作为后备)</td>
+<td align="center">标记清除</td>
+</tr>
+<tr>
+<td><code>-XX:+UseG1GC</code></td>
+<td align="center">整体上标记整理</td>
+<td align="center">局部复制</td>
+<td align="center">不会产生内存碎片</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
 
       
     </div>
@@ -549,7 +694,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://allwayz.github.io/2020/05/31/Java基础-0x0b-线程池初探/" title="Java基础-0x0b:线程池初探">allwayz.github.io/2020/05/31/Java基础-0x0b-线程池初探/</a>
+    <a href="http://allwayz.github.io/2020/06/05/Java基础-0x12-GC算法与垃圾回收器的关系/" title="Java基础-0x12:GC算法与垃圾回收器的关系">allwayz.github.io/2020/06/05/Java基础-0x12-GC算法与垃圾回收器的关系/</a>
   </li>
 
 
@@ -578,7 +723,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JUC/" rel="tag"># JUC</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -591,8 +736,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/31/Java%E5%9F%BA%E7%A1%80-0x0a-Callable%E6%8E%A5%E5%8F%A3/" rel="next" title="Java基础-0x0a:Callable接口">
-                <i class="fa fa-chevron-left"></i> Java基础-0x0a:Callable接口
+              <a href="/2020/06/05/Java%E5%9F%BA%E7%A1%80-0x11-OOM%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8/" rel="next" title="Java基础-0x11:OOM常见异常">
+                <i class="fa fa-chevron-left"></i> Java基础-0x11:OOM常见异常
               </a>
             
           </div>
@@ -600,10 +745,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/01/%E4%B8%BA%E4%B8%AD%E5%8D%8E%E4%B9%8B%E5%B4%9B%E8%B5%B7%E8%80%8C%E8%AF%BB%E4%B9%A6/" rel="prev" title="为中华之崛起而读书">
-                为中华之崛起而读书 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -800,7 +941,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程池"><span class="nav-number">1.1.</span> <span class="nav-text">线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么使用线程池"><span class="nav-number">1.1.1.</span> <span class="nav-text">为什么使用线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程池的使用"><span class="nav-number">1.1.2.</span> <span class="nav-text">线程池的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#架构说明"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">架构说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编码实现"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">编码实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程池重要参数"><span class="nav-number">1.1.3.</span> <span class="nav-text">线程池重要参数</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM"><span class="nav-number">1.</span> <span class="nav-text">JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾回收算法和垃圾收集器的关系"><span class="nav-number">1.1.</span> <span class="nav-text">垃圾回收算法和垃圾收集器的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#四种主要的垃圾回收器"><span class="nav-number">1.1.1.</span> <span class="nav-text">四种主要的垃圾回收器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看服务器默认的垃圾回收器"><span class="nav-number">1.1.2.</span> <span class="nav-text">查看服务器默认的垃圾回收器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">1.1.3.</span> <span class="nav-text">&#x3D;&#x3D;垃圾收集器&#x3D;&#x3D;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何选择垃圾收集器"><span class="nav-number">1.1.4.</span> <span class="nav-text">如何选择垃圾收集器</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

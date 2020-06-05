@@ -1,6 +1,333 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础-0x12:GC算法与垃圾回收器的关系</title>
+    <url>/2020/06/05/Java%E5%9F%BA%E7%A1%80-0x12-GC%E7%AE%97%E6%B3%95%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
+    <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/2020-0605-1.jpg" alt="s"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="垃圾回收算法和垃圾收集器的关系"><a href="#垃圾回收算法和垃圾收集器的关系" class="headerlink" title="垃圾回收算法和垃圾收集器的关系"></a>垃圾回收算法和垃圾收集器的关系</h2><blockquote>
+<p>  GC算法（<strong>引用计数/复制/标记清除/标记整理</strong>）是内存回收的<strong>方法论</strong></p>
+<p>  垃圾收集器就是<strong>算法</strong>的<strong>落地实现</strong>。</p>
+</blockquote>
+<a id="more"></a>
+
+<p><strong><u>分代收集</u></strong></p>
+<p>目前还没有完美的收集器出现，更加没有万能的收集器，只是针对具体应用最合适的收集器，分别进行收集</p>
+<ul>
+<li>新生代<ul>
+<li>复制</li>
+</ul>
+</li>
+<li>老年代<ul>
+<li>标记清除</li>
+<li>标记整理</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/53.52.png" alt="屏幕快照 2020-06-05 12.53.52"></p>
+<blockquote>
+<p>  Java11之后又多了一种叫：<strong>ZGC</strong></p>
+</blockquote>
+<h3 id="四种主要的垃圾回收器"><a href="#四种主要的垃圾回收器" class="headerlink" title="四种主要的垃圾回收器"></a>四种主要的垃圾回收器</h3><ul>
+<li><p><strong>串行</strong>垃圾回收器（Serial）</p>
+<p>它为单线程环境设计，且只使用一个线程进行垃圾回收，会暂停所有用户线程。所以不适合服务器环境。</p>
+</li>
+<li><p><strong>并行</strong>垃圾回收器（Parallel）</p>
+<p>多个垃圾手机线程并行工作，此时用户线程是暂停的，适用于科学计算、大数据处理、首台处理等弱交互场景</p>
+</li>
+<li><p><strong>并发</strong>垃圾回收器（CMS）</p>
+<p>用户线程和垃圾收集线程同时执行（不一定是并行，可能是交替执行），不需要停顿用户线程。</p>
+<p>互联网公司多用这种方式，适用堆响应时间有要求的场景</p>
+</li>
+<li><p><strong>G1垃圾回收器</strong>（Garbage First）</p>
+<p>Java7开始准备 -&gt; Java8落地 -&gt; Java9的默认垃圾回收器 -&gt; Java11变成了ZGC</p>
+<p>G1垃圾回收器将堆内存凡哥成不同的区域，然后并发的对其进行垃圾回收</p>
+</li>
+</ul>
+<h3 id="查看服务器默认的垃圾回收器"><a href="#查看服务器默认的垃圾回收器" class="headerlink" title="查看服务器默认的垃圾回收器"></a>查看服务器默认的垃圾回收器</h3><p><code>java -XX:+PrintCommandLineFlags -version</code></p>
+<p>Java8默认垃圾回收器是：<strong>Parallel GC</strong></p>
+<p><strong>Java的gc的类型主要有几种：</strong></p>
+<ul>
+<li>UseSerialGC</li>
+<li>UseParallelGC</li>
+<li>UseConcMarkSweepGC</li>
+<li>UseParNewGC</li>
+<li>UseParallelOldGC</li>
+<li>UseG1GC</li>
+</ul>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="==垃圾收集器=="></a>==垃圾收集器==</h3><ul>
+<li><p>部分参数预先说明</p>
+<ul>
+<li>DefNew          Default New Generation</li>
+<li>Tenured          Old</li>
+<li>ParNew          Parallel New Generation</li>
+<li>PSYoungGen       Parallel Scavenge</li>
+<li>ParOldGen         Parallel Old Generation</li>
+</ul>
+</li>
+<li><p>Server/Client模式分别是什么意思</p>
+<p>只需要掌握Server模式即可，Client模式基本不会用</p>
+<p>操作系统</p>
+<ul>
+<li>32位Windows操作系统，无论硬件如何都默认使用Client的JVM模式。</li>
+<li>32位其他操作系统，2G内存同时有2个CPU以上用Server模式，低于该配置还是Clien模式</li>
+<li>64位 Only Server 模式</li>
+</ul>
+</li>
+<li><p><strong>新生代</strong></p>
+<ul>
+<li><p><strong>串行（serial）</strong></p>
+<p>一个线程的收集器，在进行垃圾收集的时候，必须展厅其他所有的工作线程直到他收集结束。</p>
+<p>串行收集器是最古老，最稳定以及效率高的收集器，只使用一个线程去回收。但其在进行垃圾回收的过程中可能会产生较长的停顿（<code>Stop-The-World</code>状态）。虽然在收集垃圾过程中需要暂停所有其他工作线程，但是它简单高效，对于限定耽搁CPU的环境来说，没有线程交互的开销可以获得最高的单线程垃圾收集效率，因此Serial垃圾收集器依然是Java虚拟机运行在Client模式下默认的新生代垃圾收集器。</p>
+<p><em>对应的JVM参数是：<code>-XX:+UseSerialGC</code></em></p>
+<p>开启后会使用：<code>Serial(Young区)+Serial Old(Old区)</code>的收集器组合</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>-   **并行**（ParNew）
+
+    使用多线程进行垃圾回收，在垃圾回收时，会*Stop-The-World*暂停其他所有工作线程直到他实际结束。
+
+    ParNew收集器就是Serial收集器的并行多线程版本，最常见的应用场景是配和老年代的CMS GC工作，其余的行为和Serial收集器玩去哪一样，ParNew垃圾收集器在垃圾收集过程中同样也要暂停所有工作线程，是很多Java虚拟机运行在Server模式下新生代的默认垃圾收集器。
+
+    JVM 参数：`-XX:+UseParNewGC` 只影响新生代的收集，不影响老年代
+
+
+
+-   **并行回收**（Parallel）
+
+    Parallel Scavenge收集器类似ParNew，也是个新生代垃圾收集器，使用复制算法。也是一个并行的多线程的垃圾收集器，俗称吞吐量优先收集器
+
+    **串行收集器在新生代和老年代的并行化**
+
+    他关注的重点是：
+
+    -   可控制的吞吐量(Toughput=运行用户代码时间/(运行用户代码时间+垃圾回收时间))
+
+        吞吐量高意味着高效利用CPU的时间，它多用于在后台运算而不需要太多交互的任务
+
+    -   自适应调节策略也是Parallel Scavenge收集器与ParNew收集器的一个重要的区别
+
+        虚拟机会根据当前系统运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间(`-XX:MaxGCPauseMillis`)或最大的吞吐量
+
+    JVM参数：`-XX:+UseParallelGC`/`-XX:UseParallelOldGC`(可相互激活) 使用Parallel Scanvenge收集器</code></pre><ul>
+<li><p><strong>老年代</strong></p>
+<ul>
+<li><p><strong>串行（Serial Old）/（Serial MSC）</strong></p>
+<p>  Serial Old是Serial垃圾收集器的老年代版本，他同样是一个单线程的收集器，使用<strong>标记-清除</strong>算法，这个收集器主要是运行在Client模式下的JVM默认垃圾收集器。</p>
+<p>  在Server模式下，主要有两个用途（了解）：</p>
+<ol>
+<li>在JDK1.5之前中与新生代的Parallel Scavenge收集器搭配使用</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li>作为来年呆板中使用CMS收集器的后背垃圾收集方案</li>
+</ol>
+</li>
+<li><p><strong>并行（Parallel Old）/（Parallel Scavenge）</strong></p>
+<p>Parallel Old收集器是Parallel Scavenge的老年代版本，使用多线程的<strong>标记-整理</strong>算法，Parallel Old收集器在JDK1.6才开始提供</p>
+<p>在JDK1.6之前，新生代使用ParallelScavenge收集器只能搭配老年代的Serial Old收集器，只能保证新生代的吞吐量优先，无法保证整体的吞吐量。在JDK1.6之前（Parallel Scavenge + Serial Old）</p>
+<p>Parallel Old 正是为了在老年代同样提供吞吐量优先的垃圾收集器，如果系统对吞吐量的要求较高，JDK1.8后可以优先考虑新生代Parallel Scavenge 和老年代Parllel Old收集器的搭配策略。 在JDJ1.8及以后 （Paralle Scavenge + Parallel Old）</p>
+<p>JVM参数：<code>-XX:+UseParallelOldGC</code> 设置参数之后：<strong>Paralle Scavenge（Young） + Parallel Old（Old）</strong></p>
+</li>
+<li><p><strong>CMS收集器</strong></p>
+<p>是一种以获取最短暂停时间为目标的收集器</p>
+<p>适合应用在互联网站或者B/S系统的服务器上，这类应用尤其重视服务器的响应速度，<strong>希望系统停顿时间最短</strong></p>
+<p>CMS非常适合堆内存大，CPU核数多的服务端应用，也是G1出现之前大型应用的首选收集器</p>
+<p>CMS（ConcurrentMarkSweep），并发收集、低停顿。并发指的是与用户线程一起执行。</p>
+<p>JVM参数：<code>-XX:+UseConcMarkSweepGC</code> 开启该参数后将会自动将<code>-XX:+UseParNewGC</code>打开</p>
+<p>使用ParNew（Young）+ CMS（Old）+ Serial Old 的收集器组合，<em>Serial Old</em>将作为CMS出错的<strong>后备处理</strong>方案</p>
+<p><strong><em>CMS算法简略描述</em></strong></p>
+<ol>
+<li><p>Initial Mark <code>(STW)</code></p>
+<p>标记GC Root 可直达对象，耗时短</p>
+</li>
+<li><p>Concurrent Mark <code>(Concurrent)</code></p>
+<p>从第一部标记的对象出发，并发地标记可达对象</p>
+</li>
+<li><p>Remark <code>(STW)</code></p>
+<p>重新进行标记，修正ConcurrentMark期间由于用户程序运行而导致对象关系间的变换及新创建的对象，耗时短</p>
+</li>
+<li><p>Concurrent Sweep <code>(Concurrent)</code></p>
+<p>并发地进行无用对象回收</p>
+</li>
+</ol>
+<p>优缺点：</p>
+<p>​    <strong>优</strong>： </p>
+<ul>
+<li>并发收集，停顿地</li>
+</ul>
+<p>​    <strong>缺</strong>： </p>
+<ul>
+<li><p>并发执行，对CPU压力大</p>
+<blockquote>
+<p>  由于并发进行，CMS在收集与应用线程会同时增加对堆内存的占用，也就是说，CMS必须要在老年代堆内存用尽之前完成垃圾回收，否则CMS回收失败，将触发担保机制，串行老年代收集器将会以STW的方式进行一次GC，从而造成较大时间的停顿</p>
+</blockquote>
+<ul>
+<li><p>采用的标记清除算法会导致大量的碎片</p>
+<blockquote>
+<p>  标记清楚算法无法整理空间碎片，老年代空间会随着应用时长被逐步耗尽，最后将不得不通过担保机制对堆内存进行压缩。CMS也提供了参数<code>-XX:CMSFullGCsBeForeComaction</code>（默认0，即每次都进行内存整理）来指定多少次CMS手机之后进行一次压缩的Full GC。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="如何选择垃圾收集器"><a href="#如何选择垃圾收集器" class="headerlink" title="如何选择垃圾收集器"></a>如何选择垃圾收集器</h3><p>组合的选择</p>
+<ul>
+<li>单CPU或小内存，单机程序<ul>
+<li><code>-XX:+UseSerialGC</code></li>
+</ul>
+</li>
+<li>多CPU，需要最大吞吐量，如后台计算型应用<ul>
+<li><code>-XX:+UseParallelGC</code>/<code>-XX:+UseParallelOldGC</code></li>
+</ul>
+</li>
+<li>多CPU，追求低停顿时间，需要快速响应<ul>
+<li><code>-XX:+UseConcMarkSweepGC</code></li>
+<li><code>-XX:+UseParNewGC</code></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th align="center">新生代垃圾收集器</th>
+<th align="center">新生代算法</th>
+<th align="center">老年代垃圾收集器</th>
+<th align="center">老年代算法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-XX:+UseSerialGC</code></td>
+<td align="center">SerialGC</td>
+<td align="center">复制</td>
+<td align="center">SerialOldGC</td>
+<td align="center">标记整理</td>
+</tr>
+<tr>
+<td><code>-XX:+UseParNewGC</code></td>
+<td align="center">ParNew</td>
+<td align="center">复制</td>
+<td align="center">SerialOldGC</td>
+<td align="center">标记整理</td>
+</tr>
+<tr>
+<td><code>-XX:+UseParallelGC</code></td>
+<td align="center">Parallel [Scavenge]</td>
+<td align="center">复制</td>
+<td align="center">Parallel Old</td>
+<td align="center">标记整理</td>
+</tr>
+<tr>
+<td><code>-XX:+UseConcMarkSweepGC</code></td>
+<td align="center">ParNew</td>
+<td align="center">复制</td>
+<td align="center">CMS<br>(SerialOld作为后备)</td>
+<td align="center">标记清除</td>
+</tr>
+<tr>
+<td><code>-XX:+UseG1GC</code></td>
+<td align="center">整体上标记整理</td>
+<td align="center">局部复制</td>
+<td align="center">不会产生内存碎片</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+]]></content>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础-0x11:OOM常见异常</title>
+    <url>/2020/06/05/Java%E5%9F%BA%E7%A1%80-0x11-OOM%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/2020-0605.jpg" alt="2w"></p>
+<h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="OOM"><a href="#OOM" class="headerlink" title="OOM"></a>OOM</h2><blockquote>
+<ul>
+<li>java.lang.StackOverflowError</li>
+<li>java.lang.OutOfMemoryError:Java heap space</li>
+<li>java.lang.OutOfMemoryError:GC overhead exceeded</li>
+<li>java.lang.OutOfMemoryError:Direct buffer memory</li>
+<li>java.lang.OutOfMemoryError:unable to create native thread</li>
+<li>java.lang.OutOfMemoryError:Metaspace</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+
+<h3 id="java-lang-StackOverflowError"><a href="#java-lang-StackOverflowError" class="headerlink" title="java.lang.StackOverflowError"></a><code>java.lang.StackOverflowError</code></h3><p>栈内存溢出</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 递归调用，深度加载方法容易导致StackOverflow</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackOverflowErrorDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        stackOverflowError();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackOverflowError</span><span class="params">()</span></span>&#123;</span><br><span class="line">        stackOverflowError();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>递归调用与方法的深度加载容易出现StackOverflow</p>
+<h3 id="java-lang-OutOfMemoryError-Java-heap-space"><a href="#java-lang-OutOfMemoryError-Java-heap-space" class="headerlink" title="java.lang.OutOfMemoryError:Java heap space"></a><code>java.lang.OutOfMemoryError:Java heap space</code></h3><p>堆内存溢出</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JVM参数：-Xms10m -Xmx10m</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaHeapSpaceDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">15</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="java-lang-OutOfMemoryError-GC-overhead-limit-exceeded"><a href="#java-lang-OutOfMemoryError-GC-overhead-limit-exceeded" class="headerlink" title="java.lang.OutOfMemoryError:GC overhead limit exceeded"></a><code>java.lang.OutOfMemoryError:GC overhead limit exceeded</code></h3><p><strong>GC</strong>回收时间过长会抛出<strong>OutOfMemoryError</strong>。过长的定义是：超过<strong>98%</strong>的时间用来做GC并且回收了不到<strong>2%</strong>的堆内存，连续多次回收，都只回收了不到<strong>2%</strong>的极端情况下才会抛出。假如不抛出<strong>GC overhead limit exceeded</strong> 错误，就会发生GC清理每次只清理一点点，内存很快会再次填满，迫使GC再次执行，这样就形成恶性循环。CPU使用一直是100%，而GC却没有任何成果。</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JVM properties: -Xms10m -Xmx10m -XX:+PrintGCDetails -XX:MaxDirectMemorySize=5m</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GCOverheadDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line">                list.add(String.valueOf(++i).intern());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e)&#123;</span><br><span class="line">            System.out.println(<span class="string">"i: "</span> + i);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="java-lang-OutOfMemoryError-Direct-buffer-memory"><a href="#java-lang-OutOfMemoryError-Direct-buffer-memory" class="headerlink" title="java.lang.OutOfMemoryError:Direct buffer memory"></a><code>java.lang.OutOfMemoryError:Direct buffer memory</code></h3><p>导致原因：</p>
+<p>写NIO程序经常使用ByteBuffer来读取或者写入数据，这是一种基于通道(<code>Channel</code>)与缓冲区(<code>Buffer</code>)的<strong>I/O</strong>方式，它可以使用Natice函数库直接分配<strong>堆外内存</strong>，然后通过一个存储在Java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作。它能在一些场景中显著提高性能，因为避免了在Java堆和Native堆中来回复制数据。</p>
+<ul>
+<li><p>ByteBuffer.allocate(capability) </p>
+<p>这种方式是分配JVM堆内存，<strong>属于GC管辖范围</strong>，由于需要拷贝，所以速度相对较慢</p>
+</li>
+<li><p>ByteBuffer.allocateDirect(capability)</p>
+<p>这种方式是分配OS本地内存，<strong>不属于GC管辖范围</strong>，由于不需要内存拷贝，所以速度相对较快。</p>
+</li>
+</ul>
+<p>但如果不断飞配本地内存，堆内存很少使用，那么JVM就不需要执行GC，DirectByteBuffer对象们就不会被回收，这时候堆内存充足，但本地内存可能已经被用光了，再次尝试分配本地内存就会出现OutOfMemoryError，程序就直接崩了。</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JVM properties: -Xms10m -Xmx10m -XX:MaxDirectMemorySize=5m</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DirectBufferMemoryDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"maxDirectMemory: "</span>+ (sun.misc.VM.maxDirectMemory()</span><br><span class="line">                                                 /(<span class="keyword">double</span>)<span class="number">1024</span>/<span class="number">1024</span>)+<span class="string">"MB"</span>);</span><br><span class="line">        <span class="comment">//分配5MB，但是Buffer里放6MB</span></span><br><span class="line">        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(<span class="number">6</span> * <span class="number">1024</span> * <span class="number">1024</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h3 id="java-lang-OutOfMemoryError-unable-to-create-new-native-thread"><a href="#java-lang-OutOfMemoryError-unable-to-create-new-native-thread" class="headerlink" title="java.lang.OutOfMemoryError:unable to create new native thread"></a><code>java.lang.OutOfMemoryError:unable to create new native thread</code></h3><p>无法创建更多新的本地线程</p>
+<p>高并发请求服务器时，经常出现如下异常：<code>javajava.lang.OutOfMemoryError:unable to create new native thread</code> </p>
+<p>准确的讲 该native thread异常与对应的平台有关</p>
+<p>导致原因</p>
+<ol>
+<li>应用创建了太多线程了，一个应用进程创建多个线程，超过系统承载极限</li>
+<li>服务器并不允许应用创建这么多线程，Linux系统默认允许单个进程可以创建的线程数时<strong><em>1024个</em></strong>，应用创建的线程超过这个数量，就会报这个异常。</li>
+</ol>
+<p>解决办法：</p>
+<ol>
+<li>想办法降低应用程序创建的线程的数量，分析应用是否真的需要创建这么多线程，如果不是，该代码把线程数降到最低</li>
+<li>对于有的应用，确实需要创建很多线程，远超过Linux系统的默认<strong>1024</strong>个线程，可以通过修改Linux服务器配置，扩大Linux默认限制</li>
+</ol>
+<p>真的在生产环境出现这个Bug怎么办？</p>
+<ol>
+<li>切换到root用户</li>
+<li><code>ps -ef:grep java</code> 查看运行中的Java进程</li>
+<li><code>kill -9 {进程编号}</code></li>
+</ol>
+<h3 id="java-lang-OutOfMemoryError-Metaspace"><a href="#java-lang-OutOfMemoryError-Metaspace" class="headerlink" title="java.lang.OutOfMemoryError:Metaspace"></a><code>java.lang.OutOfMemoryError:Metaspace</code></h3><p>Java8以及之后的版本使用Metaspace来替代永久代</p>
+<p>Metaspace时方法区在HotSpot中的实现，他与持久代最大的区别在于：Metaspace并不在虚拟机内存中，而是在本地内存。</p>
+<p>永久代（Java8之后被Metaspace取代了）存放了一下信息：</p>
+<ul>
+<li>虚拟机加载的类信息</li>
+<li>常量池</li>
+<li>静态变量</li>
+<li>即时编译后的代码</li>
+</ul>
+<p>模拟Metaspace空间溢出，我们不断生成类往元空间灌，类占据的空间总是会超过Metaspace制定的空间大小的</p>
+]]></content>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础-0x10:强、软、弱、虚引用</title>
     <url>/2020/06/04/Java%E5%9F%BA%E7%A1%80-0x10-%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8/</url>
     <content><![CDATA[<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/20180507.jpg" alt="s"></p>
