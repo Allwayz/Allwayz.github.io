@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JUC," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="JUC阻塞队列   队列与阻塞队列  阻塞队列,顾名思义 首先它是一个队列，而一个阻塞队列在数据结构中起到的作用大致如图所示好：   当阻塞队列是空时，从队列中获取元素的操作会被阻塞。（消费者）  当阻塞队列是满时，向队列中添加元素的操作会被阻塞。（生产者）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-0x07:学习阻塞队列">
+<meta property="og:url" content="http://yoursite.com/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x07-%E5%AD%A6%E4%B9%A0%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/index.html">
+<meta property="og:site_name" content="Allwayz aint a coder">
+<meta property="og:description" content="JUC阻塞队列   队列与阻塞队列  阻塞队列,顾名思义 首先它是一个队列，而一个阻塞队列在数据结构中起到的作用大致如图所示好：   当阻塞队列是空时，从队列中获取元素的操作会被阻塞。（消费者）  当阻塞队列是满时，向队列中添加元素的操作会被阻塞。（生产者）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png">
+<meta property="article:published_time" content="2020-05-29T08:54:47.000Z">
+<meta property="article:modified_time" content="2023-10-17T07:18:19.380Z">
+<meta property="article:author" content="Allwayz">
+<meta property="article:tag" content="JUC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E6%A8%A1%E5%9E%8B.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/29/Java基础-0x07-学习阻塞队列/"/>
+
+
+
+
+
+  <title>Java基础-0x07:学习阻塞队列 | Allwayz aint a coder</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Allwayz aint a coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x07-%E5%AD%A6%E4%B9%A0%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java基础-0x07:学习阻塞队列</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-29T16:54:47+08:00">
+                2020-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><blockquote>
+<p>  队列与阻塞队列</p>
+<ul>
+<li><p>阻塞队列,顾名思义 首先它是一个<strong>队列</strong>，而一个阻塞队列在数据结构中起到的作用大致如图所示好：</p>
+<p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E6%A8%A1%E5%9E%8B.png" alt="s"></p>
+</li>
+<li><p>当阻塞队列是<strong>空</strong>时，从队列中<strong><u>获取元素</u></strong>的操作会被阻塞。（消费者）</p>
+</li>
+<li><p>当阻塞队列是<strong>满</strong>时，向队列中<u><strong>添加元素</strong></u>的操作会被阻塞。（生产者）</p>
+</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+
+
+
+<p>在多线程领域，所谓阻塞，在某些情况下会挂起线程（即阻塞），一旦条件满足，被挂起的线程又会被自动唤醒。</p>
+<ul>
+<li><input disabled="" type="checkbox"> <p>为什么需要BlockingQueue？</p>
+<p>好处是不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，因为这写事<code>BlockingQueue</code>都做了</p>
+<p>在<strong>concurrent</strong>包发布以前，多线程环境下，开发者都需要自己控制这些细节，还需要兼顾效率和线程安全。而这会给我们的程序带来更多的复杂度。</p>
+</li>
+</ul>
+<h3 id="阻塞队列接口基础架构"><a href="#阻塞队列接口基础架构" class="headerlink" title="阻塞队列接口基础架构"></a>阻塞队列接口基础架构</h3><p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Java%E5%9F%BA%E7%A1%80-0x00%EF%BC%9A%E5%AD%A6%E4%B9%A0Volatile/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png" alt="屏幕快照 2020-05-29 15.45.21"></p>
+<p>阻塞队列接口也是集合类接口的子接口。</p>
+<p>其实现类有一下几个：</p>
+<ul>
+<li><strong><u>ArrayBlockingQueue ==&gt; 由数组结构组成的有届阻塞队列</u></strong></li>
+<li><u><strong>LinkedBlockingQueue ==&gt; 由链表结构组成的有届（但大小默认值为Integer.MAX_VALUE）阻塞队列</strong></u></li>
+<li>PriorityBlockingQueue ==&gt; 支持优先级排序的无届阻塞队列</li>
+<li>DelayQueue ==&gt; 使用优先级队列实现的延迟无届阻塞队列</li>
+<li><u><strong>SynchronousQueue ==&gt; 不存储元素的阻塞队列，也即单个元素的队列</strong></u></li>
+<li>LinkedTransferQueue ==&gt; 由链表结构组成的无届阻塞队列</li>
+<li>LinkedBlockingDeque ==&gt; 由链表结构组成的双向阻塞队列</li>
+</ul>
+<h3 id="阻塞队列主要方法的概括："><a href="#阻塞队列主要方法的概括：" class="headerlink" title="阻塞队列主要方法的概括："></a>阻塞队列主要方法的概括：</h3><table>
+<thead>
+<tr>
+<th></th>
+<th><em>Throws exception</em></th>
+<th><em>Special value</em></th>
+<th><em>Blocks</em></th>
+<th><em>Times out</em></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Insert</strong></td>
+<td><a href="#"><code>add(e)</code></a></td>
+<td><a href="#"><code>offer(e)</code></a></td>
+<td><a href="#"><code>put(e)</code></a></td>
+<td><a href="#"><code>offer(e, time, unit)</code></a></td>
+</tr>
+<tr>
+<td><strong>Remove</strong></td>
+<td><a href="#"><code>remove()</code></a></td>
+<td><a href="#"><code>poll()</code></a></td>
+<td><a href="#"><code>take()</code></a></td>
+<td><a href="#"><code>poll(time, unit)</code></a></td>
+</tr>
+<tr>
+<td><strong>Examine</strong></td>
+<td><a href="#"><code>element()</code></a></td>
+<td><a href="#"><code>peek()</code></a></td>
+<td><em>not applicable</em></td>
+<td><em>not applicable</em></td>
+</tr>
+</tbody></table>
+<p>BlockingQueue不接受空元素。实现类会在尝试添加、放置或提供<code>null</code>时抛出<code>NullPointerException</code>。空值用作标记值，以指示轮询操作失败。</p>
+<p>BlockingQueue可能受容量限制。在任何给定时间，它可能具有剩余容量，超过该容量就不能放置其他元素而不会阻塞。没有任何内部容量约束的<code>BlockingQueue</code>始终报告<code>Integer.MAX_VALUE</code>的剩余容量。</p>
+<p>BlockingQueue实现被设计为主要用于生产者-消费者队列，但另外还支持<strong>Collection</strong>接口。因此，例如，可以使用<code>remove(x)</code>从队列中删除任意元素。但是，这样的操作通常不能非常有效地执行，并且仅用于偶尔的使用，例如当取消排队的消息时。</p>
+<p>BlockingQueue实现是线程安全的。所有排队方法都是使用内部锁或其他形式的并发控制来原子地实现其效果的。但是，除非在实现中另外指定，否则批量Collection操作addAll，containsAll，retainAll和removeAll不一定是原子执行的。因此，例如，仅在c中添加一些元素之后，addAll（c）可能会失败（引发异常）。</p>
+<p>BlockingQueue本质上不支持任何类型的“close”或“shutdown”操作，以指示将不再添加任何项目。这些功能的需求和使用往往取决于实现。例如，一种常见的策略是，生产者插入特殊的流尾对象或有毒对象，当消费者采取这种方法时会对其进行相应的解释。</p>
+<p>使用示例，基于典型的生产者-消费者方案。请注意，BlockingQueue可以安全地与多个生产者和多个消费者一起使用。</p>
+<h3 id="SynchronousQueue理论："><a href="#SynchronousQueue理论：" class="headerlink" title="SynchronousQueue理论："></a>SynchronousQueue理论：</h3><p>与其他的阻塞队列不同，SynchronousQueue是一个不存储元素的阻塞队列</p>
+<p>每一个put操作必须等待一个take操作，反过来也是一样。</p>
+<h4 id="SynchronousQueueDemo："><a href="#SynchronousQueueDemo：" class="headerlink" title="SynchronousQueueDemo："></a>SynchronousQueueDemo：</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlockingQueueDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        BlockingQueue&lt;String&gt; queue = <span class="keyword">new</span> SynchronousQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t put 1"</span>);</span><br><span class="line">                queue.put(<span class="string">"1"</span>);</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t put 2"</span>);</span><br><span class="line">                queue.put(<span class="string">"2"</span>);</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"\t put 3"</span>);</span><br><span class="line">                queue.put(<span class="string">"3"</span>);</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                System.out.println(queue.take());</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                System.out.println(queue.take());</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">                System.out.println(queue.take());</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">Thread-0	 put 2</span><br><span class="line">2</span><br><span class="line">Thread-0	 put 3</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>
+
+<p>放一个，取一个，下一个才能放进来。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JUC/" rel="tag"># JUC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/29/Java%E5%9F%BA%E7%A1%80-0x06-CountDownLatch-CyclicBarrier-Semaphore%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="Java基础-0x06:CountDownLatch/CyclicBarrier/Semaphore的使用">
+                <i class="fa fa-chevron-left"></i> Java基础-0x06:CountDownLatch/CyclicBarrier/Semaphore的使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Allwayz</p>
+              <p class="site-description motion-element" itemprop="description">程序猿&攻城狮的自我修养</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞队列"><span class="nav-number">1.1.</span> <span class="nav-text">阻塞队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞队列接口基础架构"><span class="nav-number">1.1.1.</span> <span class="nav-text">阻塞队列接口基础架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞队列主要方法的概括："><span class="nav-number">1.1.2.</span> <span class="nav-text">阻塞队列主要方法的概括：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SynchronousQueue理论："><span class="nav-number">1.1.3.</span> <span class="nav-text">SynchronousQueue理论：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SynchronousQueueDemo："><span class="nav-number">1.1.3.1.</span> <span class="nav-text">SynchronousQueueDemo：</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Allwayz</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

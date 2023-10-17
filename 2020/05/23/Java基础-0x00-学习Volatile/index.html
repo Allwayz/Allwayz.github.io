@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JUC," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="JUC1. 谈谈对volatile的理解volatile是Java虚拟机提供的轻量级的同步机制。三大特性：  保证可见性 一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步  不保证原子性  禁止指令重排">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-0x00：学习Volatile">
+<meta property="og:url" content="http://yoursite.com/2020/05/23/Java%E5%9F%BA%E7%A1%80-0x00-%E5%AD%A6%E4%B9%A0Volatile/index.html">
+<meta property="og:site_name" content="Allwayz aint a coder">
+<meta property="og:description" content="JUC1. 谈谈对volatile的理解volatile是Java虚拟机提供的轻量级的同步机制。三大特性：  保证可见性 一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步  不保证原子性  禁止指令重排">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-23T11:18:40.000Z">
+<meta property="article:modified_time" content="2023-10-17T07:18:19.379Z">
+<meta property="article:author" content="Allwayz">
+<meta property="article:tag" content="JUC">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/23/Java基础-0x00-学习Volatile/"/>
+
+
+
+
+
+  <title>Java基础-0x00：学习Volatile | Allwayz aint a coder</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Allwayz aint a coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/23/Java%E5%9F%BA%E7%A1%80-0x00-%E5%AD%A6%E4%B9%A0Volatile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java基础-0x00：学习Volatile</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-23T19:18:40+08:00">
+                2020-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="1-谈谈对volatile的理解"><a href="#1-谈谈对volatile的理解" class="headerlink" title="1. 谈谈对volatile的理解"></a>1. 谈谈对<code>volatile</code>的理解</h2><h3 id="volatile是Java虚拟机提供的轻量级的同步机制。"><a href="#volatile是Java虚拟机提供的轻量级的同步机制。" class="headerlink" title="volatile是Java虚拟机提供的轻量级的同步机制。"></a><strong>volatile</strong>是<strong>Java</strong>虚拟机提供的轻量级的同步机制。</h3><p>三大特性：</p>
+<ol>
+<li><p>保证可见性</p>
+<p>一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步</p>
+</li>
+<li><p>不保证原子性</p>
+</li>
+<li><p>禁止指令重排</p>
+</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="JMM（Java内存模型）"><a href="#JMM（Java内存模型）" class="headerlink" title="JMM（Java内存模型）"></a><strong>JMM</strong>（Java内存模型）</h3><p>本身是一种抽象的概念，并不真实存在，它描述的是一组<strong>规则</strong>或者<strong>规范</strong>，通过这组规范定义了程序中各个变量（包括实例字段，静态字典和构成数组对象的元素）的访问方式。</p>
+<p><strong>JMM</strong>关于同步的规定：</p>
+<ol>
+<li>线程解锁前，必须把共享变量的值刷新回主内存</li>
+<li>线程加锁前，必须读取主内存的最新值到自己的工作内存</li>
+<li>加锁解锁是同一把锁</li>
+</ol>
+<p>由于<strong>JVM</strong>运行程序的实体是线程，而每个线程创建时，<strong>JVM</strong>都会为其创建一个工作内存（有些地方称为栈空间），工作内存时每个线程的私有数据区域，而<strong>JAVA</strong>内存模型中规定所有变量都存储在<strong>主内存</strong>，主内存时共享内存区域，所有线程都可以访问，<strong>但线程对变量的操作（读取赋值等）必须在工作内存中进行，首先要将变量从主内存拷贝到自己的工作内存空间，然后对变量进行操作，操作完成后再将变量写回主内存，</strong>不能直接操作主内存中的变量，哥哥线程中的工作内存中存储着主内存中的<em>变量拷贝副本</em>，因此不同的线程间无法访问对方的工作内存，线程间的通信（传值）必须通过主内存来完成，简要访问过程如下图：</p>
+<p>![屏幕快照 2020-05-23 16.41.11](/Users/allwayz/Desktop/屏幕快照 2020-05-23 16.41.11.png)</p>
+<p><strong>JMM</strong>三大特性：</p>
+<ol>
+<li><p>可见性</p>
+<p>一个线程修改了主内存中的值，其他线程回马上收到通知，进行同步。</p>
+<p>通过前面对<strong>JMM</strong>的介绍，我们知道各个线程对主内存中共享变量的操作都是各个线程各自拷贝到自己工作内存进行操作后再写回到主内存中的。</p>
+<p>这就可能存在一个线程<code>0x00</code>修改了共享变量<strong>X</strong>的值但还未写回主内存时，另一个线程<code>0x01</code>又对主内存中同一个共享变量<strong>X</strong>进行操作，但此时<code>0x00</code>线程工作内存中共享变量<strong>X</strong>对线程<code>0x01</code>来说并不可见。</p>
+<p><strong>这种工作内存与主内存同步延迟现象就造成了可见性问题。</strong></p>
+</li>
+<li><p>原子性</p>
+<p><strong>number++</strong>在多线程环境下是非线程安全的，如何不加synchronized解决</p>
+<p>![屏幕快照 2020-05-23 18.41.53](/Users/allwayz/Desktop/屏幕快照 2020-05-23 18.41.53.png)</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 使用原子类来进行</span></span><br><span class="line"><span class="comment">* AotmicInteger</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">AtomicInteger atomicInteger = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addMyAtomic</span><span class="params">()</span></span>&#123;</span><br><span class="line">    atomicInteger.getAndIncrement();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ol>
+<ol start="3">
+<li><p><code>VolatileDemo</code>演示<strong>可见性</strong>➕<strong>原子性</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 1. 验证volatile的可见性&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 1.1 加入 int number = 0; number变量之前没有添加volatile关键字修饰&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * &lt;b&gt;main线程没有收到number变化的消息&lt;/b&gt;&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 1.2 在 int number = 0; 前面加上 volatile&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * &lt;b&gt;main线程在number改变的时候就监测到新的值&lt;/b&gt;&lt;br&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> allwayz</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        MyData myData = <span class="keyword">new</span> MyData();</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t come in..."</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            myData.addT060();</span><br><span class="line">            System.out.println(Thread.currentThread().getName()+<span class="string">"\t number ==&gt; 60"</span>);</span><br><span class="line">        &#125;,<span class="string">"input thread-AAA"</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (myData.number == <span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">"\t mission is over! number = "</span>+myData.number);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyData</span></span>&#123;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">int</span> number = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addT060</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.number = <span class="number">60</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ol>
+<ol start="4">
+<li><p>有序性</p>
+<p>计算机在执行程序时，为了提高性能，编译器和处理器的常常会对指令做重排，一般分以下三种</p>
+<p><strong>源代码</strong> –&gt; <u><strong>编译器优化的重排</strong></u> –&gt; <u><strong>指令并行的重排</strong></u> –&gt; <u><strong>内存系统的重排</strong></u> –&gt; <strong>最终的指令</strong></p>
+<p>单线程环境里面确保程序最终执行结果和代码顺序执行的结果一致</p>
+<p>处理器在进行重排序时必须要考虑指令之间的<u><strong>数据依赖性</strong></u></p>
+<p>多线程环境中线程交替执行，由于编译器优化重排的存在，两个线程中使用的变量能否保证一致性时无法确定的，结果无法预测。</p>
+<ul>
+<li><p>重排 0x00</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mySort</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">11</span>;	<span class="comment">//语句1</span></span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">12</span>;	<span class="comment">//语句2</span></span><br><span class="line">    x = x + <span class="number">5</span>;	<span class="comment">//语句3</span></span><br><span class="line">    y = x * x;	<span class="comment">//语句4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p> 执行顺序可能不一样</p>
+</li>
+<li><p>重排 0x01</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b,x,y = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></div>
+
+<table>
+<thead>
+<tr>
+<th>Thread 0x00</th>
+<th>Thread 0x01</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>x = a;</td>
+<td>y = b;</td>
+</tr>
+<tr>
+<td>b = 1;</td>
+<td>a = 2;</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>x = 0;    y = 0;</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>如果编译器对这段程序代码执行重排优化后，可能出现下列情况</p>
+<table>
+<thead>
+<tr>
+<th>Thread 0x00</th>
+<th>Thread 0x01</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>b = 1;</td>
+<td>a = 2;</td>
+</tr>
+<tr>
+<td>x = a;</td>
+<td>y = b;</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>x = 2;   y = 1;</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>案例</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReSortSeqDemo</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method01</span><span class="params">()</span></span>&#123;</span><br><span class="line">        a = <span class="number">1</span>;</span><br><span class="line">        flag = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//多线程环境下，由于编译器优化重排的存在。</span></span><br><span class="line">    <span class="comment">//两个线程中使用的变量能否保证一致性，是无法确定的，结果无法预测</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method02</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(flag)&#123;</span><br><span class="line">            a = a + <span class="number">5</span>;</span><br><span class="line">            System.out.println(<span class="string">"retValue: "</span> + a);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>禁止指令重排小总结</p>
+<p>volatile<u><strong>实现禁止指令重排优化</strong></u>，从而避免多线程环境下程序出现乱序执行的现象。<br>先了解一个概念， 内存屏障（<em>Memory Barrier</em>）又称内存栅栏，是一个CPU指令，他的作用有两个</p>
+<ol>
+<li><p>保证特定操作的执行顺序</p>
+</li>
+<li><p>保证某些变量的内存可见性（利用该特性实现<strong>volatile</strong>的内存可见性）</p>
+<p>由于编译器和处理器都能执行指令重排优化。如果在指令间插入一条Memory Barrier则会告诉编译器和CPU，不管什么指令都不能和这条Memory Barrier指令重排序，也就是说<strong>通过插入内存屏障禁止在内存屏障前后的指令集执行重排序优化</strong>。内存屏障另外一个作用时强制刷出各种CPU的缓存数据，因此任何CPU上的线程都能读取到这些数据的最新版本。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="有了JMM，线程安全性获得保障"><a href="#有了JMM，线程安全性获得保障" class="headerlink" title="有了JMM，线程安全性获得保障"></a><strong>有了JMM，线程安全性获得保障</strong></h3><ul>
+<li><p>工作内存与主内存同步延迟现象导致的可见性问题</p>
+<p>可以使用<code>synchronized</code>和<code>volatile</code>关键字解决，他们都可以使一个线程<strong>修改后的变量立即对其他线程可见</strong></p>
+</li>
+<li><p>对于指令重排导致的可见性问题和有序性问题</p>
+<p>可以使用volatile关键字解决，因为volatile的另外一个作用就是禁止重排序优化。</p>
+<p>​    </p>
+</li>
+</ul>
+<h3 id="在那些地方使用过volatile"><a href="#在那些地方使用过volatile" class="headerlink" title="在那些地方使用过volatile"></a>在那些地方使用过volatile</h3><ul>
+<li>最经典的案例：单例模式</li>
+<li>读写锁  手写一个缓存</li>
+<li>CAS （JUC的包里面大规模使用valatile）</li>
+</ul>
+<h4 id="单例模式DCL代码"><a href="#单例模式DCL代码" class="headerlink" title="单例模式DCL代码"></a>单例模式DCL代码</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * DCL (Double Check Lock)双端检锁机制&lt;br&gt;</span></span><br><span class="line"><span class="comment"> * 加锁之前和之后都进行判断</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingletonDemo <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (SingletonDemo<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">                instance = <span class="keyword">new</span> SingletonDemo();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="单例模式volatile分析"><a href="#单例模式volatile分析" class="headerlink" title="单例模式volatile分析"></a>单例模式volatile分析</h4><p>DCL（双端检锁）机制不一定线程安全，原因是有指令重排的存在，加入volatile可以禁止指令重排</p>
+<p>原因在于一个线程指定到第一次检测，读取到的instance != null时，instance的引用对象<strong>可能没有完成初始化</strong>。</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">instance &#x3D; new SignletonDemo();</span><br><span class="line">&#x2F;&#x2F;可以分为以下三步完成</span><br><span class="line">memory &#x3D; allcate(); &#x2F;&#x2F;1.分配对象内存空间</span><br><span class="line"></span><br><span class="line">instance(memory);	&#x2F;&#x2F;2.初始化对象</span><br><span class="line"></span><br><span class="line">instance &#x3D; memory;	&#x2F;&#x2F;3.设置instance只想刚分配的内存地址，此时 instance !&#x3D; null</span><br></pre></td></tr></table></figure></div>
+
+<p>步骤2和步骤3<strong><u>不存在数据依赖关系</u></strong>，而且无论重排前还是重排后程序的执行结果在单线程中并没有改变，因此这种重排优化时允许的。</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">instance &#x3D; new SignletonDemo();</span><br><span class="line">&#x2F;&#x2F;可以分为以下三步完成</span><br><span class="line">memory &#x3D; allcate(); &#x2F;&#x2F;1.分配对象内存空间</span><br><span class="line"></span><br><span class="line">instance &#x3D; memory;	&#x2F;&#x2F;3.设置instance只想刚分配的内存地址</span><br><span class="line">&#x2F;&#x2F;此时 instance !&#x3D; null,但是对象还没有初始化完成！</span><br><span class="line"></span><br><span class="line">instance(memory);	&#x2F;&#x2F;2.初始化对象</span><br></pre></td></tr></table></figure></div>
+
+<p>但是指令重排只会保证串行语义的执行的一致性（单线程），但并不会关心多线程间的语义一致性。</p>
+<p><strong>所以当一条线程访问instance不为null时，由于instance实例未必已完成初始化，也就造成了线程安全问题。</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JUC/" rel="tag"># JUC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-1%EF%BC%9ARESTful-Login%E8%AF%A5%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0/" rel="next" title="探索前后端分离-1：RESTful Login该如何实现（未完成）">
+                <i class="fa fa-chevron-left"></i> 探索前后端分离-1：RESTful Login该如何实现（未完成）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/23/Spring-Cloud-%E5%AE%8C%E6%95%B4%E8%84%91%E5%9B%BE/" rel="prev" title="Spring Cloud:完整脑图">
+                Spring Cloud:完整脑图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Allwayz</p>
+              <p class="site-description motion-element" itemprop="description">程序猿&攻城狮的自我修养</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JUC"><span class="nav-number">1.</span> <span class="nav-text">JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-谈谈对volatile的理解"><span class="nav-number">1.1.</span> <span class="nav-text">1. 谈谈对volatile的理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile是Java虚拟机提供的轻量级的同步机制。"><span class="nav-number">1.1.1.</span> <span class="nav-text">volatile是Java虚拟机提供的轻量级的同步机制。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JMM（Java内存模型）"><span class="nav-number">1.1.2.</span> <span class="nav-text">JMM（Java内存模型）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有了JMM，线程安全性获得保障"><span class="nav-number">1.1.3.</span> <span class="nav-text">有了JMM，线程安全性获得保障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在那些地方使用过volatile"><span class="nav-number">1.1.4.</span> <span class="nav-text">在那些地方使用过volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单例模式DCL代码"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">单例模式DCL代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单例模式volatile分析"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">单例模式volatile分析</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Allwayz</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

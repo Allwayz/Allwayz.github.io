@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring-Boot," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper">
+<meta property="og:url" content="http://yoursite.com/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/index.html">
+<meta property="og:site_name" content="Allwayz aint a coder">
+<meta property="og:description" content="MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/Wrapper.png">
+<meta property="article:published_time" content="2020-02-14T07:58:26.000Z">
+<meta property="article:modified_time" content="2023-10-17T07:18:19.381Z">
+<meta property="article:author" content="Allwayz">
+<meta property="article:tag" content="Spring-Boot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/Wrapper.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/14/Spring-Boot-摸索之路-5：MyBatis-Plus-强大的条件构造器Wrapper/"/>
+
+
+
+
+
+  <title>Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper | Allwayz aint a coder</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Allwayz aint a coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/14/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring-Boot-摸索之路-5：MyBatis-Plus 强大的条件构造器Wrapper</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-14T15:58:26+08:00">
+                2020-02-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>  MyBatis-Plus提供了简单的CRUD方法，这次来研究MyBatis-Plus的条件构造器。</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="构造器关系"><a href="#构造器关系" class="headerlink" title="构造器关系"></a>构造器关系</h1><p><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-5%EF%BC%9AMyBatis-Plus-%E5%BC%BA%E5%A4%A7%E7%9A%84%E6%9D%A1%E4%BB%B6%E6%9E%84%E9%80%A0%E5%99%A8Wrapper/Wrapper.png" alt="Wrapper"></p>
+<ul>
+<li>蓝色线连起来的是Wrapper的类，其他都是继承</li>
+<li>最下边四个是正常类，可以new对象</li>
+<li>加了Abstract的是抽象类</li>
+<li>蓝色实线是继承关系</li>
+</ul>
+<h2 id="wapper介绍-："><a href="#wapper介绍-：" class="headerlink" title="wapper介绍 ："></a>wapper介绍 ：</h2><ul>
+<li><code>Wrapper</code> ： 条件构造抽象类，最顶端父类，抽象类中提供4个方法西面贴源码展示</li>
+<li><code>AbstractWrapper</code> ： 用于查询条件封装，生成 <strong>sql</strong> 的 <strong>where</strong> 条件</li>
+<li><code>AbstractLambdaWrapper</code> ： <strong>Lambda</strong> 语法使用 <strong>Wrapper</strong>统一处理解析 <strong>lambda</strong> 获取 <strong>column</strong>。</li>
+<li><code>LambdaQueryWrapper</code> ：看名称也能明白就是用于<strong>Lambda</strong>语法使用的查询<strong>Wrapper</strong></li>
+<li><code>LambdaUpdateWrapper</code> ： <strong>Lambda</strong> 更新封装<strong>Wrapper</strong></li>
+<li><code>QueryWrapper</code> ： <strong>Entity</strong> 对象封装操作类，不是用<strong>lambda</strong>语法</li>
+<li><code>UpdateWrapper</code> ： <strong>Update</strong> 条件封装，用于<strong>Entity</strong>对象更新操作</li>
+</ul>
+<h1 id="构造器方法"><a href="#构造器方法" class="headerlink" title="构造器方法"></a>构造器方法</h1><table>
+<thead>
+<tr>
+<th>FunctionName</th>
+<th>Desc</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eq( );</td>
+<td>等于      =</td>
+<td>eq(“name”,”Allwayz”) -&gt; name = ‘Allwayz’</td>
+</tr>
+<tr>
+<td>ne( );</td>
+<td>不等于   !=</td>
+<td>ne(“name”,”Allwayz”) -&gt; name&lt;&gt;’Allwayz’</td>
+</tr>
+<tr>
+<td>gt( );</td>
+<td>大于      &gt;</td>
+<td>gt(“age”,18) -&gt; age &gt; 18</td>
+</tr>
+<tr>
+<td>ge( );</td>
+<td>大于等于 &gt;=</td>
+<td>ge(“age”,18) -&gt; age &gt;= 18</td>
+</tr>
+<tr>
+<td>lt( );</td>
+<td>小于    &lt;</td>
+<td>lt(“age”,18) -&gt; age &lt; 18</td>
+</tr>
+<tr>
+<td>le( );</td>
+<td>小于等于 &lt;=</td>
+<td>le(“age”,18) -&gt; age &lt;= 18</td>
+</tr>
+<tr>
+<td>between( );</td>
+<td>BETWEEN</td>
+<td>between(“age”,18,30) -&gt; age between 18 and 30</td>
+</tr>
+<tr>
+<td>notBetween( );</td>
+<td>NOT BETWEEN</td>
+<td>notBetween(“age”,18,30) -&gt; age not between 18 and 30</td>
+</tr>
+<tr>
+<td>like( );</td>
+<td>LIKE ‘%value%’</td>
+<td>like(“name”,”All”) -&gt; name like ‘%All%’</td>
+</tr>
+<tr>
+<td>notLike( );</td>
+<td>NOT LIKE ‘%value%’</td>
+<td>notLike(“name”,”All”) -&gt; name not like ‘%All%’</td>
+</tr>
+<tr>
+<td>likeLeft( );</td>
+<td>LIKE ‘%value’</td>
+<td>likeLeft(“name”,”All”) -&gt; name like ‘%All’</td>
+</tr>
+<tr>
+<td>likeRight( );</td>
+<td>LIKE ‘value%’</td>
+<td>likeRight(“name”,”All”) -&gt; name like ‘All%’</td>
+</tr>
+<tr>
+<td>isNull( );</td>
+<td>Value IS NULL</td>
+<td>isNull(“name”) -&gt;name is null</td>
+</tr>
+<tr>
+<td>isNotNull( );</td>
+<td>Value IS NOT NULL</td>
+<td>isNotNull(“name”) -&gt;name is not null</td>
+</tr>
+<tr>
+<td>in( );</td>
+<td>Value IN(v0,v1…)</td>
+<td>in(“age”,{1,2,3}) -&gt; age in (1,2,3)</td>
+</tr>
+<tr>
+<td>notIn( );</td>
+<td>Value NOT IN(v0,v1…)</td>
+<td>notIn(“age”,{1,2,3}) -&gt; age not in (1,2,3)</td>
+</tr>
+<tr>
+<td>inSql( );</td>
+<td>Value IN(sql)</td>
+<td>inSql(“id”,”Select id from table where id &lt; 3”) -&gt; id in (Select id from table where id &lt; 3)</td>
+</tr>
+<tr>
+<td>notInSql( );</td>
+<td>Value NOT IN(sql)</td>
+<td>notInSql(“id”,”Select id from table where id &lt; 3”) -&gt; id not in (Select id from table where id &lt; 3)</td>
+</tr>
+<tr>
+<td>groupBy( );</td>
+<td>分组</td>
+<td>groupBy(“id”,”name”) -&gt; group by id, name</td>
+</tr>
+<tr>
+<td>orderByAsc( );</td>
+<td>升序排列</td>
+<td>orderByAsc(“id”,”name”) -&gt; order by id ASC, name ASC</td>
+</tr>
+<tr>
+<td>orderByDesc( );</td>
+<td>降序排列</td>
+<td>orderByDesc(“id”,”name”) -&gt; order by id DESC, nameDESC</td>
+</tr>
+<tr>
+<td>orderBy( );</td>
+<td>排列</td>
+<td>orderBy(true, true,”id”,”name”) -&gt; order by id ASC, name ASC</td>
+</tr>
+<tr>
+<td>having( );</td>
+<td>HAVING(sql)</td>
+<td>having(“sum(age) &gt; {0}”,11) -&gt; having sum (age) &gt;11</td>
+</tr>
+<tr>
+<td>or( );</td>
+<td>拼接 OR</td>
+<td></td>
+</tr>
+<tr>
+<td>and( );</td>
+<td>AND 嵌套</td>
+<td></td>
+</tr>
+<tr>
+<td>apply( );</td>
+<td>拼接 sql</td>
+<td></td>
+</tr>
+<tr>
+<td>last( )</td>
+<td>无视优化规则直接拼接到sql最后</td>
+<td></td>
+</tr>
+<tr>
+<td>exists( );</td>
+<td>拼接 EXISTS（sql）</td>
+<td></td>
+</tr>
+<tr>
+<td>notExists( );</td>
+<td>拼接 NOT EXIXSTS （sql）</td>
+<td></td>
+</tr>
+<tr>
+<td>nested( );</td>
+<td>正常嵌套 不带AND OR</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="使用过程"><a href="#使用过程" class="headerlink" title="使用过程"></a>使用过程</h1><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Fuzzy query</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMajor</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;Major&gt; majorList = majorMapper</span><br><span class="line">        .selectList(<span class="keyword">new</span> QueryWrapper&lt;Major&gt;().like(<span class="string">"major_code"</span>,<span class="string">"MC_506"</span>));</span><br><span class="line">    majorList.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>控制台</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="VERILOG"><figure class="iseeu highlight /verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@<span class="number">2005675644</span> wrapping com<span class="variable">.mysql</span><span class="variable">.cj</span><span class="variable">.jdbc</span><span class="variable">.ConnectionImpl</span>@b70fa38] will <span class="keyword">not</span> be managed by Spring</span><br><span class="line"><span class="comment">// SQL语句</span></span><br><span class="line">==&gt;  Preparing: SELECT major_id,major_code,major_name,major_status,create_time,update_time,is_delete FROM major WHERE is_delete=<span class="number">0</span> AND (major_code LIKE ?) </span><br><span class="line"><span class="comment">//变量</span></span><br><span class="line">==&gt; Parameters: %MC_506%(String)</span><br><span class="line"><span class="comment">//结果</span></span><br><span class="line">&lt;==    Columns: major_id, major_code, major_name, major_status, create_time, update_time, is_delete</span><br><span class="line">&lt;==        Row: <span class="number">1</span>, MC_50601, History of Architecture, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">21</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">8</span>, MC_50602, International System in the <span class="number">20</span>th Century, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">00</span>, <span class="number">0</span></span><br><span class="line">&lt;==        Row: <span class="number">9</span>, MC_50603, Ancient Greece:Myth,Art,War, <span class="literal">null</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">37</span>, <span class="number">0</span></span><br><span class="line">&lt;==      Total: <span class="number">3</span></span><br><span class="line">Closing non transactional SqlSession </span><br><span class="line">[org<span class="variable">.apache</span><span class="variable">.ibatis</span><span class="variable">.session</span><span class="variable">.defaults</span><span class="variable">.DefaultSqlSession</span>@<span class="number">38</span>c460e8]</span><br><span class="line">Major(majorId=<span class="number">1</span>, majorCode=MC_50601, majorName=History of Architecture, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">00</span>:<span class="number">21</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">8</span>, majorCode=MC_50602, majorName=International System in the <span class="number">20</span>th Century, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">30</span>, isDelete=<span class="number">0</span>)</span><br><span class="line">Major(majorId=<span class="number">9</span>, majorCode=MC_50603, majorName=Ancient Greece:Myth,Art,War, majorStatus=<span class="literal">null</span>, createTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, updateTime=<span class="number">2020</span>-<span class="number">02</span>-<span class="number">14</span>T15:<span class="number">32</span>:<span class="number">37</span>, isDelete=<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Boot/" rel="tag"># Spring-Boot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/12/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-4%EF%BC%9AJetbrick-template%E7%94%9F%E6%88%90%E9%82%AE%E4%BB%B6%E6%A8%A1%E7%89%88/" rel="next" title="Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版">
+                <i class="fa fa-chevron-left"></i> Spring-Boot-摸索之路-4：Jetbrick-template生成邮件模版
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-6%EF%BC%9ASpring-Boot-%E9%9B%86%E6%88%90JSP/" rel="prev" title="Spring-Boot-摸索之路-6：Spring-Boot 集成JSP">
+                Spring-Boot-摸索之路-6：Spring-Boot 集成JSP <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Allwayz</p>
+              <p class="site-description motion-element" itemprop="description">程序猿&攻城狮的自我修养</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#构造器关系"><span class="nav-number">1.</span> <span class="nav-text">构造器关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#wapper介绍-："><span class="nav-number">1.1.</span> <span class="nav-text">wapper介绍 ：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造器方法"><span class="nav-number">2.</span> <span class="nav-text">构造器方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用过程"><span class="nav-number">3.</span> <span class="nav-text">使用过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Allwayz</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

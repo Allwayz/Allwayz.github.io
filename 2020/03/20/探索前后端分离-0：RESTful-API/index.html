@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="前后端分离," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="jsp、servlet➕SpringBoot这样的前后端耦合在一起的开发实在太难熬了！ 如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探索前后端分离-0：RESTful API">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0%EF%BC%9ARESTful-API/index.html">
+<meta property="og:site_name" content="Allwayz aint a coder">
+<meta property="og:description" content="jsp、servlet➕SpringBoot这样的前后端耦合在一起的开发实在太难熬了！ 如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png">
+<meta property="og:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png">
+<meta property="article:published_time" content="2020-03-20T09:47:08.000Z">
+<meta property="article:modified_time" content="2023-10-17T07:18:19.382Z">
+<meta property="article:author" content="Allwayz">
+<meta property="article:tag" content="前后端分离">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/20/探索前后端分离-0：RESTful-API/"/>
+
+
+
+
+
+  <title>探索前后端分离-0：RESTful API | Allwayz aint a coder</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Allwayz aint a coder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0%EF%BC%9ARESTful-API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Allwayz">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Allwayz aint a coder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">探索前后端分离-0：RESTful API</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-20T17:47:08+08:00">
+                2020-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p><code>jsp</code>、<code>servlet</code>➕<code>SpringBoot</code>这样的前后端耦合在一起的开发实在太难熬了！</p>
+<p>如果同一个应用，每新开发一个平台都要重新写业务逻辑，那也太费事儿了8⃣️。<br>于是我发现只需在新的平台上开发UI界面，然后共用一套后端接口，那么代码的开发就变的优雅了起来。</p>
+</blockquote>
+<a id="more"></a>
+
+<p><a href="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png" target="_blank" rel="noopener"><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/MacPro2019.png" alt="壁纸"></a></p>
+<p><em>前后端分离主要不是使用什么样的技术，而是为什么要前后端分离。</em></p>
+<p>[TOC]</p>
+<h2 id="基于JSP的Java-web"><a href="#基于JSP的Java-web" class="headerlink" title="基于JSP的Java web"></a>基于JSP的Java web</h2><p><code>JSP</code>(<strong>J</strong>ava <strong>S</strong>erver <strong>P</strong>ages)，是一种服务端的网页模版技术，支持JSTL标准标签库，在传统HTML页面中插入可以在页面中执行的Java代码段。<code>JSP</code>是互联网开发中比较老的技术，以现在的技术来审视JSP不难发现JSP是一个高耦合性的东西。</p>
+<h3 id="JSP技术"><a href="#JSP技术" class="headerlink" title="JSP技术"></a>JSP技术</h3><p><em>什么叫服务端的网页模版技术呢？常见的网页是由<strong>样式</strong>➕<strong>数据</strong>构成的，当我们把数据全部去掉，就剩一个网页的架子，即网页模版。</em></p>
+<h3 id="JSP网页是如何开发的？"><a href="#JSP网页是如何开发的？" class="headerlink" title="JSP网页是如何开发的？"></a>JSP网页是如何开发的？</h3><p>前端工程师写好<code>HTML</code>，<code>CSS</code>，<code>js</code>动态效果等</p>
+<p>后端工程师写好后端逻辑，<code>Servlet</code>，数据库操作等等</p>
+<p><em>这个时候前后端如何联系呢？</em></p>
+<p>前端工程师把写好了的<code>HTML</code>页面交个后端工程师，这个时候页面是写死的，后端工程师需要把<code>HTML</code>换成<code>JSP</code>，然后写一些<code>JSP</code>标签或者<code>Java</code>代码把需要动态显示的数据添加到JSP页面中去。</p>
+<p>这时候前后端就有很强的依赖。需要后端工程师懂一些HTML，css之类的语法，也需要前端工程师懂的一些Java的语法。</p>
+<h2 id="前后端分离的Java-web"><a href="#前后端分离的Java-web" class="headerlink" title="前后端分离的Java web"></a>前后端分离的Java web</h2><p>前后端之间通过<strong>约定接口</strong>，<strong>数据样式</strong>，<strong>参数格式</strong>来进行开发。</p>
+<p>前后端可以并行开发，前后端单独部署。前端只从后端那数据，页面渲染工作只交给前端服务器进行。静态资源也不再由后端完成。后端只需要提供数据接口，接收到请求之后跟数据沟通就可以了。</p>
+<h2 id="为什么要进行前后端分离呢？"><a href="#为什么要进行前后端分离呢？" class="headerlink" title="为什么要进行前后端分离呢？"></a>为什么要进行前后端分离呢？</h2><p>在以前<code>JSP</code>模版开发的时候，前后端耦合在一起做，套模版的操作比比皆是。</p>
+<p>原因是这样的：这里引用<a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a>的话来说：前端开发没有像后端这样工程化，模块化和可复用化的开发思维。 </p>
+<p>所以前后端分离的原因是前后端的工作分来开做。把前端工程师的工作从后端工程师身上拿掉，也让前端工程师不再参与后端工程师的活儿。让前端工程是也需要工程化项目化的思维来做。这样看来，前后端分离不是一个技术问题，而是一个工程化考量和项目管理的问题。</p>
+<h2 id="技术上问题怎么解决呢"><a href="#技术上问题怎么解决呢" class="headerlink" title="技术上问题怎么解决呢"></a>技术上问题怎么解决呢</h2><p>前端慢慢出现了<strong>vue.js</strong>, <strong>react.js</strong>等等的前端组件化开发框架。随着node的出现，前端开发也借助node来开发各种各样的工具，比如npm包管理器，预编译工具等等。</p>
+<p><a href="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png" target="_blank" rel="noopener"><img src="https://allwayz-blog-1259174617.cos.ap-shanghai.myqcloud.com/publicImage/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-0/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB.png" alt="前后端"></a></p>
+<h2 id="前后端分离的实施"><a href="#前后端分离的实施" class="headerlink" title="前后端分离的实施"></a>前后端分离的实施</h2><p>一个标准的软件开发生命周期为例，分为需求分析，系统分析与设计，系统实现，测试和维护。</p>
+<p>真正的前后端分离应该渗透到以上的每一个步骤。</p>
+<p>需求分析之后，前后端根据需求来约定接口，之后就可以各干各的了。</p>
+<p>前端负责开发UI页面，所有的数据也可以通过Mock服务器来模拟，并不需要实时的后端接口。</p>
+<p>后端负责考量系统的设计，比如系统架构中的数据库，中间件，缓存，分布式架构等。主要考虑性能、容量、可扩展性、可维护性等等。然后实现接口来为前端提供数据即可。</p>
+<p>前后端项目独立部署，不需要迁就某一方面。</p>
+<p><strong>以上就是我认识的前后端分离，能力有限，一点浅见拙识</strong> </p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.codesheep.cn" target="_blank" rel="noopener">CodeSheep</a></p>
+<p><a href="https://allwayz.github.io" target="_blank" rel="noopener">Allwayz</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB/" rel="tag"># 前后端分离</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/18/Spring-Boot-%E6%91%B8%E7%B4%A2%E4%B9%8B%E8%B7%AF-7%EF%BC%9ASpring-Boot%E4%B8%AD%E4%BD%BF%E7%94%A8JSP%E3%80%81Ajax/" rel="next" title="Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax">
+                <i class="fa fa-chevron-left"></i> Spring-Boot-摸索之路-7：Spring-Boot中使用JSP、Ajax
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/20/%E6%8E%A2%E7%B4%A2%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB-1%EF%BC%9ARESTful-Login%E8%AF%A5%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0/" rel="prev" title="探索前后端分离-1：RESTful Login该如何实现（未完成）">
+                探索前后端分离-1：RESTful Login该如何实现（未完成） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Allwayz</p>
+              <p class="site-description motion-element" itemprop="description">程序猿&攻城狮的自我修养</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于JSP的Java-web"><span class="nav-number">1.</span> <span class="nav-text">基于JSP的Java web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP技术"><span class="nav-number">1.1.</span> <span class="nav-text">JSP技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP网页是如何开发的？"><span class="nav-number">1.2.</span> <span class="nav-text">JSP网页是如何开发的？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前后端分离的Java-web"><span class="nav-number">2.</span> <span class="nav-text">前后端分离的Java web</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要进行前后端分离呢？"><span class="nav-number">3.</span> <span class="nav-text">为什么要进行前后端分离呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术上问题怎么解决呢"><span class="nav-number">4.</span> <span class="nav-text">技术上问题怎么解决呢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前后端分离的实施"><span class="nav-number">5.</span> <span class="nav-text">前后端分离的实施</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number"></span> <span class="nav-text">Reference</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Allwayz</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
